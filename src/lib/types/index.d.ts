@@ -10,30 +10,34 @@ import type {
 
 /* --------------HTTP Requests Types---------------- */
 
-// init request config
+/* RequestConfig Type */
 export type RequestConfig<T> = {
   url: string
   params?: Record<string, string | number | boolean>
   headers?: HeadersInit
   transformResponse?: (data: unknown) => T
 }
+
+/* ErrorResponseData Type */
 export interface ErrorResponseData {
   message: string
   statusCode?: number
 }
 
-export interface RequestHelloWorld {
-  message: string
-}
-
+/* CompatibleRequest Type */
 export interface CompatibleRequest extends IncomingMessage {
   headers: Record<string, string | string[]>
 }
+
+/* SiteConfig Type */
 export type SiteConfig = {
   meta: Metadata
   viewport: Viewport
 }
 
+/* --------------Components Types---------------- */
+
+/* FieldConfig Type */
 interface FieldConfig<TFieldValues> {
   name: Path<TFieldValues>
   type: string
@@ -42,17 +46,20 @@ interface FieldConfig<TFieldValues> {
   className?: string
 }
 
+/* Mutation Type */
 interface Mutation {
   isPending: boolean
 }
 
+/* DynamicFormProps Type */
 interface DynamicFormProps<TFieldValues extends FieldValues> {
   form: UseFormReturn<TFieldValues>
   onSubmit: SubmitHandler<TFieldValues>
   fields: FieldConfig<TFieldValues>[]
   submitButtonTitle: string
-  mutation: Mutation
+  mutation?: Mutation
   className?: string
+  disabled?: boolean
 }
 
 /* Unique Id Type */

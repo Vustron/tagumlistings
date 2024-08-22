@@ -1,14 +1,22 @@
 // components
-
+import ProgressBarProvider from "@/components/providers/progress-bar"
 import QueryProvider from "@/components/providers/query"
+import ThemeProvider from "@/components/providers/themes"
 import ToastProvider from "@/components/providers/toast"
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
-    <QueryProvider>
-      <ToastProvider />
-      {children}
-    </QueryProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <TooltipProvider disableHoverableContent>
+        <QueryProvider>
+          <ProgressBarProvider>
+            <ToastProvider />
+            {children}
+          </ProgressBarProvider>
+        </QueryProvider>
+      </TooltipProvider>
+    </ThemeProvider>
   )
 }
 

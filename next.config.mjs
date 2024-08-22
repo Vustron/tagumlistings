@@ -24,13 +24,19 @@ const ContentSecurityPolicy = `
     frame-src 'self' *.codesandbox.io vercel.live https://upload-widget.cloudinary.com/;
 `
 
+// init allowed origins
+const allowedOrigins = [
+  process.env.NEXT_PUBLIC_BASE_URL,
+  "http://127.0.0.1:8000",
+]
+
 // configure security headers
 export const securityHeaders = [
   // api
   { key: "Access-Control-Allow-Credentials", value: "true" },
   {
     key: "Access-Control-Allow-Origin",
-    value: `${process.env.NEXT_PUBLIC_BASE_URL}`,
+    value: allowedOrigins.join(", "),
   },
   {
     key: "Access-Control-Allow-Methods",
@@ -129,6 +135,8 @@ const nextConfig = {
 
   // image domains
   images: {
+    // config formats
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "https",
@@ -141,14 +149,6 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
-      },
-      {
-        protocol: "https",
-        hostname: "firebasestorage.googleapis.com",
-      },
-      {
-        protocol: "https",
-        hostname: "api.microlink.io",
       },
     ],
   },

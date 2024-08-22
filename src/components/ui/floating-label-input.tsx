@@ -6,6 +6,8 @@ import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 import { EyeIcon, EyeOffIcon } from "lucide-react"
 import { useState } from "react"
+
+// types
 import type { FieldError } from "react-hook-form"
 
 export interface InputProps
@@ -25,7 +27,7 @@ const FloatingInput = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <>
         <Input
-          type={type || (isPassword && showPassword ? "text" : "password")}
+          type={isPassword ? (showPassword ? "text" : "password") : type}
           placeholder={placeholder}
           disabled={disabled}
           className={cn(
@@ -61,13 +63,13 @@ const FloatingInput = React.forwardRef<HTMLInputElement, InputProps>(
             </Button>
 
             <style>{`
-					.hide-password-toggle::-ms-reveal,
-					.hide-password-toggle::-ms-clear {
-						visibility: hidden;
-						pointer-events: none;
-						display: none;
-					}
-				`}</style>
+              .hide-password-toggle::-ms-reveal,
+              .hide-password-toggle::-ms-clear {
+                visibility: hidden;
+                pointer-events: none;
+                display: none;
+              }
+            `}</style>
           </>
         )}
       </>
@@ -101,7 +103,7 @@ type FloatingLabelInputProps = InputProps & {
 const FloatingLabelInput = React.forwardRef<
   React.ElementRef<typeof FloatingInput>,
   React.PropsWithoutRef<FloatingLabelInputProps>
->(({ id, label, disabled, hasErrors, ...props }, ref) => {
+>(({ id, label, disabled, hasErrors, isPassword, ...props }, ref) => {
   return (
     <div className="relative">
       <FloatingInput
@@ -109,6 +111,7 @@ const FloatingLabelInput = React.forwardRef<
         id={id}
         disabled={disabled}
         hasErrors={hasErrors}
+        isPassword={isPassword}
         {...props}
       />
       <FloatingLabel htmlFor={id} hasErrors={!!hasErrors}>

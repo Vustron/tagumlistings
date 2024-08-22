@@ -23,6 +23,7 @@ const DynamicForm = <TFieldValues extends FieldValues>({
   submitButtonTitle,
   mutation,
   className,
+  disabled,
 }: DynamicFormProps<TFieldValues>) => {
   return (
     <Form {...form}>
@@ -44,7 +45,7 @@ const DynamicForm = <TFieldValues extends FieldValues>({
                     type={field.type}
                     label={field.label}
                     placeholder={field.placeholder}
-                    disabled={mutation.isPending}
+                    disabled={mutation?.isPending || disabled}
                     hasErrors={!!form.formState.errors[field.name]}
                     className={cn(
                       form.formState.errors[field.name]
@@ -64,7 +65,7 @@ const DynamicForm = <TFieldValues extends FieldValues>({
         <SubmitButton
           type="submit"
           title={submitButtonTitle}
-          disabled={mutation.isPending}
+          disabled={mutation?.isPending || disabled}
           buttonClassName="w-full focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-600"
         />
       </form>

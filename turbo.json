@@ -2,7 +2,7 @@
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
     "build": {
-      "env": ["NEXT_PUBLIC_BASE_URL"],
+      "env": ["NEXT_PUBLIC_APP_URL"],
       "inputs": [
         "$TURBO_DEFAULT$",
         ".env.production.local",

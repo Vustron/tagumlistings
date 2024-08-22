@@ -24,7 +24,7 @@ export async function httpRequest<RequestType = any, ResponseType = any>({
 }: RequestConfig<RequestType, ResponseType>): Promise<ResponseType> {
   try {
     // Full URL with query string
-    const fullUrl = `${env.NEXT_PUBLIC_BASE_URL}/api/v1/${url}${buildQueryString(params)}`
+    const fullUrl = `${env.NEXT_PUBLIC_APP_URL}/api/v1/${url}${buildQueryString(params)}`
 
     // Use customURL if provided, otherwise use fullUrl
     const requestUrl = customURL || fullUrl
@@ -50,12 +50,14 @@ export async function httpRequest<RequestType = any, ResponseType = any>({
     // Check for HTTP errors
     if (!response.ok) {
       const errorData = await response.json()
-      return Promise.reject({ status: response.status, ...errorData })
+      return Promise.reject(
+        new Error(errorData.error || "A network error occurred."),
+      )
     }
 
     const data = await response.json()
 
-    // Transform response data if transformer is provided
+    // Transform response data if transformer is provide  d
     const transformedData: ResponseType = transformResponse
       ? transformResponse(data)
       : data

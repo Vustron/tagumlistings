@@ -1,13 +1,28 @@
-### NextJS 14.2.5 Template with shadcn-ui, custom toast, react-query, turbo, and biomejs for format & linting
+# **TagumListings: A web-based real estate brokenage appointment and reservation system for RME**
 
 > [!NOTE]
-> This is a template for using nextjs15@rc with react19 + react compiler.
-> It also has prettier tailwind plugin
-> <br>
-> To run the development server use
+> A collaborated commissioned project.
+> To run the development frontend server use
 
+# Frontend
 ```
 turbo dev
-
-turbo build
+npm run dev
 ```
+
+> [!NOTE]
+> To run the development backend server use
+
+# Backend
+```
+cd backend
+php artisan serve
+```
+
+
+# **Contributors**
+- <a href="https://github.com/Vustron">Vustron</a>
+- <a href="https://github.com/johnkristanf">johnkristanf</a>
+- <a href="https://github.com/MaikuSliver">MaikuSliver</a>
+
+

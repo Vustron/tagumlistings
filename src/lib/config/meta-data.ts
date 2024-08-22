@@ -7,7 +7,7 @@ import type { SiteConfig } from "@/lib/types"
 // base url
 export const getBaseUrl = () => {
   if (typeof window !== "undefined") return window.location.origin
-  if (env.NEXT_PUBLIC_BASE_URL) return `https://${env.NEXT_PUBLIC_BASE_URL}`
+  if (env.NEXT_PUBLIC_APP_URL) return `https://${env.NEXT_PUBLIC_APP_URL}`
   return "http://localhost:3000"
 }
 
@@ -15,7 +15,10 @@ export const getBaseUrl = () => {
 export const siteConfig: SiteConfig = {
   meta: {
     metadataBase: new URL(getBaseUrl()),
-    title: "TagumListings",
+    title: {
+      template: "%s | TagumListings",
+      default: "TagumListings",
+    },
     applicationName: "TagumListings",
     description:
       "A web-based real estate brokenage appointment and reservation system for RME",
