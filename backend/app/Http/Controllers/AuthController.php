@@ -56,4 +56,37 @@ class AuthController extends Controller
         ], 200);
 
     }
+
+
+    public function update(Request $request)
+    {
+        $user = $request->user();
+
+        $data = $request->validate([
+            "name" => "required",
+            "username" => "required",
+            "email" => "required|email|unique:users",
+            "password" => "required"
+        ]);
+
+
+        if(isset($data['password'])){
+            $data['password'] = Hash::make($data['password']);
+        } 
+
+        unset($data['role']);
+        $user->update($data);
+
+        return response()->json([
+            "message" => "User updated successfully",
+            "user" => $user
+        ], 200);
+    }
+
+
+    public function logout(Request $request)
+    {
+        $request->user()->tokens()->delete();
+        return response()->json(['message' => 'Logged out successfully']);
+    }
 }
