@@ -1,15 +1,46 @@
 // components
-import { Card, CardContent } from "@/components/ui/card"
+import Appointments from "@/app/(admin)/dashboard/_components/appointments"
+import AppointmentsChart from "@/app/(admin)/dashboard/_components/appointments-chart"
+import DashboardCard from "@/app/(admin)/dashboard/_components/dashboard-card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+
+// utils
+import {
+  appointmentsData,
+  dashboardItems,
+} from "@/app/(admin)/dashboard/constants"
 
 const AdminDashboardClient = () => {
   return (
-    <Card className="rounded-lg border-none mt-6">
-      <CardContent className="p-6">
-        <div className="flex justify-center items-center min-h-[calc(100vh-56px-64px-20px-24px-56px-48px)]">
-          <div className="flex flex-col relative">Dashboard</div>
+    <div className="p-5">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <DashboardCard items={dashboardItems} />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7 mt-4">
+        <div className="col-span-4">
+          <AppointmentsChart />
         </div>
-      </CardContent>
-    </Card>
+
+        <Card className="col-span-4 md:col-span-3">
+          <CardHeader>
+            <CardTitle>Recent Appointments</CardTitle>
+            <CardDescription>
+              There are 69 appointments for this month.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Appointments appointments={appointmentsData} />
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   )
 }
 
