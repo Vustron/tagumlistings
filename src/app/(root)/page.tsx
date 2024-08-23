@@ -1,7 +1,7 @@
-export default function RootPage() {
+export default function ClientPage() {
   return (
     <main className="m-auto flex size-full flex-col items-center justify-center">
-      Hello world
+      Client Page
     </main>
   )
 }

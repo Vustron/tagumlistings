@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 
 // utils
-import { cn } from "@/lib/utils/"
+import { cn } from "@/lib/utils"
 
 interface Props {
   children?: React.ReactNode

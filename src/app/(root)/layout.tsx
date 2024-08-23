@@ -1,7 +1,7 @@
 // utils
 import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
 
-export default function HomeLayout({
+export default function ClientLayout({
   children,
 }: {
   children: React.ReactNode
