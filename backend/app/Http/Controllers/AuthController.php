@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -43,10 +45,11 @@ class AuthController extends Controller
                 "user" => $user,
                 "token" => $token
             ], 201);
+            
         } catch (\Exception $e) {
-            // Log the error
-            \Log::error('Registration failed: ' . $e->getMessage());
-            \Log::error($e->getTraceAsString());
+
+            Log::error('Registration failed: ' . $e->getMessage());
+            Log::error($e->getTraceAsString());
 
             return response()->json([
                 "message" => "Registration failed",
@@ -57,74 +60,137 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $data = $request->validate([
-            "username" => "required",
-            "password" => "required"
-        ]);
 
+        try {
 
-        $user = User::where('username', $data["username"])->first();
+            $data = $request->validate([
+                "username" => "required|exists:users,username",
+                "password" => "required"
+            ]);
+    
+    
+            $user = User::where('username', $data["username"])->first();
+    
+            if($user && Hash::check($data["password"], $user->password)){
+                $user->tokens()->delete();
+    
+                $expiration = now()->addHours(2);
+                $token = $user->createToken($data['username'], ['expiration' => $expiration])->plainTextToken;
+    
+                return response()->json([
+                    "message" => "Login Successfully",
+                    "token"   => $token,
+                    'token_expires_at' => $expiration
+                ], 200);
+            }
 
-        if($user && Hash::check($data["password"], $user->password)){
-            $user->tokens()->delete();
+        } catch (\Exception $e) {
 
-            $expiration = now()->addHours(2);
-            $token = $user->createToken($data['username'], ['expiration' => $expiration])->plainTextToken;
+            Log::error('Login failed: ' . $e->getMessage());
 
             return response()->json([
-                "message" => "Login Successfully",
-                "token"   => $token,
-                'token_expires_at' => $expiration
-            ], 200);
+                "message" => "Login Error",
+                "error"   => $e->getMessage()
+            ], 401);
         }
-
-        return response()->json([
-            "message" => "Invalid Credentials"
-        ], 401);
-
+       
     }
 
-
-    public function update(Request $request)
+    public function getAllAccounts()
     {
-        $user = $request->user();
 
-        $data = $request->validate([
-            "name" => "required",
-            "username" => "required",
-            "email" => "required|email|unique:users",
-            "password" => "required"
-        ]);
+        try {
 
+            $users = User::all();
 
-        if(isset($data['password'])){
-            $data['password'] = Hash::make($data['password']);
+            return response()->json([
+                "message" => "Accounts retrieved successfully",
+                "users" => $users
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => "Internal Server Error Occurred: {$e}"], 500);
         }
-
-        unset($data['role']);
-        $user->update($data);
-
-        return response()->json([
-            "message" => "User updated successfully",
-            "user" => $user
-        ], 200);
+       
     }
+
+
+    public function getAccountByID(string $id)
+    {
+        try {
+
+            $users = User::findOrFail($id);
+            return response()->json(['user' => $users], 200);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Account not found'], 404);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => "Internal Server Error Occurred: {$e}"], 500);
+        }
+    }
+
+
+
+    public function updateAccount(Request $request, string $id)
+    {
+
+        try {
+
+            $data = $request->validate([
+                "name" => "nullable|string",
+                "username" => "required",
+                "email" => "required|email|unique:users",
+                "password" => "nullable|string|min:8|confirmed"
+            ]);
+
+            $user = User::findOrFail($id);
+            $user->fill($data);
+
+            if(!empty($data['password'])){
+                $user->password = Hash::make($data['password']);
+            }
+
+            $user->save();
+
+
+            return response()->json([
+                "message" => "User updated successfully",
+                "user" => $user
+            ], 200);
+           
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Account Update Error',
+                'error'   =>  $e->getMessage()
+            ], 500);
+        }
+        
+    }
+
+
+    public function deleteAccount(string $id)
+    {
+        try {
+
+           $user = User::findOrFail($id);
+           $user->delete();
+
+           return response()->json(['message' => 'Account Deleted Successfully'], 200);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Account Not Found'], 404);
+
+        }catch (\Exception $e) {
+            return response()->json(['error' => "Internal Server Error Occurred: {$e}"], 500);
+        }
+    }
+
 
 
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
         return response()->json(['message' => 'Logged out successfully']);
-    }
-
-// Vustron: kani kay mu return ra sa tanan users nga na save sa db
-    public function getAllUsers()
-    {
-        $users = User::all();
-
-        return response()->json([
-            "message" => "Users retrieved successfully",
-            "users" => $users
-        ], 200);
     }
 }
