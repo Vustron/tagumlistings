@@ -17,9 +17,12 @@ import { useForm } from "react-hook-form"
 // types
 import type { RegisterValues } from "@/lib/validation"
 
-// TODO: 🛠️ work in progress register mutation
+interface RegisterFormProps {
+  onSuccess?: () => void
+  onError?: () => void
+}
 
-const RegisterForm = () => {
+const RegisterForm = ({ onSuccess, onError }: RegisterFormProps) => {
   // init mutation
   const registerMutation = useRegisterAccount()
 
@@ -41,6 +44,11 @@ const RegisterForm = () => {
     })
 
     form.reset()
+    if (registerMutation.isSuccess) {
+      onSuccess?.()
+    } else {
+      onError?.()
+    }
   }
 
   return (
