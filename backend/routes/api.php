@@ -4,16 +4,14 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PropertyController;
 use Illuminate\Support\Facades\Route;
 
-// Vustron: kaning users kay pang-test ra kung nasave ba sa db
 
-// Public routes
-Route::get('/users', [AuthController::class, 'getAllUsers']);
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-
+Route::middleware('guest')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+});
 
 // Protected routes
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'check.token.expiration'])->group(function () {
     // User management routes
     Route::put('/user/update', [AuthController::class, 'update']);
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -25,7 +23,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Client representative routes
     Route::middleware('role:client_representative')->group(function () {
-        Route::get('/client_representative', [PropertyController::class, 'client_representative']);
+        Route::apiResource('property', PropertyController::class);
+        Route::put('/reserve/property/{property}', [PropertyController::class, 'reserve']);
+        Route::put('/sold/property/{property}', [PropertyController::class, 'sold']);
     });
 });
 
