@@ -12,7 +12,7 @@ export const env = createEnv({
   },
   // server env
   server: {
-    // TODO: server variables
+    API_URL: z.string().url(),
   },
   // client env
   client: {
@@ -20,6 +20,7 @@ export const env = createEnv({
   },
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
+    API_URL: process.env.API_URL,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

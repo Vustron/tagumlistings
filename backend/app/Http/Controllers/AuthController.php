@@ -8,27 +8,52 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+// Vustron: akung gi butngan ug try catch kay mu success pero wla nasave sa db
+// gi optional ranang name ug role tas hash ang password
     public function register(Request $request)
     {
-        $data = $request->validate([
-            "name" => "required",
-            "username" => 'required',
-            "email" => "required|email|unique:users",
-            "password" => "required|confirmed",
-            "role" => "required"
-        ]);
+        try {
+            // Validate the incoming request
+            $data = $request->validate([
+                "username" => 'required|string|unique:users,username',
+                "email" => "required|string|email|unique:users,email",
+                "password" => "required|string|min:8",
+                "name" => "nullable|string",
+                "role" => "nullable|string"
+            ]);
 
-        $user = User::create($data);
+            // Hash the password
+            $data['password'] = Hash::make($data['password']);
 
-        $token = $user->createToken($data['username'])->plainTextToken;
+            // Create the user
+            $user = User::create([
+                'username' => $data['username'],
+                'email' => $data['email'],
+                'password' => $data['password'],
+                'name' => $data['name'] ?? null,
+                'role' => $data['role'] ?? 'client'
+            ]);
 
-        return response()->json([
-            "message" => "Registered Successfully",
-            "user" => $user,
-            "token" => $token
-        ], 201);
+            // Create token
+            $token = $user->createToken($data['username'])->plainTextToken;
+
+            // Return response
+            return response()->json([
+                "message" => "Registered Successfully",
+                "user" => $user,
+                "token" => $token
+            ], 201);
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Registration failed: ' . $e->getMessage());
+            \Log::error($e->getTraceAsString());
+
+            return response()->json([
+                "message" => "Registration failed",
+                "error" => $e->getMessage()
+            ], 500);
+        }
     }
-
 
     public function login(Request $request)
     {
@@ -72,7 +97,7 @@ class AuthController extends Controller
 
         if(isset($data['password'])){
             $data['password'] = Hash::make($data['password']);
-        } 
+        }
 
         unset($data['role']);
         $user->update($data);
@@ -88,5 +113,16 @@ class AuthController extends Controller
     {
         $request->user()->tokens()->delete();
         return response()->json(['message' => 'Logged out successfully']);
+    }
+
+// Vustron: kani kay mu return ra sa tanan users nga na save sa db
+    public function getAllUsers()
+    {
+        $users = User::all();
+
+        return response()->json([
+            "message" => "Users retrieved successfully",
+            "users" => $users
+        ], 200);
     }
 }

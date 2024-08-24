@@ -22,11 +22,9 @@ POST http://127.0.0.1:8000/api/register HTTP/1.1
 Content-Type: {{contentType}}
 
 {
-   "name": "Test",
    "username": "Test",
    "email":"test@email.com",
    "password":"12345678",
-   "role":"user"
 }
 
 ###
