@@ -40,20 +40,22 @@ class AuthController extends Controller
 
         $user = User::where('username', $data["username"])->first();
 
-        if(!$user || !Hash::check($data["password"], $user->password)){
+        if($user && Hash::check($data["password"], $user->password)){
+            $user->tokens()->delete();
+
+            $expiration = now()->addHours(2);
+            $token = $user->createToken($data['username'], ['expiration' => $expiration])->plainTextToken;
+
             return response()->json([
-                "message" => "Invalid Credentials"
-            ], 401);
+                "message" => "Login Successfully",
+                "token"   => $token,
+                'token_expires_at' => $expiration
+            ], 200);
         }
 
-        $token = $user->createToken($data['username'])->plainTextToken;
-        // $cookie = cookie('auth_token', $token, 60 * 24, "/", "localhost", false, true, false, 'None');
-
-
         return response()->json([
-            "message" => "Login Successfully",
-            "token" => $token
-        ], 200);
+            "message" => "Invalid Credentials"
+        ], 401);
 
     }
 
