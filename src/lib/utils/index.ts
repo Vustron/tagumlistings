@@ -12,6 +12,18 @@ import type DOMPurify from "dompurify"
 import type { NextRequest } from "next/server"
 import type { z } from "zod"
 
+// Helper function to determine badge color based on role
+export const getRoleBadgeColor = (role: string) => {
+  switch (role.toLowerCase()) {
+    case "client":
+      return "bg-blue-100 text-blue-800 hover:text-white dark:hover:text-black"
+    case "admin":
+      return "bg-green-100 text-green-800 hover:text-white dark:hover:text-black"
+    default:
+      return "bg-gray-100 text-gray-800"
+  }
+}
+
 // Unique Id generator
 export function createUniqueId(
   length: number = 21,

@@ -11,17 +11,20 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import toast from "react-hot-toast"
 
 // hooks
-// import { useRegisterAccount } from "@/app/(auth)/register/api"
+import { useRegisterAccount } from "@/app/(auth)/register/api"
 import { useForm } from "react-hook-form"
 
 // types
 import type { RegisterValues } from "@/lib/validation"
 
-// TODO: 🛠️ work in progress register mutation
+interface RegisterFormProps {
+  onSuccess?: () => void
+  onError?: () => void
+}
 
-const RegisterForm = () => {
+const RegisterForm = ({ onSuccess, onError }: RegisterFormProps) => {
   // init mutation
-  // const registerMutation = useRegisterAccount()
+  const registerMutation = useRegisterAccount()
 
   // init form
   const form = useForm<RegisterValues>({
@@ -34,13 +37,18 @@ const RegisterForm = () => {
 
   // submit handler
   const submitHandler = async (values: RegisterValues) => {
-    // await toast.promise(registerMutation.mutateAsync(values), {
-    //   loading: <span className="animate-pulse">Registering...</span>,
-    //   success: "Account registered",
-    //   error: (error: unknown) => clientErrorHandler(error),
-    // })
+    await toast.promise(registerMutation.mutateAsync(values), {
+      loading: <span className="animate-pulse">Registering...</span>,
+      success: "Account registered",
+      error: (error: unknown) => clientErrorHandler(error),
+    })
 
     form.reset()
+    if (registerMutation.isSuccess) {
+      onSuccess?.()
+    } else {
+      onError?.()
+    }
   }
 
   return (
@@ -49,7 +57,7 @@ const RegisterForm = () => {
       onSubmit={submitHandler}
       fields={registerFields}
       submitButtonTitle="Register"
-      // mutation={() => {}}
+      mutation={registerMutation}
     />
   )
 }
