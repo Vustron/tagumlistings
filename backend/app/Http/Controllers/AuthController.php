@@ -5,17 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-// Vustron: akung gi butngan ug try catch kay mu success pero wla nasave sa db
-// gi optional ranang name ug role tas hash ang password
+
     public function register(Request $request)
     {
         try {
-            // Validate the incoming request
+
             $data = $request->validate([
                 "username" => 'required|string|unique:users,username',
                 "email" => "required|string|email|unique:users,email",
@@ -24,11 +24,9 @@ class AuthController extends Controller
                 "role" => "nullable|string"
             ]);
 
-            // Hash the password
             $data['password'] = Hash::make($data['password']);
 
-            // Create the user
-            $user = User::create([
+            User::create([
                 'username' => $data['username'],
                 'email' => $data['email'],
                 'password' => $data['password'],
@@ -36,15 +34,8 @@ class AuthController extends Controller
                 'role' => $data['role'] ?? 'client'
             ]);
 
-            // Create token
-            $token = $user->createToken($data['username'])->plainTextToken;
 
-            // Return response
-            return response()->json([
-                "message" => "Registered Successfully",
-                "user" => $user,
-                "token" => $token
-            ], 201);
+            return response()->json(["message" => "Registered Successfully"], 201);
             
         } catch (\Exception $e) {
 
@@ -69,20 +60,13 @@ class AuthController extends Controller
             ]);
     
     
-            $user = User::where('username', $data["username"])->first();
-    
-            if($user && Hash::check($data["password"], $user->password)){
-                $user->tokens()->delete();
-    
-                $expiration = now()->addHours(2);
-                $token = $user->createToken($data['username'], ['expiration' => $expiration])->plainTextToken;
-    
-                return response()->json([
-                    "message" => "Login Successfully",
-                    "token"   => $token,
-                    'token_expires_at' => $expiration
-                ], 200);
+            if (!Auth::attempt($request->only('username', 'password'))) {
+                return response()->json(['message' => 'Invalid credentials'], 401);
             }
+    
+            $request->session()->regenerate();
+    
+            return response()->json(['message' => 'Login successful']);;
 
         } catch (\Exception $e) {
 
@@ -190,7 +174,10 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->tokens()->delete();
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return response()->json(['message' => 'Logged out successfully']);
     }
 }

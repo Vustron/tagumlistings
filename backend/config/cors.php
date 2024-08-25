@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'paths' => ['*'],
+    'paths' =>  ['api/*', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
 // Vustron: gibutngan pud ug cors kay dli mugana ang requests sa frontend
@@ -29,6 +29,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => true,
+    'supports_credentials' => true
 
 ];
