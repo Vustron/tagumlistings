@@ -79,52 +79,46 @@ class PropertyController extends Controller
     public function reserve(Request $request, Property $property)
     {
         
-       
         try {
 
             $data = $request->validate([
-                'status' => 'required',
                 'user_id' => 'required',
                 'appointment_date' => 'required|date_format:Y-m-d H:i:s'
             ]);
     
             DB::beginTransaction();
-    
 
-            if($data['status'] === 'reserved'){
-                $statusUpdated = $property->update([
-                    'status' => $data['status'],
-                    'user_id' => $data['user_id'],
-                ]);
-    
-                if($statusUpdated){
-    
-                    $existingAppointment = Appointment::where('property_id', $property->id)->first();
+            $propertyStatusUpdated = $property->update([
+                'status' => 'reserved',
+                'user_id' => $data['user_id'],
+            ]);
 
-                    // avoid property appointment duplication
-                    if ($existingAppointment) {
-                        return response()->json([
-                            'message' => 'An appointment already exists for this user and property.',
-                            'appointment_id' => $existingAppointment->id,
-                        ], 409); 
-                    }
-        
-    
-                    $appointment = Appointment::create([
-                        'appointment_date'  => $data['appointment_date'],
-                        'user_id'           => $data['user_id'],
-                        'property_id'       => $property->id,
-                    ]);
+            if($propertyStatusUpdated){
 
-                    DB::commit();
-        
+                $existingAppointment = Appointment::where('property_id', $property->id)->first();
+
+                if ($existingAppointment) {
                     return response()->json([
-                        'message' => 'Property Reserved Successfully',
-                        'property' => $property,
-                        'appointment_id' => $appointment->id,
-                    ], 200);
+                        'message' => 'An appointment already exists for this user and property.',
+                        'appointment_id' => $existingAppointment->id,
+                    ], 409); 
                 }
     
+
+                $appointment = Appointment::create([
+                    'appointment_date'  => $data['appointment_date'],
+                    'user_id'           => $data['user_id'],
+                    'property_id'       => $property->id,
+                ]);
+
+                DB::commit();
+    
+                return response()->json([
+                    'message' => 'Property Reserved Successfully',
+                    'property' => $property,
+                    'appointment_id' => $appointment->id,
+                ], 200);
+
     
             } 
 
@@ -146,31 +140,30 @@ class PropertyController extends Controller
         try {
 
             $data = $request->validate([
-                'status' => 'required',
                 'user_id' => 'required',
             ]);
     
             DB::beginTransaction();
-    
 
-            if ($data['status'] === 'sold'){
-                $statusUpdated = $property->update($data);
+            $propertyStatusUpdated = $property->update([
+                'status' => 'sold',
+                'user_id' => $data['user_id'],
+            ]);
 
-                if($statusUpdated){
-                    $appointment = Appointment::where('property_id', $property->id);
+            if($propertyStatusUpdated){
+                $appointment = Appointment::where('property_id', $property->id);
 
-                    if($appointment){
-                        $appointment->delete();
+                if($appointment){
+                    $appointment->delete();
 
-                        DB::commit();
+                    DB::commit();
 
-                        return response()->json([
-                            'message' => 'Property Sold Successfully',
-                            'property' => $property,
-                        ], 200);
-                    }
-                    
+                    return response()->json([
+                        'message' => 'Property Sold Successfully',
+                        'property' => $property,
+                    ], 200);
                 }
+                    
             }
 
         } catch (\Exception $e){
