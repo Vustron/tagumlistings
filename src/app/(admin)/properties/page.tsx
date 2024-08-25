@@ -5,6 +5,7 @@ import BounceWrapper from "@/components/shared/bounce"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 
 // utils
+import { properties } from "@/app/(admin)/properties/constants"
 import { propertiesItems } from "@/lib/misc/breadcrumb-lists"
 
 // types
@@ -23,7 +24,7 @@ export default function PropertiesPage() {
         <DynamicBreadcrumb items={propertiesItems} />
 
         {/* client */}
-        <PropertiesClient />
+        <PropertiesClient data={properties} />
       </BounceWrapper>
     </ContentLayout>
   )
