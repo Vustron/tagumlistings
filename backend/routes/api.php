@@ -13,7 +13,11 @@ Route::middleware('guest')->group(function () {
 // Protected routes
 Route::middleware(['auth:sanctum', 'check.token.expiration'])->group(function () {
     // User management routes
-    Route::put('/user/update', [AuthController::class, 'update']);
+    Route::get('/get/accounts', [AuthController::class, 'getAllAccounts']);
+    Route::get('/get/account/{id}', [AuthController::class, 'getAccountByID']);
+
+    Route::patch('/account/update/{id}', [AuthController::class, 'updateAccount']);
+    Route::delete('/account/delete/{id}', [AuthController::class, 'deleteAccount']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // Client routes
@@ -24,9 +28,12 @@ Route::middleware(['auth:sanctum', 'check.token.expiration'])->group(function ()
     // Client representative routes
     Route::middleware('role:client_representative')->group(function () {
         Route::apiResource('property', PropertyController::class);
-        Route::put('/reserve/property/{property}', [PropertyController::class, 'reserve']);
-        Route::put('/sold/property/{property}', [PropertyController::class, 'sold']);
+
+
+        Route::patch('/reserve/property/{property}', [PropertyController::class, 'reserve']);
+        Route::patch('/sold/property/{property}', [PropertyController::class, 'sold']);
     });
+
 });
 
 

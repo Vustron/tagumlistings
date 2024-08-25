@@ -34,7 +34,10 @@ class PropertyController extends Controller
 
         $property = Property::create($data);
 
-        return response()->json($property, 201);
+        return response()->json([
+            'message' => 'Property Created Successfully',
+            'property' => $property  
+        ], 201);
 
     }
 
@@ -55,7 +58,7 @@ class PropertyController extends Controller
         $property->update($data);
 
         return response()->json([
-            'message' => 'Property Sold Successfully',
+            'message' => 'Property Updated Successfully',
             'property' => $property,
         ], 200);
 
@@ -76,15 +79,17 @@ class PropertyController extends Controller
     public function reserve(Request $request, Property $property)
     {
         
-        $data = $request->validate([
-            'status' => 'required',
-            'user_id' => 'required',
-            'appointment_date' => 'required|date_format:Y-m-d H:i:s'
-        ]);
-
-        DB::beginTransaction();
-
+       
         try {
+
+            $data = $request->validate([
+                'status' => 'required',
+                'user_id' => 'required',
+                'appointment_date' => 'required|date_format:Y-m-d H:i:s'
+            ]);
+    
+            DB::beginTransaction();
+    
 
             if($data['status'] === 'reserved'){
                 $statusUpdated = $property->update([
@@ -95,7 +100,8 @@ class PropertyController extends Controller
                 if($statusUpdated){
     
                     $existingAppointment = Appointment::where('property_id', $property->id)->first();
-    
+
+                    // avoid property appointment duplication
                     if ($existingAppointment) {
                         return response()->json([
                             'message' => 'An appointment already exists for this user and property.',
@@ -127,7 +133,7 @@ class PropertyController extends Controller
             Log::error('Transaction failed: ' . $e->getMessage());
 
             return response()->json([
-                'message' => 'Server Error Occured',
+                'message' => 'Property Reservation Error',
                 'error'   => $e->getMessage()
             ], 500);
         }
@@ -137,14 +143,15 @@ class PropertyController extends Controller
     public function sold(Request $request, Property $property)
     {
 
-        $data = $request->validate([
-            'status' => 'required',
-            'user_id' => 'required',
-        ]);
-
-        DB::transaction();
-
         try {
+
+            $data = $request->validate([
+                'status' => 'required',
+                'user_id' => 'required',
+            ]);
+    
+            DB::beginTransaction();
+    
 
             if ($data['status'] === 'sold'){
                 $statusUpdated = $property->update($data);
@@ -171,7 +178,7 @@ class PropertyController extends Controller
             Log::error('Transaction failed: ' . $e->getMessage());
 
             return response()->json([
-                'message' => 'Server Error Occured',
+                'message' => 'Property Sold Error',
                 'error'   => $e->getMessage()
             ], 500);
         }
