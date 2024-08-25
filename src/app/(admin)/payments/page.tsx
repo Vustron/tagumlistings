@@ -1,6 +1,7 @@
 // components
 import ContentLayout from "@/app/(admin)/_components/content-layout"
 import PaymentsClient from "@/app/(admin)/payments/_components/client"
+import BounceWrapper from "@/components/shared/bounce"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 
 // utils
@@ -17,11 +18,13 @@ export const metadata: Metadata = {
 export default function PaymentsPage() {
   return (
     <ContentLayout title="Payments">
-      {/* breadcrumb */}
-      <DynamicBreadcrumb items={paymentsItems} />
+      <BounceWrapper>
+        {/* breadcrumb */}
+        <DynamicBreadcrumb items={paymentsItems} />
 
-      {/* client */}
-      <PaymentsClient />
+        {/* client */}
+        <PaymentsClient />
+      </BounceWrapper>
     </ContentLayout>
   )
 }

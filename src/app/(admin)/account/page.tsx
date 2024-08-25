@@ -1,6 +1,7 @@
 // components
 import ContentLayout from "@/app/(admin)/_components/content-layout"
 import AccountClient from "@/app/(admin)/account/_components/client"
+import BounceWrapper from "@/components/shared/bounce"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 
 // utils
@@ -17,11 +18,13 @@ export const metadata: Metadata = {
 export default function AccountPage() {
   return (
     <ContentLayout title="Account">
-      {/* breadcrumb */}
-      <DynamicBreadcrumb items={dashboardItems} />
+      <BounceWrapper>
+        {/* breadcrumb */}
+        <DynamicBreadcrumb items={dashboardItems} />
 
-      {/* client */}
-      <AccountClient />
+        {/* client */}
+        <AccountClient />
+      </BounceWrapper>
     </ContentLayout>
   )
 }

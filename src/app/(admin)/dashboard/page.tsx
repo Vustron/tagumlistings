@@ -1,6 +1,7 @@
 // components
 import ContentLayout from "@/app/(admin)/_components/content-layout"
 import AdminDashboardClient from "@/app/(admin)/dashboard/_components/client"
+import BounceWrapper from "@/components/shared/bounce"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 
 // utils
@@ -17,11 +18,14 @@ export const metadata: Metadata = {
 export default function AdminDashboardPage() {
   return (
     <ContentLayout title="Dashboard">
-      {/* breadcrumb */}
-      <DynamicBreadcrumb items={dashboardItems} />
+      <BounceWrapper>
+        {/* breadcrumb */}
+        <DynamicBreadcrumb items={dashboardItems} />
 
-      {/* client */}
-      <AdminDashboardClient />
+        {/* client */}
+
+        <AdminDashboardClient />
+      </BounceWrapper>
     </ContentLayout>
   )
 }

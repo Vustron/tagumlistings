@@ -1,6 +1,7 @@
 // components
 import ContentLayout from "@/app/(admin)/_components/content-layout"
 import AppointmentsClient from "@/app/(admin)/appointments/_components/client"
+import BounceWrapper from "@/components/shared/bounce"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 
 // utils
@@ -17,11 +18,14 @@ export const metadata: Metadata = {
 export default function AppointmentsPage() {
   return (
     <ContentLayout title="Appointments">
-      {/* breadcrumb */}
-      <DynamicBreadcrumb items={appointmentsItems} />
+      <BounceWrapper>
+        {/* breadcrumb */}
+        <DynamicBreadcrumb items={appointmentsItems} />
 
-      {/* client */}
-      <AppointmentsClient />
+        {/* client */}
+
+        <AppointmentsClient />
+      </BounceWrapper>
     </ContentLayout>
   )
 }

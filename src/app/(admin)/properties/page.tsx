@@ -1,6 +1,7 @@
 // components
 import ContentLayout from "@/app/(admin)/_components/content-layout"
 import PropertiesClient from "@/app/(admin)/properties/_components/client"
+import BounceWrapper from "@/components/shared/bounce"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 
 // utils
@@ -17,11 +18,13 @@ export const metadata: Metadata = {
 export default function PropertiesPage() {
   return (
     <ContentLayout title="Properties">
-      {/* breadcrumb */}
-      <DynamicBreadcrumb items={propertiesItems} />
+      <BounceWrapper>
+        {/* breadcrumb */}
+        <DynamicBreadcrumb items={propertiesItems} />
 
-      {/* client */}
-      <PropertiesClient />
+        {/* client */}
+        <PropertiesClient />
+      </BounceWrapper>
     </ContentLayout>
   )
 }

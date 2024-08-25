@@ -16,7 +16,10 @@ class Property extends Model
         "status",
         "user_id",
         "appointment_id",
+        "propertyPics",
     ];
 
-    
+    protected $casts = [
+        'propertyPics' => 'array',
+    ];
 }

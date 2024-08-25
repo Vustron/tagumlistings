@@ -1,10 +1,11 @@
 // components
 import ContentLayout from "@/app/(admin)/_components/content-layout"
 import UsersClient from "@/app/(admin)/users/_components/client"
+import BounceWrapper from "@/components/shared/bounce"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 
-import { users } from "@/app/(admin)/users/constants"
 // utils
+import { users } from "@/app/(admin)/users/constants"
 import { usersItems } from "@/lib/misc/breadcrumb-lists"
 
 // types
@@ -18,11 +19,13 @@ export const metadata: Metadata = {
 export default function UsersPage() {
   return (
     <ContentLayout title="Users">
-      {/* breadcrumb */}
-      <DynamicBreadcrumb items={usersItems} />
+      <BounceWrapper>
+        {/* breadcrumb */}
+        <DynamicBreadcrumb items={usersItems} />
 
-      {/* client */}
-      <UsersClient data={users} />
+        {/* client */}
+        <UsersClient data={users} />
+      </BounceWrapper>
     </ContentLayout>
   )
 }

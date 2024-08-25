@@ -82,7 +82,6 @@ return [
             ]) : [],
         ],
 
-// Vustron: kaning db kay elisdi rani balik sa inyung env
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DB_URL'),

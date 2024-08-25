@@ -18,7 +18,7 @@ return [
     'paths' =>  ['api/*', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
-// Vustron: gibutngan pud ug cors kay dli mugana ang requests sa frontend
+
     'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:3000')],
 
     'allowed_origins_patterns' => [],

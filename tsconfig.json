@@ -6,9 +6,12 @@
     "skipLibCheck": true,
     "allowJs": true,
     "useDefineForClassFields": true,
-    "lib": ["esnext", "dom", "dom.iterable"],
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ],
     "skipDefaultLibCheck": true,
-
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
@@ -22,19 +25,18 @@
         "name": "next"
       }
     ],
-
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "checkJs": true,
-
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     }
   },
-
   "include": [
     ".lefthook.yml",
     ".eslintrc.cjs",
@@ -47,6 +49,8 @@
     "**/*.js",
     ".next/types/**/*.ts"
   ],
-
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "vendor"
+  ]
 }
