@@ -19,8 +19,7 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
 
-// Vustron: kani kay tig log sa db sa mga errors or something
-     public function boot(): void
+    public function boot(): void
     {
         if (config('app.debug')) {
             DB::listen(function ($query) {

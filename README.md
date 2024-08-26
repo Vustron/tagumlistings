@@ -5,7 +5,8 @@
 > To run the development frontend server use
 
 # Frontend
-```
+
+``` javascript
 turbo dev
 npm run dev
 ```
@@ -14,15 +15,14 @@ npm run dev
 > To run the development backend server use
 
 # Backend
-```
+
+```javascript
 cd backend
 php artisan serve
 ```
 
-
 # **Contributors**
+
 - <a href="https://github.com/Vustron">Vustron</a>
 - <a href="https://github.com/johnkristanf">johnkristanf</a>
 - <a href="https://github.com/MaikuSliver">MaikuSliver</a>
-
-
