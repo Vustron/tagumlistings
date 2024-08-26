@@ -15,6 +15,7 @@ Route::middleware(['web', 'guest'])->group(function () {
 Route::middleware(['web', 'auth:sanctum', 'check.token.expiration'])->group(function () {
 
     // User management routes
+    Route::get('/get/profile', [AuthController::class, 'getProfile']);
     Route::get('/get/accounts', [AuthController::class, 'getAllAccounts']);
     Route::get('/get/account/{id}', [AuthController::class, 'getAccountByID']);
 
@@ -25,7 +26,7 @@ Route::middleware(['web', 'auth:sanctum', 'check.token.expiration'])->group(func
 
     // Client routes
     Route::middleware('role:client')->group(function () {
-        Route::get('/client', [PropertyController::class, 'client']);
+        Route::get('/client/property', [PropertyController::class, 'client']);
     });
 
     
