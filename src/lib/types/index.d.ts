@@ -37,13 +37,20 @@ export type SiteConfig = {
 
 /* --------------Components Types---------------- */
 
+/* SelectOption Type */
+interface SelectOption {
+  value: string
+  label: string
+}
+
 /* FieldConfig Type */
 interface FieldConfig<TFieldValues> {
   name: Path<TFieldValues>
-  type: string
+  type: "text" | "password" | "email" | "number" | "select" | "image"
   label: string
   placeholder: string
   className?: string
+  options?: SelectOption[]
 }
 
 /* Mutation Type */
@@ -60,6 +67,10 @@ interface DynamicFormProps<TFieldValues extends FieldValues> {
   mutation?: Mutation
   className?: string
   disabled?: boolean
+  submitButtonClassname?: string
+  submitButtonTitleClassname?: string
+  cloudinaryCloudName?: string
+  cloudinaryUploadPreset?: string
 }
 
 /* Unique Id Type */

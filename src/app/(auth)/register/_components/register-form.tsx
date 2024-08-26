@@ -57,6 +57,8 @@ const RegisterForm = ({ onSuccess, onError }: RegisterFormProps) => {
       onSubmit={submitHandler}
       fields={registerFields}
       submitButtonTitle="Register"
+      submitButtonClassname="bg-green-500 rounded-3xl"
+      submitButtonTitleClassname="text-md font-medium"
       mutation={registerMutation}
     />
   )

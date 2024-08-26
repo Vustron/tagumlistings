@@ -11,7 +11,9 @@ export const Heading: React.FC<HeadingProps> = ({
 }) => {
   return (
     <div className={className}>
-      <h2 className="text-3xl font-bold tracking-tight mt-3">{title}</h2>
+      <h2 className="text-3xl font-bold tracking-tight mt-3 text-green-600">
+        {title}
+      </h2>
       <p className="text-sm text-muted-foreground">{description}</p>
     </div>
   )

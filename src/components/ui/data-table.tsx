@@ -50,6 +50,7 @@ import type {
   SortingState,
   VisibilityState,
 } from "@tanstack/react-table"
+import { useRouter } from "next-nprogress-bar"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -72,6 +73,9 @@ export default function DataTable<TData, TValue>({
   isOnProperties,
   placeholder,
 }: DataTableProps<TData, TValue>) {
+  // init router
+  const router = useRouter()
+
   // confirmation state
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure?",
@@ -166,7 +170,12 @@ export default function DataTable<TData, TValue>({
 
             {/* create ne report */}
             {isOnProperties && (
-              <Button variant="outline" size="sm" className="shadow-sm">
+              <Button
+                variant="outline"
+                size="sm"
+                className="shadow-sm"
+                onClick={() => router.push("/properties/new")}
+              >
                 <PlusIcon className="mr-2 size-4" aria-hidden="true" />
                 New Property
               </Button>

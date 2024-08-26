@@ -3,6 +3,9 @@ import Menu from "@/app/(admin)/_components/menu"
 import { Button } from "@/components/ui/button"
 import SidebarToggle from "@/components/ui/sidebar-toggle"
 
+// assets
+import logo from "@/app/assets/icons/logo.jpg"
+
 // hooks
 import { useSidebarToggle } from "@/lib/hooks/use-sidebar-toggle"
 import { useStore } from "@/lib/hooks/use-store"
@@ -40,18 +43,16 @@ const Sidebar = () => {
           {/* brand logo */}
           <Link href="/dashboard" className="flex items-center gap-2">
             <Image
-              src="/icons/icon.ico"
+              src={logo}
               alt="logo"
               priority
-              height={500}
-              width={500}
               sizes="100vh"
               className="object contain rounded-full size-8"
             />
 
             <h1
               className={cn(
-                "font-bold text-lg whitespace-nowrap transition-[transform,opacity,display] ease-in-out duration-300",
+                "font-bold text-lg whitespace-nowrap transition-[transform,opacity,display] ease-in-out duration-300 text-green-600",
                 sidebar?.isOpen === false
                   ? "-translate-x-96 opacity-0 hidden"
                   : "translate-x-0 opacity-100",

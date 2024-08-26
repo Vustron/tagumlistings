@@ -51,6 +51,13 @@ export const propertiesItems: BreadcrumbItemProps[] = [
   { label: "Properties" },
 ]
 
+// addProperties
+export const addPropertiesItems: BreadcrumbItemProps[] = [
+  { label: "Dashboard", href: "/dashboard" },
+  { label: "Properties", href: "/properties" },
+  { label: "Add Property" },
+]
+
 // property
 export const propertyItems: BreadcrumbItemProps[] = [
   { label: "Dashboard", href: "/dashboard" },

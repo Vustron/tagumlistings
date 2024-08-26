@@ -26,10 +26,13 @@ export const loginSchema = z.object({
 /* loginSchema Type */
 export type LoginValues = z.infer<typeof loginSchema>
 
-// postSchema
-export const createPostSchema = z.object({
-  content: requiredString,
+// addPropertySchema
+export const addPropertySchema = z.object({
+  category: requiredString,
+  location: requiredString,
+  status: requiredString,
+  propertyPics: z.array(z.string().url("Invalid URL")).optional(),
 })
 
 /* postSchema Type */
-export type createPostValues = z.infer<typeof createPostSchema>
+export type AddPropertyValues = z.infer<typeof addPropertySchema>

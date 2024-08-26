@@ -2,6 +2,9 @@
 import LoginForm from "@/app/(auth)/login/_components/login-form"
 import BounceWrapper from "@/components/shared/bounce"
 
+// assets
+import bgAuth from "@/app/assets/images/bg_auth.jpg"
+
 // utils
 import Image from "next/image"
 import Link from "next/link"
@@ -39,7 +42,7 @@ export default function LoginPage() {
 
           {/* bg */}
           <Image
-            src="/images/login.jpg"
+            src={bgAuth}
             alt=""
             className="hidden w-1/2 object-cover md:block"
             width={1920}

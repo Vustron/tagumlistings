@@ -13,11 +13,11 @@ import { useRouter } from "next/navigation"
 import type { Property } from "@/app/(admin)/properties/constants"
 import type { Row } from "@tanstack/react-table"
 
-interface UsersClientProps {
+interface PropertiesClientProps {
   data: Property[]
 }
 
-const UsersClient = ({ data }: UsersClientProps) => {
+const PropertiesClient = ({ data }: PropertiesClientProps) => {
   // init delete handler
   const handleDelete = async (rows: Row<Property>[]) => {
     // const ids = rows.map((r) => r.original.id)
@@ -49,4 +49,4 @@ const UsersClient = ({ data }: UsersClientProps) => {
   )
 }
 
-export default UsersClient
+export default PropertiesClient

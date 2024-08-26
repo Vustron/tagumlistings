@@ -9,6 +9,9 @@ import {
 } from "@/components/ui/sheet"
 import { MenuIcon } from "lucide-react"
 
+// assets
+import logo from "@/app/assets/icons/logo.jpg"
+
 // utils
 import Image from "next/image"
 import Link from "next/link"
@@ -31,7 +34,7 @@ const SheetMenu = () => {
             {/* brand logo */}
             <Link href="/dashboard" className="flex items-center gap-2">
               <Image
-                src="/icons/icon.ico"
+                src={logo}
                 alt="logo"
                 priority
                 height={500}
@@ -40,7 +43,9 @@ const SheetMenu = () => {
                 className="object contain rounded-full size-8"
               />
 
-              <h1 className="font-bold text-lg">TagumListings</h1>
+              <h1 className="font-bold text-lg text-green-600">
+                TagumListings
+              </h1>
             </Link>
           </Button>
         </SheetHeader>

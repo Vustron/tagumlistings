@@ -49,6 +49,8 @@ const LoginForm = () => {
       onSubmit={submitHandler}
       fields={loginFields}
       submitButtonTitle="Login"
+      submitButtonClassname="bg-green-500 rounded-3xl"
+      submitButtonTitleClassname="text-md font-medium"
       // mutation={() => {}}
     />
   )

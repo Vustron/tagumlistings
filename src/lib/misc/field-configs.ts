@@ -1,6 +1,10 @@
 // types
 import type { FieldConfig } from "@/lib/types"
-import type { LoginValues, RegisterValues } from "@/lib/validation"
+import type {
+  AddPropertyValues,
+  LoginValues,
+  RegisterValues,
+} from "@/lib/validation"
 
 // register form fields
 export const registerFields: FieldConfig<RegisterValues>[] = [
@@ -37,5 +41,43 @@ export const loginFields: FieldConfig<LoginValues>[] = [
     type: "password",
     label: "Password",
     placeholder: "******",
+  },
+]
+
+// add property form fields
+export const addPropertyFields: FieldConfig<AddPropertyValues>[] = [
+  {
+    name: "category",
+    type: "select",
+    label: "Category",
+    placeholder: "Select a category",
+    options: [
+      { value: "residential", label: "Residential" },
+      { value: "commercial", label: "Commercial" },
+      { value: "industrial", label: "Industrial" },
+    ],
+  },
+  {
+    name: "location",
+    type: "text",
+    label: "Location",
+    placeholder: "123 street",
+  },
+  {
+    name: "status",
+    type: "select",
+    label: "Status",
+    placeholder: "Select a status",
+    options: [
+      { value: "available", label: "Available" },
+      { value: "sold", label: "Sold" },
+      { value: "reserved", label: "Reserved" },
+    ],
+  },
+  {
+    name: "propertyPics",
+    type: "image",
+    label: "Property Image",
+    placeholder: "Upload property image",
   },
 ]

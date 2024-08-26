@@ -38,8 +38,8 @@ const AppointmentsChart = () => {
       label: "Appointments",
       icon: Monitor,
       theme: {
-        light: "#2563eb",
-        dark: "#26CDDC",
+        light: "#17DE28",
+        dark: "#17DE28",
       },
     },
   } satisfies ChartConfig
@@ -48,7 +48,7 @@ const AppointmentsChart = () => {
     <Card>
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-          <CardTitle>Appointments</CardTitle>
+          <CardTitle className="text-green-600">Appointments</CardTitle>
           <CardDescription>
             Showing total appointments for the last 3 months
           </CardDescription>

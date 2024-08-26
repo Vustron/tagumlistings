@@ -23,7 +23,7 @@ export const siteConfig: SiteConfig = {
     description:
       "A web-based real estate brokenage appointment and reservation system for RME",
     openGraph: { images: ["/og"] },
-    icons: [{ rel: "icon", url: "/icons/icon.ico" }],
+    icons: [{ rel: "icon", url: "/icons/favicon.ico" }],
   },
   viewport: {
     themeColor: [

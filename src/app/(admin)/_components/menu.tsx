@@ -76,7 +76,7 @@ const Menu = ({ isOpen }: MenuProps) => {
                           <TooltipTrigger asChild>
                             <Button
                               variant={active ? "secondary" : "ghost"}
-                              className="w-full justify-start h-10 mb-1"
+                              className={`w-full justify-start h-10 mb-1 ${active ? "bg-green-600 text-white hover:bg-green-400" : "text-black dark:text-white bg-background"}`}
                               asChild
                             >
                               <Link href={href}>

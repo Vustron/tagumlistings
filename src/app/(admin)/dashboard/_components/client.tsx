@@ -30,7 +30,9 @@ const AdminDashboardClient = () => {
 
         <Card className="col-span-4 md:col-span-3">
           <CardHeader>
-            <CardTitle>Recent Appointments</CardTitle>
+            <CardTitle className="text-green-600">
+              Recent Appointments
+            </CardTitle>
             <CardDescription>
               There are 69 appointments for this month.
             </CardDescription>

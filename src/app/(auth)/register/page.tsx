@@ -2,6 +2,9 @@
 import RegisterForm from "@/app/(auth)/register/_components/register-form"
 import BounceWrapper from "@/components/shared/bounce"
 
+// assets
+import bgAuth from "@/app/assets/images/bg_auth.jpg"
+
 // utils
 import Image from "next/image"
 import Link from "next/link"
@@ -41,7 +44,7 @@ export default function RegisterPage() {
 
           {/* bg */}
           <Image
-            src="/images/register.jpg"
+            src={bgAuth}
             alt=""
             className="hidden w-1/2 object-cover md:block"
             width={1920}
