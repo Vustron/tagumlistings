@@ -13,14 +13,21 @@ class PropertyController extends Controller
   
     public function index(Request $request)
     {
-        $properties = Property::when($request->search, function ($query) use ($request) {
-            $searchTerm = strtolower($request->search);
-    
-            $query
-                ->whereRaw('LOWER(category) LIKE ?', ["%{$searchTerm}%"])
-                ->orWhere('location', 'like', "%{$searchTerm}%");
-        })->paginate(10)->withQueryString();
-    
+        $properties = Property::query()
+            ->when($request->status, function ($query) use ($request) {
+                $query->where('status', strtolower($request->status));
+            })
+            ->when($request->search, function ($query) use ($request) {
+                $searchTerm = strtolower($request->search);
+
+                $query->where(function ($query) use ($searchTerm) {
+                    $query->whereRaw('LOWER(category) LIKE ?', ["%{$searchTerm}%"])
+                        ->orWhere('location', 'like', "%{$searchTerm}%");
+                });
+            })
+            ->paginate(10)
+            ->withQueryString();
+        
         return response()->json($properties, 200);
     }
 
