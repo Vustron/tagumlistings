@@ -54,7 +54,7 @@ class AuthController extends Controller
 
         try {
 
-            $data = $request->validate([
+            $request->validate([
                 "username" => "required|exists:users,username",
                 "password" => "required"
             ]);
@@ -78,6 +78,12 @@ class AuthController extends Controller
             ], 401);
         }
        
+    }
+
+
+    public function getProfile(){
+        $authenticatedUser = Auth::user();
+        return response()->json(['user' => $authenticatedUser], 200);
     }
 
     public function getAllAccounts()
