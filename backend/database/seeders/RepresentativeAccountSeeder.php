@@ -15,11 +15,12 @@ class RepresentativeAccountSeeder extends Seeder
     public function run(): void
     {
         DB::table('users')->insert([
-            'name'      => 'Joshua',
-            'username'  => 'joshua123',
-            'email'     => 'joshua@gmail.com',
-            'password'  =>  Hash::make('joshua123'),
-            'role'      => 'client_representative'
+            'name'              => 'Joshua',
+            'address'           => 'Barangay Gredu Panabo City',
+            'contact_number'    => '+63-987-685-4678',
+            'email'             => 'joshua@gmail.com',
+            'password'          =>  Hash::make('joshua123'),
+            'role'              => 'company_representative'
         ]);
     }
 }
