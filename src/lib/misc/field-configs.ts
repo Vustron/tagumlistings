@@ -4,10 +4,33 @@ import type {
   AddPropertyValues,
   LoginValues,
   RegisterValues,
+  UpdateAccountValues,
 } from "@/lib/validation"
 
 // register form fields
 export const registerFields: FieldConfig<RegisterValues>[] = [
+  {
+    name: "email",
+    type: "email",
+    label: "Email address",
+    placeholder: "john@test.com",
+  },
+  {
+    name: "username",
+    type: "text",
+    label: "Username",
+    placeholder: "john",
+  },
+  {
+    name: "password",
+    type: "password",
+    label: "Password",
+    placeholder: "******",
+  },
+]
+
+// register form fields
+export const updateAccountFields: FieldConfig<UpdateAccountValues>[] = [
   {
     name: "email",
     type: "email",
@@ -47,6 +70,12 @@ export const loginFields: FieldConfig<LoginValues>[] = [
 // add property form fields
 export const addPropertyFields: FieldConfig<AddPropertyValues>[] = [
   {
+    name: "propertyPics",
+    type: "image",
+    label: "Property Image",
+    placeholder: "Upload property image",
+  },
+  {
     name: "category",
     type: "select",
     label: "Category",
@@ -73,11 +102,5 @@ export const addPropertyFields: FieldConfig<AddPropertyValues>[] = [
       { value: "sold", label: "Sold" },
       { value: "reserved", label: "Reserved" },
     ],
-  },
-  {
-    name: "propertyPics",
-    type: "image",
-    label: "Property Image",
-    placeholder: "Upload property image",
   },
 ]

@@ -6,6 +6,12 @@ interface BreadcrumbItemProps {
 // dashboard
 export const dashboardItems: BreadcrumbItemProps[] = [{ label: "Dashboard" }]
 
+// account
+export const accountItems: BreadcrumbItemProps[] = [
+  { label: "Dashboard", href: "/dashboard" },
+  { label: "Account" },
+]
+
 // users
 export const usersItems: BreadcrumbItemProps[] = [
   { label: "Dashboard", href: "/dashboard" },
@@ -63,4 +69,10 @@ export const propertyItems: BreadcrumbItemProps[] = [
   { label: "Dashboard", href: "/dashboard" },
   { label: "Properties", href: "/properties" },
   { label: "Property" },
+]
+
+// messages
+export const messagesItems: BreadcrumbItemProps[] = [
+  { label: "Dashboard", href: "/dashboard" },
+  { label: "Messages" },
 ]

@@ -1,29 +1,29 @@
 // components
 import ContentLayout from "@/app/(admin)/_components/content-layout"
-import AccountClient from "@/app/(admin)/account/_components/client"
+import MessagesClient from "@/app/(admin)/messages/_components/client"
 import BounceWrapper from "@/components/shared/bounce"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 
 // utils
-import { accountItems } from "@/lib/misc/breadcrumb-lists"
+import { messagesItems } from "@/lib/misc/breadcrumb-lists"
 
 // types
 import type { Metadata } from "next"
 
 // meta data
 export const metadata: Metadata = {
-  title: "Account",
+  title: "Messages",
 }
 
-export default function AccountPage() {
+export default function MessagesPage() {
   return (
-    <ContentLayout title="Account">
+    <ContentLayout title="Messages">
       <BounceWrapper>
         {/* breadcrumb */}
-        <DynamicBreadcrumb items={accountItems} />
+        <DynamicBreadcrumb items={messagesItems} />
 
         {/* client */}
-        <AccountClient />
+        <MessagesClient />
       </BounceWrapper>
     </ContentLayout>
   )

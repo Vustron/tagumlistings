@@ -4,6 +4,7 @@ import {
   HandCoins,
   LandPlot,
   LayoutGrid,
+  MessageSquareText,
   Settings,
   Users,
 } from "lucide-react"
@@ -61,6 +62,13 @@ export function getMenuList(pathname: string): Group[] {
           label: "Payments",
           active: pathname.includes("/payments"),
           icon: HandCoins,
+          submenus: [],
+        },
+        {
+          href: "/messages",
+          label: "Messages",
+          active: pathname.includes("/messages"),
+          icon: MessageSquareText,
           submenus: [],
         },
       ],

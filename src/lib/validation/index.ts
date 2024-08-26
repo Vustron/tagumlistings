@@ -17,6 +17,19 @@ export const registerSchema = z.object({
 /* RegisterValues Type */
 export type RegisterValues = z.infer<typeof registerSchema>
 
+// updateAccountSchema
+export const updateAccountSchema = z.object({
+  email: requiredString.email("Invalid email address"),
+  username: requiredString.regex(
+    /^[a-zA-Z0-9_-]+$/,
+    "Only letters, numbers, - and _ are allowed",
+  ),
+  password: requiredString.min(8, "Must be at least 8 characters"),
+})
+
+/* UpdateAccountValues Type */
+export type UpdateAccountValues = z.infer<typeof updateAccountSchema>
+
 // loginSchema
 export const loginSchema = z.object({
   username: requiredString,
