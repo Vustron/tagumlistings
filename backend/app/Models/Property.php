@@ -11,6 +11,10 @@ class Property extends Model
     use HasFactory, HasApiTokens;
 
     protected $fillable = [
+        "property_name",
+        "description",
+        "price",
+        "reservation_fee",
         "category",
         "location",
         "status",
