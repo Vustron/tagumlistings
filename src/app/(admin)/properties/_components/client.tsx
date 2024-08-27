@@ -7,7 +7,7 @@ import { Heading } from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
 
 // hooks
-import { useRouter } from "next/navigation"
+// import { useRouter } from "next/navigation"
 
 // types
 import type { Property } from "@/app/(admin)/properties/constants"
@@ -26,6 +26,7 @@ const PropertiesClient = ({ data }: PropertiesClientProps) => {
     //   success: "Users deleted",
     //   error: (error: unknown) => clientErrorHandler(error),
     // })
+    console.log(rows.map((row) => row.original.id))
   }
 
   return (

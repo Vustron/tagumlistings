@@ -12,6 +12,17 @@ import type DOMPurify from "dompurify"
 import type { NextRequest } from "next/server"
 import type { z } from "zod"
 
+// Helper function to format date
+export const formatDate = (dateString: string) => {
+  const date = new Date(dateString)
+  return date.toLocaleDateString("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric",
+  })
+}
+
+// change color badge function
 export const getPercentageChangeColor = (percentageChange: string) => {
   const value = Number.parseFloat(percentageChange)
   return value >= 0

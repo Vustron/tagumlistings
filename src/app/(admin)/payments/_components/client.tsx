@@ -1,15 +1,52 @@
-// components
-import { Card, CardContent } from "@/components/ui/card"
+"use client"
 
-const PaymentsClient = () => {
+// components
+import { columns } from "@/app/(admin)/payments/_components/columns"
+import DataTable from "@/components/ui/data-table"
+import { Heading } from "@/components/ui/heading"
+import { Separator } from "@/components/ui/separator"
+
+// hooks
+// import { useRouter } from "next/navigation"
+
+// types
+import type { Payments } from "@/app/(admin)/payments/constants"
+import type { Row } from "@tanstack/react-table"
+
+interface PaymentsClientProps {
+  data: Payments[]
+}
+
+const PaymentsClient = ({ data }: PaymentsClientProps) => {
+  // init delete handler
+  const handleDelete = async (rows: Row<Payments>[]) => {
+    // const ids = rows.map((r) => r.original.id)
+    // await toast.promise(deleteAccounts.mutateAsync({ ids }), {
+    //   loading: <span className="animate-pulse">Deleting users...</span>,
+    //   success: "Users deleted",
+    //   error: (error: unknown) => clientErrorHandler(error),
+    // })
+    console.log(rows.map((row) => row.original.id))
+  }
+
   return (
-    <Card className="rounded-lg border-none mt-6">
-      <CardContent className="p-6">
-        <div className="flex justify-center items-center min-h-[calc(100vh-56px-64px-20px-24px-56px-48px)]">
-          <div className="flex flex-col relative">Payments</div>
-        </div>
-      </CardContent>
-    </Card>
+    <>
+      <div className="flex items-start justify-between">
+        <Heading
+          title={`Payments (${data.length})`}
+          description="Manage payments"
+        />
+      </div>
+      <Separator className="mt-2" />
+      <DataTable
+        filterKey="property"
+        placeholder="123, Anytown"
+        columns={columns}
+        data={data || []}
+        isOnPayments
+        onDelete={handleDelete}
+      />
+    </>
   )
 }
 

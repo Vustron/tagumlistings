@@ -60,6 +60,7 @@ interface DataTableProps<TData, TValue> {
   disabled?: boolean
   isOnUsers?: boolean
   isOnProperties?: boolean
+  isOnPayments?: boolean
   placeholder: string
 }
 
@@ -71,6 +72,7 @@ export default function DataTable<TData, TValue>({
   disabled,
   isOnUsers,
   isOnProperties,
+  isOnPayments,
   placeholder,
 }: DataTableProps<TData, TValue>) {
   // init router
@@ -168,7 +170,7 @@ export default function DataTable<TData, TValue>({
             {/* create new user */}
             {isOnUsers && <CreateUserModal />}
 
-            {/* create ne report */}
+            {/* create new property */}
             {isOnProperties && (
               <Button
                 variant="outline"
@@ -178,6 +180,19 @@ export default function DataTable<TData, TValue>({
               >
                 <PlusIcon className="mr-2 size-4" aria-hidden="true" />
                 New Property
+              </Button>
+            )}
+
+            {/* create new payment */}
+            {isOnPayments && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="shadow-sm"
+                onClick={() => router.push("/payments/new")}
+              >
+                <PlusIcon className="mr-2 size-4" aria-hidden="true" />
+                New Payment
               </Button>
             )}
 
