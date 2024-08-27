@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('payment', function (Blueprint $table) {
             $table->id();
-            $table->decimal('ammount', 10, 2);
-            $table->foreignId('user_id')->nullable();
-            $table->foreignId('property_id')->nullable();
+            $table->decimal('amount', 10, 2);
+            $table->string('mode_of_payment');
+            $table->foreignId('user_id');
+            $table->foreignId('property_id');
             $table->timestamps();
         });
     }
