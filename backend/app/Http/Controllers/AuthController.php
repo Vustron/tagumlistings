@@ -17,17 +17,20 @@ class AuthController extends Controller
         try {
 
             $data = $request->validate([
-                "username" => 'required|string|unique:users,username',
+                "name" => "nullable|string",
+                "address" => "nullable|string",
+                "contact_number" => "nullable|string",
                 "email" => "required|string|email|unique:users,email",
                 "password" => "required|string|min:8",
-                "name" => "nullable|string",
                 "role" => "nullable|string"
             ]);
 
             $data['password'] = Hash::make($data['password']);
 
             User::create([
-                'username' => $data['username'],
+                'name' => $data['name'],
+                'address' => $data['address'],
+                'contact_number' => $data['contact_number'],
                 'email' => $data['email'],
                 'password' => $data['password'],
                 'name' => $data['name'] ?? null,
@@ -55,12 +58,12 @@ class AuthController extends Controller
         try {
 
             $request->validate([
-                "username" => "required|exists:users,username",
+                "email" => "required|exists:users,email",
                 "password" => "required"
             ]);
     
     
-            if (!Auth::attempt($request->only('username', 'password'))) {
+            if (!Auth::attempt($request->only('email', 'password'))) {
                 return response()->json(['message' => 'Invalid credentials'], 401);
             }
     
@@ -98,8 +101,8 @@ class AuthController extends Controller
                 "users" => $users
             ], 200);
 
-        } catch (\Exception $e) {
-            return response()->json(['error' => "Internal Server Error Occurred: {$e}"], 500);
+        } catch (\Exception $e){
+            return response()->json(['error' => "Internal Server Error Occurred: {$e}"], $e->getCode());
         }
        
     }
@@ -113,10 +116,13 @@ class AuthController extends Controller
             return response()->json(['user' => $users], 200);
 
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Account not found'], 404);
+            return response()->json([
+                'message' => 'Account not found',
+                'error'   => $e->getMessage()
+            ], 404);
 
-        } catch (\Exception $e) {
-            return response()->json(['error' => "Internal Server Error Occurred: {$e}"], 500);
+        } catch (\Exception $e){
+            return response()->json(['error' => "Internal Server Error Occurred: {$e}"], $e->getCode());
         }
     }
 
@@ -149,11 +155,8 @@ class AuthController extends Controller
                 "user" => $user
             ], 200);
            
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Account Update Error',
-                'error'   =>  $e->getMessage()
-            ], 500);
+        } catch (\Exception $e){
+            return response()->json(['error' => "Internal Server Error Occurred: {$e}"], $e->getCode());
         }
         
     }
@@ -169,10 +172,13 @@ class AuthController extends Controller
            return response()->json(['message' => 'Account Deleted Successfully'], 200);
 
         } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'Account Not Found'], 404);
+            return response()->json([
+                'message' => 'Account not found',
+                'error'   => $e->getMessage()
+            ], 404);
 
-        }catch (\Exception $e) {
-            return response()->json(['error' => "Internal Server Error Occurred: {$e}"], 500);
+        } catch (\Exception $e){
+            return response()->json(['error' => "Internal Server Error Occurred: {$e}"], $e->getCode());
         }
     }
 
