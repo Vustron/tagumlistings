@@ -19,7 +19,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'username',
+        'address',
+        'contact_number',
         'email',
         'password',
         'role'
@@ -49,7 +50,7 @@ class User extends Authenticatable
     }
 
 
-    public function hasRole($role)
+    public function isCorrectRole($role)
     {
         return $this->role === $role;
     }

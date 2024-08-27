@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\Property;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -16,6 +18,9 @@ class PropertyController extends Controller
         $properties = Property::query()
             ->when($request->status, function ($query) use ($request) {
                 $query->where('status', strtolower($request->status));
+            })
+            ->when($request->price, function ($query) use ($request) {
+                $query->where('price', floatval($request->price));
             })
             ->when($request->search, function ($query) use ($request) {
                 $searchTerm = strtolower($request->search);
@@ -35,8 +40,12 @@ class PropertyController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
+            'property_name' => 'nullable|string',
+            'description' => 'nullable|string',
             'category' => 'required',
             'location' => 'required',
+            'price' => 'required|numeric',
+            'reservation_fee' => 'required|numeric',
         ]);
 
         $property = Property::create($data);
@@ -58,8 +67,12 @@ class PropertyController extends Controller
     public function update(Request $request, Property $property)
     {
         $data = $request->validate([
+            'property_name' => 'nullable|string',
+            'description' => 'nullable|string',
             'category' => 'required',
             'location' => 'required',
+            'price' => 'required',
+            'reservation_fee' => 'required',
         ]);
 
         $property->update($data);
@@ -184,4 +197,5 @@ class PropertyController extends Controller
         }
 
     }
+
 }
