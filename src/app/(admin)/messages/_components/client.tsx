@@ -6,77 +6,35 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { ArrowRight, Menu, SendHorizontal } from "lucide-react"
+import { ArrowRight, Menu, SendHorizontal, X } from "lucide-react"
 
 // hooks
-import { useState } from "react"
+import { useEffect, useState } from "react"
+
+// utils
+import { clients } from "@/app/(admin)/messages/constants"
 
 // types
+import type { Client } from "@/app/(admin)/messages/constants"
 import type React from "react"
-
-type Message = {
-  id: string
-  content: string
-  timestamp: Date
-  senderId: string
-}
-
-type Client = {
-  id: string
-  name: string
-  email: string
-  messages: Message[]
-}
 
 const MessagesClient = () => {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [searchQuery, setSearchQuery] = useState<string>("")
   const [message, setMessage] = useState<string>("")
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
-  const clients: Client[] = [
-    {
-      id: "1",
-      name: "John Doe",
-      email: "john.doe@example.com", // Client email
-      messages: [
-        { id: "1", content: "Hello", timestamp: new Date(), senderId: "1" },
-        {
-          id: "2",
-          content: "How are you?",
-          timestamp: new Date(),
-          senderId: "1",
-        },
-        {
-          id: "3",
-          content: "I am fine, thank you!",
-          timestamp: new Date(),
-          senderId: "admin",
-        }, // Admin reply
-      ],
-    },
-    {
-      id: "2",
-      name: "Jane Smith",
-      email: "jane.smith@example.com", // Client email
-      messages: [
-        { id: "4", content: "Hi there", timestamp: new Date(), senderId: "2" },
-        {
-          id: "5",
-          content: "Can you help me?",
-          timestamp: new Date(),
-          senderId: "2",
-        },
-        {
-          id: "6",
-          content: "Sure, what do you need help with?",
-          timestamp: new Date(),
-          senderId: "admin",
-        }, // Admin reply
-      ],
-    },
-    // Add more clients as needed
-  ]
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+      setIsSidebarOpen(window.innerWidth >= 768)
+    }
+
+    handleResize()
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
 
   const filteredClients = clients.filter((client) =>
     client.name.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -101,22 +59,28 @@ const MessagesClient = () => {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
 
   return (
-    // TODO: make the sidebar of the messages responsive on mobile
     <Card className="rounded-lg border-none mt-6 h-[calc(100vh-100px)]">
       <CardContent className="p-0 h-full">
         <div className="flex h-full bg-background">
+          {/* Sidebar */}
           <div
             className={`${
-              isSidebarOpen ? "w-1/3" : "w-16"
-            } border-r border-border transition-all duration-300 ease-in-out flex flex-col`}
+              isSidebarOpen ? "w-full md:w-1/3" : "w-0 md:w-16"
+            } border-r border-border transition-all duration-300 ease-in-out flex flex-col ${
+              isMobile && !isSidebarOpen ? "hidden" : "absolute md:relative"
+            } z-10 bg-background h-full`}
           >
-            <div className="p-2">
+            <div className="p-2 flex justify-between items-center">
               <Button
                 onClick={toggleSidebar}
-                className="mb-4 w-12 h-12 flex justify-center items-center bg-green-500 hover:bg-green-400"
+                className="w-12 h-12 flex justify-center items-center bg-green-500 hover:bg-green-400"
               >
                 {isSidebarOpen ? (
-                  <Menu className="text-white" size={32} />
+                  isMobile ? (
+                    <X className="text-white" size={32} />
+                  ) : (
+                    <Menu className="text-white" size={32} />
+                  )
                 ) : (
                   <ArrowRight className="text-white" size={32} />
                 )}
@@ -125,10 +89,8 @@ const MessagesClient = () => {
                 <Input
                   placeholder="Search clients..."
                   value={searchQuery}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setSearchQuery(e.target.value)
-                  }
-                  className="mb-4"
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="ml-2 flex-grow"
                 />
               )}
             </div>
@@ -141,10 +103,13 @@ const MessagesClient = () => {
                       ? "bg-accent text-white"
                       : ""
                   } ${isSidebarOpen ? "" : "justify-center"}`}
-                  onClick={() => setSelectedClient(client)}
+                  onClick={() => {
+                    setSelectedClient(client)
+                    if (isMobile) setIsSidebarOpen(false)
+                  }}
                 >
                   <Avatar className="w-10 h-10 border flex-shrink-0 bg-white">
-                    <div className="font-semibold flex items-center justify-center w-full h-full text-black truncate ">
+                    <div className="font-semibold flex items-center justify-center w-full h-full text-black truncate">
                       {getInitials(client.name)}
                     </div>
                   </Avatar>
@@ -155,17 +120,28 @@ const MessagesClient = () => {
               ))}
             </ScrollArea>
           </div>
+
+          {/* Main content */}
           <div className="flex-grow flex flex-col">
             {selectedClient ? (
               <>
-                <div className="p-4 border-b border-border">
-                  <h2 className="text-lg font-semibold">
-                    {selectedClient.name}
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    {selectedClient.email}
-                  </p>{" "}
-                  {/* Client email */}
+                <div className="p-4 border-b border-border flex justify-between items-center">
+                  <div>
+                    <h2 className="text-lg font-semibold">
+                      {selectedClient.name}
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      {selectedClient.email}
+                    </p>
+                  </div>
+                  {isMobile && (
+                    <Button
+                      onClick={toggleSidebar}
+                      className="md:hidden w-12 h-12 flex justify-center items-center bg-green-500 hover:bg-green-400"
+                    >
+                      <Menu className="text-white" size={32} />
+                    </Button>
+                  )}
                 </div>
                 <ScrollArea className="flex-grow p-4 bg-accent/10">
                   {selectedClient.messages.map((msg) => (
@@ -188,9 +164,7 @@ const MessagesClient = () => {
                   <Input
                     placeholder="Type a message..."
                     value={message}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setMessage(e.target.value)
-                    }
+                    onChange={(e) => setMessage(e.target.value)}
                     className="flex-grow mr-2"
                   />
                   <Button
