@@ -54,4 +54,10 @@ export const properties: PropertyCardProps[] = [
     title: "Beachfront Property",
     price: 950000,
   },
+  {
+    id: "9",
+    image: "/images/image4.jpg",
+    title: "Beachfront Property",
+    price: 950000,
+  },
 ]
