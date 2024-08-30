@@ -31,4 +31,4 @@ export const FefyiLogo = () => (
       clipRule="evenodd"
     />
   </svg>
-);
+)
