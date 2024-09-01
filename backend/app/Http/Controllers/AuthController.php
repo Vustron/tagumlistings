@@ -156,6 +156,9 @@ class AuthController extends Controller
             ], 200);
            
         } catch (\Exception $e){
+            Log::error('Update Account Failed:' . $e->getMessage());
+            Log::error($e->getTraceAsString());
+
             return response()->json(['error' => "Internal Server Error Occurred: {$e}"], $e->getCode());
         }
         
