@@ -113,8 +113,29 @@ export function checkRequiredFields<T>(
 
 // response stringify parser
 export const dataSerializer = <T>(data: T): T => {
-  // serialize data
-  const serializedData = JSON.stringify(data).toString()
+  const convertDateToISOString = (obj: any): any => {
+    if (obj === null || typeof obj !== "object") {
+      return obj
+    }
+
+    if (obj instanceof Date) {
+      return obj.toISOString()
+    }
+
+    if (Array.isArray(obj)) {
+      return obj.map(convertDateToISOString)
+    }
+
+    return Object.fromEntries(
+      Object.entries(obj).map(([key, value]) => [
+        key,
+        convertDateToISOString(value),
+      ]),
+    )
+  }
+
+  const convertedData = convertDateToISOString(data)
+  const serializedData = JSON.stringify(convertedData)
   return JSON.parse(serializedData) as T
 }
 
@@ -184,60 +205,43 @@ export function formatBytes(
   }`
 }
 
+// http error
+export class HttpError extends Error {
+  constructor(
+    public statusCode: number,
+    message: string,
+  ) {
+    super(message)
+    this.name = "HttpError"
+  }
+}
+
 // error class handler
 export class ErrorHandler {
-  // init error handler method
   public static handleError(error: unknown): ErrorResponseData {
-    // return fetch error if fetch error
-    if (ErrorHandler.isFetchError(error)) {
-      return ErrorHandler.handleFetchError(error)
+    if (error instanceof HttpError) {
+      return {
+        message: error.message,
+        statusCode: error.statusCode,
+      }
     }
 
-    // return zod error if zod error
     if (ErrorHandler.isZodError(error)) {
       return ErrorHandler.handleZodError(error)
     }
 
-    // return generic if generic error
     if (error instanceof Error) {
       return ErrorHandler.handleGenericError(error)
     }
 
-    // return unknown error if unknown error
     return ErrorHandler.handleUnknownError(error)
   }
 
-  // init fetch error identifier method
-  private static isFetchError(
-    error: unknown,
-  ): error is { status: number; error: string } {
-    return (
-      typeof error === "object" &&
-      error !== null &&
-      "status" in error &&
-      "error" in error
-    )
-  }
-
-  // init zod error identifier method
   private static isZodError(error: unknown): error is ZodError {
     return error instanceof ZodError
   }
 
-  // init fetch error handler method
-  private static handleFetchError(error: {
-    status: number
-    error: string
-  }): ErrorResponseData {
-    return {
-      message: error.error || "A network error occurred.",
-      statusCode: error.status || 500,
-    }
-  }
-
-  // init zod error handler method
   private static handleZodError(error: ZodError): ErrorResponseData {
-    // init message
     const message = error.errors.map((e) => e.message).join(", ")
     return {
       message: `Validation error: ${message}`,
@@ -245,7 +249,6 @@ export class ErrorHandler {
     }
   }
 
-  // init generic error handler method
   private static handleGenericError(error: Error): ErrorResponseData {
     return {
       message: error.message || "An unexpected error occurred.",
@@ -253,7 +256,6 @@ export class ErrorHandler {
     }
   }
 
-  // init unknown error handler method
   private static handleUnknownError(error: unknown): ErrorResponseData {
     return {
       message: typeof error === "string" ? error : "An unknown error occurred.",

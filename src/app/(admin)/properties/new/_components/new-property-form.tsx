@@ -56,7 +56,7 @@ const NewPropertyForm = () => {
       submitButtonTitle="Add"
       submitButtonClassname="bg-green-500 rounded-3xl hover:dark:text-black"
       submitButtonTitleClassname="text-md font-medium"
-      cloudinaryUploadPreset={env.NEXT_PUBLIC_UPLOAD_PRESET}
+
       // mutation={() => {}}
     />
   )

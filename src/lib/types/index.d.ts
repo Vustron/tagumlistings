@@ -71,6 +71,11 @@ interface DynamicFormProps<TFieldValues extends FieldValues> {
   submitButtonTitleClassname?: string
   cloudinaryCloudName?: string
   cloudinaryUploadPreset?: string
+  imagekitConfig?: {
+    publicKey: string
+    urlEndpoint: string
+    authenticationEndpoint: string
+  }
 }
 
 /* Unique Id Type */

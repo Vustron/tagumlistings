@@ -6,7 +6,10 @@
         "API_URL",
         "NEXT_PUBLIC_APP_URL",
         "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME",
-        "NEXT_PUBLIC_UPLOAD_PRESET"
+        "NEXT_PUBLIC_UPLOAD_PRESET",
+        "NEXT_PUBLIC_PUBLIC_KEY",
+        "NEXT_PUBLIC_URL_ENDPOINT",
+        "PRIVATE_KEY"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
