@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\Property;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -30,8 +28,8 @@ class PropertyController extends Controller
                         ->orWhere('location', 'like', "%{$searchTerm}%");
                 });
             })
-            ->paginate(10)
-            ->withQueryString();
+            ->paginate(10);
+            // ->withQueryString();
         
         return response()->json($properties, 200);
     }
@@ -66,21 +64,30 @@ class PropertyController extends Controller
  
     public function update(Request $request, Property $property)
     {
-        $data = $request->validate([
-            'property_name' => 'nullable|string',
-            'description' => 'nullable|string',
-            'category' => 'required',
-            'location' => 'required',
-            'price' => 'required',
-            'reservation_fee' => 'required',
-        ]);
-
-        $property->update($data);
-
-        return response()->json([
-            'message' => 'Property Updated Successfully',
-            'property' => $property,
-        ], 200);
+        try {
+            $data = $request->validate([
+                'property_name' => 'nullable|string',
+                'description' => 'nullable|string',
+                'category' => 'required',
+                'location' => 'required',
+                'price' => 'required|numeric',
+                'reservation_fee' => 'required|numeric',
+            ]);
+    
+            $property->update($data);
+    
+            return response()->json([
+                'message' => 'Property Updated Successfully',
+                'property' => $property,
+            ], 200);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Updating Property Error',
+                'error' => $e->getMessage(),
+            ], $e->getCode());
+        }
+       
 
       
     }
