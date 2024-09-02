@@ -2,7 +2,7 @@
 
 // components
 // import CreateReportModal from "@/components/modals/create-report"
-import CreateUserModal from "@/app/(admin)/users/_components/create-user"
+import CreateUserModal from "@/app/(admin)/admin/users/_components/create-user"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -176,7 +176,7 @@ export default function DataTable<TData, TValue>({
                 variant="outline"
                 size="sm"
                 className="shadow-sm"
-                onClick={() => router.push("/properties/new")}
+                onClick={() => router.push("/admin/properties/new")}
               >
                 <PlusIcon className="mr-2 size-4" aria-hidden="true" />
                 New Property
@@ -189,7 +189,7 @@ export default function DataTable<TData, TValue>({
                 variant="outline"
                 size="sm"
                 className="shadow-sm"
-                onClick={() => router.push("/payments/new")}
+                onClick={() => router.push("/admin/payments/new")}
               >
                 <PlusIcon className="mr-2 size-4" aria-hidden="true" />
                 New Payment

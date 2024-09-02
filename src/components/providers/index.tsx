@@ -5,18 +5,21 @@ import QueryProvider from "@/components/providers/query"
 import ThemeProvider from "@/components/providers/themes"
 import ToastProvider from "@/components/providers/toast"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import WrapBalancer from "@/components/providers/wrap-balancer"
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <TooltipProvider disableHoverableContent>
-        <QueryProvider>
-          <ProgressBarProvider>
-            <ToastProvider />
-            <ImagekitProvider>{children}</ImagekitProvider>
-          </ProgressBarProvider>
-        </QueryProvider>
-      </TooltipProvider>
+      <WrapBalancer>
+        <TooltipProvider disableHoverableContent>
+          <QueryProvider>
+            <ProgressBarProvider>
+              <ToastProvider />
+              <ImagekitProvider>{children}</ImagekitProvider>
+            </ProgressBarProvider>
+          </QueryProvider>
+        </TooltipProvider>
+      </WrapBalancer>
     </ThemeProvider>
   )
 }

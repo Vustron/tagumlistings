@@ -21,7 +21,7 @@ export const usersItems: BreadcrumbItemProps[] = [
 // user
 export const userItems: BreadcrumbItemProps[] = [
   { label: "Dashboard", href: "/admin" },
-  { label: "Users", href: "/users" },
+  { label: "Users", href: "/admin/users" },
   { label: "User" },
 ]
 
@@ -34,7 +34,7 @@ export const appointmentsItems: BreadcrumbItemProps[] = [
 // appointment
 export const appointmentItems: BreadcrumbItemProps[] = [
   { label: "Dashboard", href: "/admin" },
-  { label: "Appointments", href: "/appointments" },
+  { label: "Appointments", href: "/admin/appointments" },
   { label: "Appointment" },
 ]
 
@@ -47,14 +47,14 @@ export const paymentsItems: BreadcrumbItemProps[] = [
 // payment
 export const paymentItems: BreadcrumbItemProps[] = [
   { label: "Dashboard", href: "/admin" },
-  { label: "Payment", href: "/payments" },
+  { label: "Payment", href: "/admin/payments" },
   { label: "Payment" },
 ]
 
 // add payment
 export const addPaymentItems: BreadcrumbItemProps[] = [
   { label: "Dashboard", href: "/admin" },
-  { label: "Payment", href: "/payments" },
+  { label: "Payment", href: "/admin/payments" },
   { label: "Add Payment" },
 ]
 
@@ -67,14 +67,14 @@ export const propertiesItems: BreadcrumbItemProps[] = [
 // addProperties
 export const addPropertiesItems: BreadcrumbItemProps[] = [
   { label: "Dashboard", href: "/admin" },
-  { label: "Properties", href: "/properties" },
+  { label: "Properties", href: "/admin/properties" },
   { label: "Add Property" },
 ]
 
 // property
 export const propertyItems: BreadcrumbItemProps[] = [
   { label: "Dashboard", href: "/admin" },
-  { label: "Properties", href: "/properties" },
+  { label: "Properties", href: "/admin/properties" },
   { label: "Property" },
 ]
 

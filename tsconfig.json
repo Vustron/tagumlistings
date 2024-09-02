@@ -6,11 +6,8 @@
     "skipLibCheck": true,
     "allowJs": true,
     "useDefineForClassFields": true,
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable"
-    ],
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "typeRoots": ["./node_modules/@types", "./types"],
     "skipDefaultLibCheck": true,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -32,9 +29,7 @@
     "noUncheckedIndexedAccess": true,
     "checkJs": true,
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
@@ -47,10 +42,8 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.js",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "tailwindcss-modules.d.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "vendor"
-  ]
+  "exclude": ["node_modules", "vendor"]
 }
