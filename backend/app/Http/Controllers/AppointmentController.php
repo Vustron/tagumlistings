@@ -6,7 +6,9 @@ use App\Models\Appointment;
 use App\Models\Property;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AppointmentController extends Controller
 {
@@ -23,7 +25,8 @@ class AppointmentController extends Controller
                             'users.name as name', 
                             'users.email as email', 
                             'properties.category', 
-                            'properties.location'
+                            'properties.location',
+                            'appointments.status'
                         )
                         ->paginate(10);
 
@@ -33,15 +36,71 @@ class AppointmentController extends Controller
             return response()->json([
                 'message' => 'Getting Appointments Error',
                 'error' => $e->getMessage(),
-            ], 500);
+            ], $e->getCode());
         }
       
     }
 
     
-    public function store(Request $request)
+    public function setAppointmentRequest(Request $request)
     {
-        return 'store';
+        try {
+
+            $data = $request->validate([
+                'appointment_date' => 'required',
+                'property_id' => 'required',
+            ]);
+
+            Appointment::create([
+                'appointment_date' => $data['appointment_date'],
+                'user_id' => Auth::id(),
+                'property_id' => $data['property_id'],
+            ]);
+
+            return response()->json(['message' => 'Appointment Request Sent!'], 201);
+
+        } catch (\Exception $e) {
+
+            Log::error('Appointment Request Failed:' . $e->getMessage());
+            Log::error($e->getTraceAsString());
+
+            return response()->json([
+                'message' => 'Setting Appointments Error',
+                'error' => $e->getMessage(),
+            ], $e->getCode());
+        }
+
+    }
+
+    public function confirmAppointmentRequest(Request $request, string $appointment_id)
+    {
+        try {
+
+            $data = $request->validate([
+                'status' => 'required|string'
+            ]);
+
+            $appointment = Appointment::findOrFail($appointment_id);
+            $appointment->fill($data);
+
+            $appointment->save();
+
+            return response()->json([
+                'message' => 'Appointment Confirmed Successfully',
+                'appointment' => $appointment,
+            ], 200);
+        
+        } catch (\Exception $e) {
+
+            Log::error('Confirming Appointment Request Failed:' . $e->getMessage());
+            Log::error($e->getTraceAsString());
+
+            return response()->json([
+                'message' => 'Confirming Appointments Error',
+                'error' => $e->getMessage(),
+            ], $e->getCode());
+        }
+        
     }
 
     
@@ -56,14 +115,8 @@ class AppointmentController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Appointment not found'], 404);
         } catch (\Exception $e) {
-            return response()->json(['error' => "Internal Server Error Occurred: {$e}"], 500);
+            return response()->json(['error' => "Internal Server Error Occurred: {$e}"], $e->getCode());
         }
-    }
-
-    
-    public function update(Request $request, string $id)
-    {
-        return 'update';
     }
 
     

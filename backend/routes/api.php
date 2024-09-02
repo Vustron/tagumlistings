@@ -28,6 +28,7 @@ Route::middleware(['web', 'auth:sanctum', 'check.token.expiration'])->group(func
     // Client routes
     Route::middleware('role:client')->group(function () {
         Route::get('/payment/history/{property_id}', [PaymentController::class, 'getPaymentHistory']);
+        Route::post('/set/appointment', [AppointmentController::class, 'setAppointmentRequest']);
     });
 
     
@@ -35,6 +36,9 @@ Route::middleware(['web', 'auth:sanctum', 'check.token.expiration'])->group(func
     Route::middleware('role:company_representative')->group(function () {
         Route::apiResource('property', PropertyController::class);
         Route::apiResource('appointments', AppointmentController::class);
+
+        Route::patch('/confirm/appointment/{appointment_id}', [AppointmentController::class, 'confirmAppointmentRequest']);
+
 
         Route::post('/add/payment', [PaymentController::class, 'addPayment']);
         Route::patch('/reserve/property/{property}', [PropertyController::class, 'reserve']);
