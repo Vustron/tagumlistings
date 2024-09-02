@@ -31,7 +31,6 @@ import type { DynamicFormProps } from "@/lib/types"
 import type { FieldValues } from "react-hook-form"
 import toast from "react-hot-toast"
 
-// TODO: 🪲 dli mugawas ang loader pag upload dafq
 const DynamicForm = <TFieldValues extends FieldValues>({
   form,
   onSubmit,
@@ -52,18 +51,12 @@ const DynamicForm = <TFieldValues extends FieldValues>({
       const currentImages = (form.getValues(field.name) as string[]) || []
       form.setValue(field.name, [...currentImages, result.url] as any)
       toast.success("Image Uploaded.")
-      setIsUploading(false)
     }
   }
 
   const handleError = (error: any) => {
     setIsUploading(false)
     toast.error(`Upload Error: ${error}`)
-  }
-
-  const handleProgress = (event: any) => {
-    console.log("Upload Progress", event)
-    setIsUploading(true)
   }
 
   return (
@@ -117,7 +110,6 @@ const DynamicForm = <TFieldValues extends FieldValues>({
                           multiple={true}
                           useUniqueFileName
                           onError={handleError}
-                          onProgress={handleProgress}
                           onSuccess={(result: any) =>
                             handleSuccess(result, field)
                           }
@@ -126,11 +118,16 @@ const DynamicForm = <TFieldValues extends FieldValues>({
                         />
                         <Button
                           type="button"
-                          onClick={() => uploadRef.current?.click()}
+                          onClick={() => {
+                            setIsUploading(true)
+                            uploadRef.current?.click()
+                          }}
                           className="dark:text-white bg-green-600 hover:bg-green-500 rounded-xl p-2"
                         >
                           {isUploading ? (
-                            <Loader2 className="animate-spin size-5" />
+                            <>
+                              <Loader2 className="animate-spin size-5" />
+                            </>
                           ) : (
                             <>
                               <Upload className="mr-2 size-5" />

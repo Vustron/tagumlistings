@@ -1,7 +1,7 @@
 // components
-import Appointments from "@/app/(admin)/dashboard/_components/appointments"
-import AppointmentsChart from "@/app/(admin)/dashboard/_components/appointments-chart"
-import DashboardCard from "@/app/(admin)/dashboard/_components/dashboard-card"
+import Appointments from "@/app/(admin)/admin/_components/appointments"
+import AppointmentsChart from "@/app/(admin)/admin/_components/appointments-chart"
+import DashboardCard from "@/app/(admin)/admin/_components/dashboard-card"
 import {
   Card,
   CardContent,
@@ -11,10 +11,7 @@ import {
 } from "@/components/ui/card"
 
 // utils
-import {
-  appointmentsData,
-  dashboardItems,
-} from "@/app/(admin)/dashboard/constants"
+import { appointmentsData, dashboardItems } from "@/app/(admin)/admin/constants"
 
 const AdminDashboardClient = () => {
   return (

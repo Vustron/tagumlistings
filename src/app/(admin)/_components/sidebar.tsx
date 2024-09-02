@@ -41,7 +41,7 @@ const Sidebar = () => {
           asChild
         >
           {/* brand logo */}
-          <Link href="/dashboard" className="flex items-center gap-2">
+          <Link href="/admin" className="flex items-center gap-2">
             <Image
               src={logo}
               alt="logo"

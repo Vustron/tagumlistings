@@ -24,8 +24,8 @@ const Pagination = ({
       <Button
         className={`px-4 py-2 rounded-md ${
           currentPage === 1
-            ? "bg-gray-300 dark:bg-gray-700 cursor-not-allowed"
-            : "bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-600"
+            ? "bg-gray-600 dark:bg-gray-700 cursor-not-allowed"
+            : "bg-gray-500 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-600"
         }`}
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}
@@ -50,8 +50,8 @@ const Pagination = ({
       <Button
         className={`px-4 py-2 rounded-md ${
           currentPage === totalPages
-            ? "bg-gray-300 dark:bg-gray-700 cursor-not-allowed"
-            : "bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-600"
+            ? "bg-gray-600 dark:bg-gray-700 cursor-not-allowed"
+            : "bg-gray-500 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-600"
         }`}
         disabled={currentPage === totalPages}
         onClick={() => onPageChange(currentPage + 1)}
