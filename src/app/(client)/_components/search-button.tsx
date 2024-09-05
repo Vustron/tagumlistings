@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/tooltip"
 
 // hooks
+import { useRouter } from "next-nprogress-bar"
 import { useState } from "react"
 
 // utils
@@ -17,15 +18,12 @@ import { Search } from "lucide-react"
 
 interface SearchButtonProps {
   placeholder?: string
-  onSearch: (query: string) => void
 }
 
-const SearchButton = ({
-  placeholder = "Search...",
-  onSearch,
-}: SearchButtonProps) => {
+const SearchButton = ({ placeholder = "Search..." }: SearchButtonProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+  const router = useRouter()
 
   const handleToggle = () => {
     setIsExpanded(!isExpanded)
@@ -33,8 +31,8 @@ const SearchButton = ({
 
   const handleSearch = () => {
     if (searchQuery.trim() !== "") {
-      onSearch(searchQuery)
-      setSearchQuery("") // Clear input after search
+      router.push(`/search?query=${encodeURIComponent(searchQuery)}`)
+      setSearchQuery("")
     }
   }
 
@@ -50,7 +48,6 @@ const SearchButton = ({
         }}
         transition={{ duration: 0.3 }}
       >
-        {/* Search input */}
         <motion.input
           type="text"
           value={searchQuery}

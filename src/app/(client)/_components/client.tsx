@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import Image from "next/image"
 
 // hooks
+import { useRouter } from "next-nprogress-bar"
 import { useState } from "react"
 
 // utils
@@ -13,9 +14,18 @@ import { AnimatePresence, motion } from "framer-motion"
 
 const Client = () => {
   const [showChatInput, setShowChatInput] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const router = useRouter()
 
   const handleChatNowClick = () => {
     setShowChatInput(true)
+  }
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/search?query=${encodeURIComponent(searchQuery)}`)
+    }
   }
 
   const buttonVariants = {
@@ -94,12 +104,16 @@ const Client = () => {
               variants={inputVariants}
               className="w-full max-w-md"
             >
-              <Input
-                type="text"
-                placeholder="Search property name..."
-                className="w-full px-4 py-2 text-black dark:text-white bg-white dark:bg-gradient-to-br from-green-950 to-blue-950 border border-green-900 dark:border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                autoFocus
-              />
+              <form onSubmit={handleSearch} className="w-full">
+                <Input
+                  type="text"
+                  placeholder="Search property name..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-4 py-2 text-black dark:text-white bg-white dark:bg-gradient-to-br from-green-950 to-blue-950 border border-green-900 dark:border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  autoFocus
+                />
+              </form>
             </motion.div>
           )}
         </AnimatePresence>

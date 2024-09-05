@@ -15,18 +15,13 @@ import useScrollPosition from "@react-hook/window-scroll"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
+// TODO: 🪲 naay bug ang navbar mawala at a certain distance pag scroll pababa
 const ClientHeader = () => {
   const y = useScrollPosition(60)
   const navX = useRange(y, 0, 50, 0, 42)
   const logoScale = useRange(y, 0, 50, 1, 0.8)
   const titleY = useRange(y, 0, 50, 0, 30)
-
   const pathName = usePathname()
-
-  const handleSearch = (query: string) => {
-    console.log("Searching for:", query)
-    // Perform your search logic here
-  }
 
   return (
     <>
@@ -37,8 +32,9 @@ const ClientHeader = () => {
           }}
           src={appLogo}
           alt="logo"
-          className="size-11 fixed left-6 top-1 z-20"
+          className="size-11 fixed left-6 top-1 z-10"
         />
+
         <Link href="/">
           <h1
             className="ml-2 -mt-1 text-lg md:text-xl font-bold text-green-600 absolute"
@@ -52,12 +48,12 @@ const ClientHeader = () => {
         </Link>
 
         <div className="flex flex-1 items-center space-x-2 justify-end">
-          <SearchButton onSearch={handleSearch} />
+          <SearchButton />
           <ThemeToggle />
           <UserButton />
         </div>
       </header>
-      <nav className="sticky top-0 flex border-b  bg-white dark:bg-zinc-900 text-sm overflow-x-auto z-20">
+      <nav className="sticky top-0 flex border-b bg-white dark:bg-zinc-900 text-sm overflow-x-auto z-20 ">
         <ol
           style={{
             transform: `translateX(${navX}px)`,
@@ -73,12 +69,12 @@ const ClientHeader = () => {
             Properties
           </Link>
           <Link
-            href="/categories"
+            href="/search"
             className={`${
-              pathName === "/categories" ? "font-bold text-green-500" : ""
+              pathName === "/search" ? "font-bold text-green-500" : ""
             }`}
           >
-            Categories
+            Search
           </Link>
           <Link
             href="/about"
