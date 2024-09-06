@@ -103,17 +103,18 @@ class PropertyController extends Controller
     }
 
 
-    public function reserve(Request $request, Property $property)
+    public function reserve(Request $request, string $property_id)
     {
         
         try {
 
             $data = $request->validate([
-                'user_id' => 'required',
-                'appointment_date' => 'required|date_format:Y-m-d H:i:s'
+                'user_id' => 'required|numeric'
             ]);
     
             DB::beginTransaction();
+
+            $property = Property::findOrFail($property_id);
 
             $propertyStatusUpdated = $property->update([
                 'status' => 'reserved',
@@ -121,32 +122,12 @@ class PropertyController extends Controller
             ]);
 
             if($propertyStatusUpdated){
-
-                $existingAppointment = Appointment::where('property_id', $property->id)->first();
-
-                if ($existingAppointment) {
-                    return response()->json([
-                        'message' => 'An appointment already exists for this user and property.',
-                        'appointment_id' => $existingAppointment->id,
-                    ], 409); 
-                }
-    
-
-                $appointment = Appointment::create([
-                    'appointment_date'  => $data['appointment_date'],
-                    'user_id'           => $data['user_id'],
-                    'property_id'       => $property->id,
-                ]);
-
                 DB::commit();
     
                 return response()->json([
                     'message' => 'Property Reserved Successfully',
                     'property' => $property,
-                    'appointment_id' => $appointment->id,
                 ], 200);
-
-    
             } 
 
         } catch (\Exception $e){
@@ -156,12 +137,12 @@ class PropertyController extends Controller
             return response()->json([
                 'message' => 'Property Reservation Error',
                 'error'   => $e->getMessage()
-            ], 500);
+            ], $e->getCode());
         }
       
     }
 
-    public function sold(Request $request, Property $property)
+    public function sold(Request $request, string $property_id)
     {
 
         try {
@@ -171,6 +152,8 @@ class PropertyController extends Controller
             ]);
     
             DB::beginTransaction();
+
+            $property = Property::findOrFail($property_id);
 
             $propertyStatusUpdated = $property->update([
                 'status' => 'sold',
@@ -200,7 +183,7 @@ class PropertyController extends Controller
             return response()->json([
                 'message' => 'Property Sold Error',
                 'error'   => $e->getMessage()
-            ], 500);
+            ], $e->getCode());
         }
 
     }
