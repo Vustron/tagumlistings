@@ -12,7 +12,7 @@ import { useState } from "react"
 // utils
 import { AnimatePresence, motion } from "framer-motion"
 
-const Client = () => {
+const Hero = () => {
   const [showChatInput, setShowChatInput] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const router = useRouter()
@@ -122,4 +122,4 @@ const Client = () => {
   )
 }
 
-export default Client
+export default Hero

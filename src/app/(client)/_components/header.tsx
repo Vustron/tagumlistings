@@ -8,11 +8,11 @@ import ThemeToggle from "@/components/ui/theme-toggle"
 
 // utils
 import Image from "next/image"
+import Link from "next/link"
 
 // hooks
 import { useRange } from "@/lib/hooks/use-range"
 import useScrollPosition from "@react-hook/window-scroll"
-import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 // TODO: 🪲 naay bug ang navbar mawala at a certain distance pag scroll pababa
@@ -60,38 +60,22 @@ const ClientHeader = () => {
           }}
           className="relative flex gap-4 px-6 py-4 text-zinc-500 dark:text-zinc-400"
         >
-          <Link
-            href="/properties"
-            className={`${
-              pathName === "/properties" ? "font-bold text-green-500" : ""
-            }`}
-          >
-            Properties
-          </Link>
-          <Link
-            href="/search"
-            className={`${
-              pathName === "/search" ? "font-bold text-green-500" : ""
-            }`}
-          >
-            Search
-          </Link>
-          <Link
-            href="/about"
-            className={`${
-              pathName === "/about" ? "font-bold text-green-500" : ""
-            }`}
-          >
-            About
-          </Link>
-          <Link
-            href="/contact"
-            className={`${
-              pathName === "/contact" ? "font-bold text-green-500" : ""
-            }`}
-          >
-            Contact
-          </Link>
+          {[
+            { href: "/properties", label: "Properties" },
+            { href: "/search", label: "Search" },
+            { href: "/about", label: "About" },
+            { href: "/contact", label: "Contact" },
+          ].map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`${
+                pathName === link.href ? "font-bold text-green-500" : ""
+              } hover:text-green-500`}
+            >
+              {link.label}
+            </Link>
+          ))}
         </ol>
       </nav>
     </>
