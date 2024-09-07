@@ -6,7 +6,7 @@ import Link from "next/link"
 
 const ClientFooter = () => {
   return (
-    <footer className="dark:bg-zinc-900 bg-white">
+    <footer className="bg-white dark:bg-black">
       <section>
         <div className="mx-auto max-w-5xl p-6 sm:p-8 grid gap-6">
           <div className="mb-4 flex flex-col gap-4 md:mb-0 md:flex-row">
