@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/tooltip"
 import {
   User as FallbackUser,
+  Home,
   LayoutGrid,
   Loader2,
   LogOut,
@@ -41,7 +42,11 @@ import toast from "react-hot-toast"
 // types
 // import type { SessionData } from "@/lib/types"
 
-const UserButton = () => {
+interface UserButtonProps {
+  isOnClient?: boolean
+}
+
+const UserButton = ({ isOnClient }: UserButtonProps) => {
   // init router
   const router = useRouter()
 
@@ -128,9 +133,21 @@ const UserButton = () => {
             className="hover:font-bold hover:cursor-pointer"
             asChild
           >
-            <Link href="/dashboard" className="flex items-center">
-              <LayoutGrid className="size-4 mr-3 text-muted-foreground" />
-              Dashboard
+            <Link
+              href={isOnClient ? "/" : "/admin"}
+              className="flex items-center"
+            >
+              {isOnClient ? (
+                <>
+                  <Home className="size-4 mr-3 text-muted-foreground" />
+                  Home
+                </>
+              ) : (
+                <>
+                  <LayoutGrid className="size-4 mr-3 text-muted-foreground" />
+                  Dashboard
+                </>
+              )}
             </Link>
           </DropdownMenuItem>
 
@@ -139,7 +156,10 @@ const UserButton = () => {
             className="hover:font-bold hover:cursor-pointer"
             asChild
           >
-            <Link href="/account" className="flex items-center">
+            <Link
+              href={isOnClient ? "/account" : "/admin/account"}
+              className="flex items-center"
+            >
               <UserCog className="mr-3 size-4 text-muted-foreground" />
               Account
             </Link>

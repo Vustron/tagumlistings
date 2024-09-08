@@ -13,9 +13,8 @@ export async function registerAccount(credentials: RegisterValues) {
   const URL = `${env.API_URL}/api/register`
 
   // init http post method
-  await httpRequest<RegisterValues>({
-    customURL: URL,
-    method: "POST",
+  const data = await httpRequest<RegisterValues, void>(URL, "POST", {
     body: credentials,
   })
+  return data
 }
