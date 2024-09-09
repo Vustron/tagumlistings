@@ -32,9 +32,11 @@ import {
 
 // hooks
 // import { useGetAccount } from "@/lib/api/account/get-account"
+import { useState } from "react"
 import { useRouter } from "next-nprogress-bar"
 
 // utils
+import { motion, AnimatePresence } from "framer-motion"
 import { clientErrorHandler, dataSerializer } from "@/lib/utils"
 import Link from "next/link"
 import toast from "react-hot-toast"
@@ -47,7 +49,7 @@ interface UserButtonProps {
 }
 
 const UserButton = ({ isOnClient }: UserButtonProps) => {
-  // init router
+  const [isOpen, setIsOpen] = useState(false)
   const router = useRouter()
 
   // get user
@@ -69,113 +71,131 @@ const UserButton = ({ isOnClient }: UserButtonProps) => {
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <TooltipProvider disableHoverableContent>
         <Tooltip delayDuration={100}>
           <TooltipTrigger asChild>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="relative size-8 rounded-full"
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                {/* {isLoading ? (
-                  <Loader2 className="animate-spin size-10" />
-                ) : status === "error" ? (
-                  <span className="absolute inset-0 flex items-center justify-center">
-                    {error?.message}
-                  </span>
-                ) : (
-                  status === "success" && (
-                    <Avatar className="hover:scale-110  size-8">
-                      <AvatarImage src={userData?.image} alt="Avatar" />
-
-                      <AvatarFallback className="bg-transparent">
-                        <FallbackUser className="size-6" />
-                      </AvatarFallback>
-                    </Avatar>
-                  )
-                )} */}
-                <Avatar className="hover:scale-110  size-8">
-                  <AvatarImage src="/images/vustron.png" alt="Avatar" />
-
-                  <AvatarFallback className="bg-transparent">
-                    <FallbackUser className="size-6" />
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
+                <Button
+                  variant="outline"
+                  className="relative size-8 rounded-full"
+                >
+                  <Avatar className="size-8">
+                    <AvatarImage src="/images/vustron.png" alt="Avatar" />
+                    <AvatarFallback className="bg-transparent">
+                      <FallbackUser className="size-6" />
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </motion.div>
             </DropdownMenuTrigger>
           </TooltipTrigger>
           <TooltipContent side="bottom">Profile</TooltipContent>
         </Tooltip>
       </TooltipProvider>
 
-      <DropdownMenuContent
-        className="w-[250px] border-none dark:text-white text-black shadow-xl"
-        align="end"
-        forceMount
-      >
-        <DropdownMenuLabel>
-          <div className="flex flex-col space-y-1">
-            <h2 className="font-extrabold dark:text-white text-black leading-none">
-              Vustron
-            </h2>
-            <h6 className="text-xs text-muted-foreground leading-none">
-              vustron@email.com
-            </h6>
-          </div>
-        </DropdownMenuLabel>
-
-        <DropdownMenuSeparator className="ml-[5px] w-[230px]" />
-
-        <DropdownMenuGroup>
-          {/* dashboard */}
-          <DropdownMenuItem
-            className="hover:font-bold hover:cursor-pointer"
+      <AnimatePresence>
+        {isOpen && (
+          <DropdownMenuContent
+            className="w-[250px] border-none dark:text-white text-black shadow-xl"
+            align="end"
+            forceMount
             asChild
           >
-            <Link
-              href={isOnClient ? "/" : "/admin"}
-              className="flex items-center"
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
             >
-              {isOnClient ? (
-                <>
-                  <Home className="size-4 mr-3 text-muted-foreground" />
-                  Home
-                </>
-              ) : (
-                <>
-                  <LayoutGrid className="size-4 mr-3 text-muted-foreground" />
-                  Dashboard
-                </>
-              )}
-            </Link>
-          </DropdownMenuItem>
+              <DropdownMenuLabel>
+                <div className="flex flex-col space-y-1">
+                  <motion.h2
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.1 }}
+                    className="font-extrabold dark:text-white text-black leading-none"
+                  >
+                    Vustron
+                  </motion.h2>
+                  <motion.h6
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-xs text-muted-foreground leading-none"
+                  >
+                    vustron@email.com
+                  </motion.h6>
+                </div>
+              </DropdownMenuLabel>
 
-          {/* edit */}
-          <DropdownMenuItem
-            className="hover:font-bold hover:cursor-pointer"
-            asChild
-          >
-            <Link
-              href={isOnClient ? "/account" : "/admin/account"}
-              className="flex items-center"
-            >
-              <UserCog className="mr-3 size-4 text-muted-foreground" />
-              Account
-            </Link>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
+              <DropdownMenuSeparator className="ml-[5px] w-[230px]" />
 
-        <DropdownMenuSeparator className="ml-[5px] w-[230px]" />
+              <DropdownMenuGroup>
+                <MenuItem
+                  icon={isOnClient ? Home : LayoutGrid}
+                  text={isOnClient ? "Home" : "Dashboard"}
+                  href={isOnClient ? "/" : "/admin"}
+                  delay={0.3}
+                />
+                <MenuItem
+                  icon={UserCog}
+                  text="Account"
+                  href={isOnClient ? "/account" : "/admin/account"}
+                  delay={0.4}
+                />
+              </DropdownMenuGroup>
 
-        {/* logout */}
-        <DropdownMenuItem className="hover:font-bold" onClick={handleLogout}>
-          <LogOut className="mr-3 size-4 text-muted-foreground" />
-          Sign out
-        </DropdownMenuItem>
-      </DropdownMenuContent>
+              <DropdownMenuSeparator className="ml-[5px] w-[230px]" />
+
+              <MenuItem
+                icon={LogOut}
+                text="Sign out"
+                onClick={handleLogout}
+                delay={0.5}
+              />
+            </motion.div>
+          </DropdownMenuContent>
+        )}
+      </AnimatePresence>
     </DropdownMenu>
   )
 }
 
 export default UserButton
+
+interface MenuItemProps {
+  icon: React.ElementType
+  text: string
+  href?: string
+  onClick?: () => void
+  delay: number
+}
+
+function MenuItem({ icon: Icon, text, href, onClick, delay }: MenuItemProps) {
+  const content = (
+    <motion.div
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay }}
+      className="flex items-center hover:font-bold hover:cursor-pointer dark:hover:text-white"
+    >
+      <Icon className="mr-3 size-4 text-muted-foreground dark:text-white" />
+      {text}
+    </motion.div>
+  )
+
+  if (href) {
+    return (
+      <DropdownMenuItem asChild>
+        <Link href={href}>{content}</Link>
+      </DropdownMenuItem>
+    )
+  }
+
+  return <DropdownMenuItem onClick={onClick}>{content}</DropdownMenuItem>
+}

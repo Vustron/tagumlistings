@@ -16,6 +16,7 @@ interface CarouselProps {
 
 const ImageCarousel = ({ images }: CarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [direction, setDirection] = useState(0)
 
   const validImages = useMemo(
     () => images?.filter((img): img is string => typeof img === "string") ?? [],
@@ -23,10 +24,12 @@ const ImageCarousel = ({ images }: CarouselProps) => {
   )
 
   const handleNext = useCallback(() => {
+    setDirection(1)
     setCurrentIndex((prevIndex) => (prevIndex + 1) % validImages.length)
   }, [validImages.length])
 
   const handlePrevious = useCallback(() => {
+    setDirection(-1)
     setCurrentIndex(
       (prevIndex) => (prevIndex - 1 + validImages.length) % validImages.length,
     )
@@ -43,9 +46,31 @@ const ImageCarousel = ({ images }: CarouselProps) => {
     }
   }, [handleNext, handlePrevious])
 
+  const variants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 1000 : -1000,
+      opacity: 0,
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1,
+    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      x: direction < 0 ? 1000 : -1000,
+      opacity: 0,
+    }),
+  }
+
+  const swipeConfidenceThreshold = 10000
+  const swipePower = (offset: number, velocity: number) => {
+    return Math.abs(offset) * velocity
+  }
+
   if (validImages.length === 0) {
     return (
-      <div className="w-full h-64 sm:h-96 bg-gray-200 flex items-center justify-center">
+      <div className="w-full h-64 sm:h-96 bg-gray-200 flex items-center justify-center text-gray-500">
         No images available
       </div>
     )
@@ -53,14 +78,31 @@ const ImageCarousel = ({ images }: CarouselProps) => {
 
   return (
     <div className="space-y-4">
-      <div className="relative w-full h-64 sm:h-96 overflow-hidden rounded-lg">
-        <AnimatePresence initial={false} mode="wait">
+      <div className="relative w-full h-64 sm:h-96 overflow-hidden rounded-lg bg-gray-100">
+        <AnimatePresence initial={false} custom={direction}>
           <motion.div
             key={currentIndex}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.2 },
+            }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={1}
+            onDragEnd={(_e, { offset, velocity }) => {
+              const swipe = swipePower(offset.x, velocity.x)
+
+              if (swipe < -swipeConfidenceThreshold) {
+                handleNext()
+              } else if (swipe > swipeConfidenceThreshold) {
+                handlePrevious()
+              }
+            }}
             className="absolute inset-0"
           >
             <Image
@@ -77,25 +119,46 @@ const ImageCarousel = ({ images }: CarouselProps) => {
 
         {validImages.length > 1 && (
           <>
-            <Button
-              onClick={handlePrevious}
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50  p-2 rounded-full hover:bg-gray-800"
-              aria-label="Previous Image"
+            <motion.div
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             >
-              <ChevronLeft className="text-white " size={24} />
-            </Button>
-            <Button
-              onClick={handleNext}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50  p-2 rounded-full hover:bg-gray-800"
-              aria-label="Next Image"
+              <Button
+                onClick={handlePrevious}
+                className="bg-black/50 hover:bg-black/75 text-white p-2 rounded-full transition-colors duration-200"
+                size="icon"
+                variant="ghost"
+                aria-label="Previous Image"
+              >
+                <ChevronLeft className="size-6" />
+              </Button>
+            </motion.div>
+            <motion.div
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             >
-              <ChevronRight className="text-white" size={24} />
-            </Button>
+              <Button
+                onClick={handleNext}
+                className="bg-black/50 hover:bg-black/75 text-white p-2 rounded-full transition-colors duration-200"
+                size="icon"
+                variant="ghost"
+                aria-label="Next Image"
+              >
+                <ChevronRight className="size-6" />
+              </Button>
+            </motion.div>
           </>
         )}
       </div>
 
-      <div className="flex space-x-2 overflow-x-auto p-1">
+      <motion.div
+        className="flex space-x-2 overflow-x-auto p-1 scrollbar-hide"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
         {validImages.map((image, index) => (
           <motion.div
             key={index}
@@ -103,14 +166,17 @@ const ImageCarousel = ({ images }: CarouselProps) => {
             whileTap={{ scale: 0.95 }}
             className={`flex-shrink-0 w-14 sm:w-16 h-14 sm:h-16 rounded-md overflow-hidden ${
               index === currentIndex
-                ? "ring-2 ring-green-500 border-2 border-green-500 bg-blue-50"
+                ? "ring-2 ring-green-500 border-2 border-green-500"
                 : "bg-gray-200"
             }`}
             style={{ aspectRatio: "1/1" }}
           >
             <Button
               className="p-0 w-full h-full"
-              onClick={() => setCurrentIndex(index)}
+              onClick={() => {
+                setDirection(index > currentIndex ? 1 : -1)
+                setCurrentIndex(index)
+              }}
               aria-label={`Go to image ${index + 1}`}
             >
               <Image
@@ -120,12 +186,12 @@ const ImageCarousel = ({ images }: CarouselProps) => {
                 height={64}
                 quality={100}
                 loading={index === currentIndex ? "eager" : "lazy"}
-                className="object-cover"
+                className="object-cover transition-all duration-200 hover:opacity-80"
               />
             </Button>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   )
 }

@@ -104,6 +104,7 @@ const SearchClient = () => {
                   animate="animate"
                   exit="exit"
                   transition={{ duration: 0.3, delay: index * 0.1 }}
+                  className="mb-5"
                 >
                   <PropertyCard {...property} />
                 </motion.div>

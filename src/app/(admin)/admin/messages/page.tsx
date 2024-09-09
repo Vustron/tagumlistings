@@ -23,7 +23,7 @@ export default function MessagesPage() {
         <DynamicBreadcrumb items={messagesItems} />
 
         {/* client */}
-        <MessagesClient />
+        <MessagesClient isAdmin />
       </BounceWrapper>
     </ContentLayout>
   )

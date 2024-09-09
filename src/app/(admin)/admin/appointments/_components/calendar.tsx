@@ -21,6 +21,9 @@ import {
 } from "@/components/ui/select"
 import { ChevronLeft, ChevronRight, Menu, Plus, Search } from "lucide-react"
 
+// hooks
+import { useState, useEffect, useMemo } from "react"
+
 // utils
 import {
   addDays,
@@ -35,7 +38,10 @@ import {
   startOfMonth,
   startOfWeek,
 } from "date-fns"
-import React, { useState, useEffect, useMemo } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+
+// type
+import type React from "react"
 
 type CalendarView = "month" | "week" | "day" | "agenda"
 
@@ -51,7 +57,6 @@ interface CalendarProps {
   events: Event[]
 }
 
-// TODO: rename events/agenda into appointments
 const Calendar = ({ events: initialEvents }: CalendarProps) => {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [view, setView] = useState<CalendarView>("month")
@@ -94,7 +99,12 @@ const Calendar = ({ events: initialEvents }: CalendarProps) => {
     const days = eachDayOfInterval({ start, end })
 
     return (
-      <div className="grid grid-cols-7 gap-1 text-xs md:text-sm">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="grid grid-cols-7 gap-1 text-xs md:text-sm"
+      >
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
           <div
             key={day}
@@ -103,32 +113,38 @@ const Calendar = ({ events: initialEvents }: CalendarProps) => {
             {day}
           </div>
         ))}
-        {days.map((day) => (
-          <Card
+        {days.map((day, index) => (
+          <motion.div
             key={day.toString()}
-            className={`p-1 md:p-2 ${
-              !isSameMonth(day, currentDate)
-                ? "bg-gray-100 dark:bg-gray-800 opacity-50"
-                : "bg-white dark:bg-gray-700"
-            } ${
-              isSameDay(day, new Date())
-                ? "border-2 border-blue-500 dark:border-blue-300"
-                : "border-0"
-            }`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.01 }}
           >
-            <div className="text-xs md:text-sm font-medium">
-              {format(day, "d")}
-            </div>
-            <ScrollArea className="h-20 md:h-32">
-              {events
-                .filter((event) => isSameDay(event.date, day))
-                .map((event) => (
-                  <EventItem key={event.id} event={event} compact />
-                ))}
-            </ScrollArea>
-          </Card>
+            <Card
+              className={`p-1 md:p-2 ${
+                !isSameMonth(day, currentDate)
+                  ? "bg-gray-100 dark:bg-gray-800 opacity-50"
+                  : "bg-white dark:bg-gray-700"
+              } ${
+                isSameDay(day, new Date())
+                  ? "border-2 border-blue-500 dark:border-blue-300"
+                  : "border-0"
+              }`}
+            >
+              <div className="text-xs md:text-sm font-medium">
+                {format(day, "d")}
+              </div>
+              <ScrollArea className="h-20 md:h-32">
+                {events
+                  .filter((event) => isSameDay(event.date, day))
+                  .map((event) => (
+                    <EventItem key={event.id} event={event} compact />
+                  ))}
+              </ScrollArea>
+            </Card>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     )
   }
 
@@ -138,10 +154,18 @@ const Calendar = ({ events: initialEvents }: CalendarProps) => {
     const days = eachDayOfInterval({ start, end })
 
     return (
-      <div className="grid grid-cols-7 gap-1">
-        {days.map((day) => (
-          <div
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="grid grid-cols-7 gap-1"
+      >
+        {days.map((day, index) => (
+          <motion.div
             key={day.toString()}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.1 }}
             className={`p-2 border ${
               isSameDay(day, new Date())
                 ? "bg-blue-100 dark:bg-blue-900"
@@ -156,15 +180,20 @@ const Calendar = ({ events: initialEvents }: CalendarProps) => {
                   <EventItem key={event.id} event={event} />
                 ))}
             </ScrollArea>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     )
   }
 
   const renderDayView = () => {
     return (
-      <div className="p-2 border bg-white dark:bg-gray-800">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="p-2 border bg-white dark:bg-gray-800"
+      >
         <div className="text-xl font-bold mb-4">
           {format(currentDate, "EEEE, MMMM d, yyyy")}
         </div>
@@ -175,31 +204,48 @@ const Calendar = ({ events: initialEvents }: CalendarProps) => {
               <EventItem key={event.id} event={event} />
             ))}
         </ScrollArea>
-      </div>
+      </motion.div>
     )
   }
 
   const renderAgendaView = () => {
     return (
-      <ScrollArea className="h-[calc(100vh-300px)]">
-        <div className="space-y-2">
-          {events.map((event) => (
-            <EventItem key={event.id} event={event} showDate />
-          ))}
-        </div>
-      </ScrollArea>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        <ScrollArea className="h-[calc(100vh-300px)]">
+          <div className="space-y-2">
+            {events.map((event, index) => (
+              <motion.div
+                key={event.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+              >
+                <EventItem event={event} showDate />
+              </motion.div>
+            ))}
+          </div>
+        </ScrollArea>
+      </motion.div>
     )
   }
 
-  const EventItem = ({
-    event,
-    showDate = false,
-    compact = false,
-  }: { event: Event; showDate?: boolean; compact?: boolean }) => (
+  const EventItem: React.FC<{
+    event: Event
+    showDate?: boolean
+    compact?: boolean
+  }> = ({ event, showDate = false, compact = false }) => (
     <Dialog>
       <DialogTrigger asChild>
-        <div
-          className={`p-1 rounded-xl cursor-pointer text-center text-white overflow-hidden ${compact ? "h-6" : ""}`}
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className={`p-1 rounded-xl cursor-pointer text-center text-white overflow-hidden ${
+            compact ? "h-6" : ""
+          }`}
           style={{ backgroundColor: event.color || "#3b82f6" }}
         >
           <div className="font-bold truncate text-xs">{event.title}</div>
@@ -208,7 +254,7 @@ const Calendar = ({ events: initialEvents }: CalendarProps) => {
               {format(event.date, "MMM d, HH:mm")}
             </div>
           )}
-        </div>
+        </motion.div>
       </DialogTrigger>
       <DialogContent className="w-[90vw] max-w-lg">
         <DialogHeader>
@@ -248,24 +294,28 @@ const Calendar = ({ events: initialEvents }: CalendarProps) => {
     <Card className="container mx-auto p-2 md:p-6 max-w-7xl bg-white dark:bg-gray-900 shadow-lg">
       <div className="flex flex-col space-y-4 mb-6">
         <div className="flex justify-between items-center">
-          <Button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            variant="outline"
-            size="sm"
-            className="md:hidden dark:bg-gray-800 dark:text-white"
-          >
-            <Menu className="size-4" />
-          </Button>
-          <div className="flex space-x-2">
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button
-              onClick={() => changeDate(-1)}
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               variant="outline"
               size="sm"
-              className="dark:bg-gray-800 dark:text-white"
+              className="md:hidden dark:bg-gray-800 dark:text-white"
             >
-              <ChevronLeft className="mr-1 size-4" />
-              <span className="hidden md:inline">Previous</span>
+              <Menu className="size-4" />
             </Button>
+          </motion.div>
+          <div className="flex space-x-2">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                onClick={() => changeDate(-1)}
+                variant="outline"
+                size="sm"
+                className="dark:bg-gray-800 dark:text-white"
+              >
+                <ChevronLeft className="mr-1 size-4" />
+                <span className="hidden md:inline">Previous</span>
+              </Button>
+            </motion.div>
             <Select
               value={view}
               onValueChange={(value: CalendarView) => setView(value)}
@@ -280,15 +330,17 @@ const Calendar = ({ events: initialEvents }: CalendarProps) => {
                 <SelectItem value="agenda">Agenda</SelectItem>
               </SelectContent>
             </Select>
-            <Button
-              onClick={() => changeDate(1)}
-              variant="outline"
-              size="sm"
-              className="dark:bg-gray-800 dark:text-white"
-            >
-              <span className="hidden md:inline">Next</span>
-              <ChevronRight className="ml-1 size-4" />
-            </Button>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                onClick={() => changeDate(1)}
+                variant="outline"
+                size="sm"
+                className="dark:bg-gray-800 dark:text-white"
+              >
+                <span className="hidden md:inline">Next</span>
+                <ChevronRight className="ml-1 size-4" />
+              </Button>
+            </motion.div>
           </div>
         </div>
         <div className="flex space-x-2">
@@ -305,35 +357,48 @@ const Calendar = ({ events: initialEvents }: CalendarProps) => {
               size={20}
             />
           </div>
-          <Button
-            onClick={() => setIsNewEventDialogOpen(true)}
-            className="bg-green-500 hover:bg-green-600 text-white"
-          >
-            <Plus className="mr-2 h-4 w-4" /> Add Event
-          </Button>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              onClick={() => setIsNewEventDialogOpen(true)}
+              className="bg-green-500 hover:bg-green-600 text-white"
+            >
+              <Plus className="mr-2 h-4 w-4" /> Add Event
+            </Button>
+          </motion.div>
         </div>
       </div>
-      <div className="text-center text-2xl md:text-3xl mb-6 font-bold dark:text-white">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center text-2xl md:text-3xl mb-6 font-bold dark:text-white"
+      >
         {format(currentDate, "MMMM yyyy")}
-      </div>
+      </motion.div>
       <div className="flex flex-col md:flex-row">
-        <div
-          className={`${
-            isSidebarOpen ? "block" : "hidden"
-          } md:block w-full md:w-64 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg md:mr-4 mb-4 md:mb-0`}
-        >
-          <h2 className="text-lg font-bold mb-4">Upcoming Events</h2>
-          <ScrollArea className="h-64 md:h-[calc(100vh-400px)]">
-            {upcomingEvents.map((event) => (
-              <EventItem key={event.id} event={event} showDate />
-            ))}
-          </ScrollArea>
-        </div>
+        <AnimatePresence>
+          {isSidebarOpen && (
+            <motion.div
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -100 }}
+              className="md:block w-full md:w-64 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg md:mr-4 mb-4 md:mb-0"
+            >
+              <h2 className="text-lg font-bold mb-4">Upcoming Events</h2>
+              <ScrollArea className="h-64 md:h-[calc(100vh-400px)]">
+                {upcomingEvents.map((event) => (
+                  <EventItem key={event.id} event={event} showDate />
+                ))}
+              </ScrollArea>
+            </motion.div>
+          )}
+        </AnimatePresence>
         <div className="flex-grow">
-          {view === "month" && renderMonthView()}
-          {view === "week" && renderWeekView()}
-          {view === "day" && renderDayView()}
-          {view === "agenda" && renderAgendaView()}
+          <AnimatePresence mode="wait">
+            {view === "month" && renderMonthView()}
+            {view === "week" && renderWeekView()}
+            {view === "day" && renderDayView()}
+            {view === "agenda" && renderAgendaView()}
+          </AnimatePresence>
         </div>
       </div>
 
@@ -377,12 +442,14 @@ const Calendar = ({ events: initialEvents }: CalendarProps) => {
               }
               className="rounded-2xl"
             />
-            <Button
-              onClick={addNewEvent}
-              className="bg-green-500 hover:bg-green-400 text-white "
-            >
-              Add Event
-            </Button>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                onClick={addNewEvent}
+                className="bg-green-500 hover:bg-green-400 text-white"
+              >
+                Add Event
+              </Button>
+            </motion.div>
           </div>
         </DialogContent>
       </Dialog>
