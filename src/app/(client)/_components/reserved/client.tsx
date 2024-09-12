@@ -1,7 +1,7 @@
 "use client"
 
 // components
-import { columns } from "@/app/(admin)/_components/properties/columns"
+import { columns } from "@/app/(client)/_components/reserved/columns"
 import DataTable from "@/components/ui/data-table"
 import { Heading } from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
@@ -10,14 +10,14 @@ import { Separator } from "@/components/ui/separator"
 // import { useRouter } from "next/navigation"
 
 // types
-import type { Property } from "@/app/(admin)/_components/data"
+import type { Property } from "@/app/(admin)/_components/data/properties"
 import type { Row } from "@tanstack/react-table"
 
 interface PropertiesClientProps {
   data: Property[]
 }
 
-const PropertiesClient = ({ data }: PropertiesClientProps) => {
+const ReservedPropertiesClient = ({ data }: PropertiesClientProps) => {
   // init delete handler
   const handleDelete = async (rows: Row<Property>[]) => {
     // const ids = rows.map((r) => r.original.id)
@@ -33,8 +33,8 @@ const PropertiesClient = ({ data }: PropertiesClientProps) => {
     <>
       <div className="flex items-start justify-between">
         <Heading
-          title={`Properties (${data.length})`}
-          description="Manage properties"
+          title={`Reserved Properties (${data.length})`}
+          description="Manage reserved properties"
         />
       </div>
       <Separator className="mt-2" />
@@ -50,4 +50,4 @@ const PropertiesClient = ({ data }: PropertiesClientProps) => {
   )
 }
 
-export default PropertiesClient
+export default ReservedPropertiesClient

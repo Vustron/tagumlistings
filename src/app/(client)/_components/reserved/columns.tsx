@@ -1,7 +1,7 @@
 "use client"
 
 // components
-import CellActions from "@/app/(admin)/_components/properties/cell-actions"
+import CellActions from "@/app/(client)/_components/reserved/cell-actions"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 
@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { getRoleBadgeColor } from "@/lib/utils"
 
 // types
-import type { Property } from "@/app/(admin)/_components/data"
+import type { Property } from "@/app/(admin)/_components/data/properties"
 import type { ColumnDef } from "@tanstack/react-table"
 
 export const columns: ColumnDef<Property>[] = [

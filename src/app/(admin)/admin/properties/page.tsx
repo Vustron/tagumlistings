@@ -1,6 +1,6 @@
 // components
 import ContentLayout from "@/app/(admin)/_components/shared/content-layout"
-import PropertiesClient from "@/app/(admin)/_components/properties/client"
+import ReservedPropertiesClient from "@/app/(client)/_components/reserved/client"
 import BounceWrapper from "@/components/shared/bounce"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 
@@ -24,7 +24,7 @@ export default function PropertiesPage() {
         <DynamicBreadcrumb items={propertiesItems} />
 
         {/* client */}
-        <PropertiesClient data={properties} />
+        <ReservedPropertiesClient data={properties} />
       </BounceWrapper>
     </ContentLayout>
   )

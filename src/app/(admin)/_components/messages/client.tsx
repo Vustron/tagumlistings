@@ -116,7 +116,16 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
 
   const handleSendMessage = (): void => {
     if (message.trim() && selectedClient) {
-      console.log(`Sending message to ${selectedClient.name}: ${message}`)
+      const newMessage = {
+        id: Date.now().toString(),
+        content: message,
+        timestamp: Date.now(),
+        senderId: isAdmin ? "admin" : "1",
+      }
+      setSelectedClient({
+        ...selectedClient,
+        messages: [...selectedClient.messages, newMessage],
+      })
       setMessage("")
     }
   }
@@ -129,7 +138,6 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
         className={`p-0 h-full ${isAdmin ? "w-auto container" : "w-full"}`}
       >
         <div className="flex h-full bg-background">
-          {/* Sidebar (only for admin) */}
           {isAdmin && (
             <motion.div
               initial={false}
@@ -210,7 +218,6 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
             </motion.div>
           )}
 
-          {/* Main content */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -219,7 +226,7 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
           >
             {selectedClient ? (
               <>
-                <div className="p-4 border-b border-border flex justify-between items-center">
+                <div className="p-4 border-b border-border flex justify-between items-center bg-secondary">
                   <div>
                     <h2 className="text-lg font-semibold">
                       {selectedClient.name}
@@ -258,25 +265,30 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
                           stiffness: 300,
                           damping: 30,
                         }}
-                        className={`mb-2 p-2 rounded-lg max-w-[70%] ${
+                        className={`mb-4 p-3 rounded-lg max-w-[70%] ${
                           msg.senderId === selectedClient.id
-                            ? "dark:bg-green-400 bg-green-500 dark:text-white text-primary-foreground"
-                            : "bg-blue-400 dark:bg-secondary text-white ml-auto"
+                            ? "bg-green-500 text-white"
+                            : "bg-blue-500 text-white ml-auto"
                         }`}
                       >
-                        {msg.content}
-                        <div className="text-xs mt-1 opacity-70">
+                        <p className="break-words">{msg.content}</p>
+                        <div className="text-xs mt-2 opacity-70">
                           {new Date(msg.timestamp).toLocaleTimeString()}
                         </div>
                       </motion.div>
                     ))}
                   </AnimatePresence>
                 </ScrollArea>
-                <div className="p-4 border-t border-border flex">
+                <div className="p-4 border-t border-border flex bg-secondary">
                   <Input
                     placeholder="Type a message..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === "Enter") {
+                        handleSendMessage()
+                      }
+                    }}
                     className="flex-grow mr-2"
                   />
                   <motion.div
