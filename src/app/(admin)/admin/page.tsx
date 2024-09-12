@@ -1,6 +1,6 @@
 // components
-import ContentLayout from "@/app/(admin)/_components/content-layout"
-import AdminDashboardClient from "@/app/(admin)/admin/_components/client"
+import ContentLayout from "@/app/(admin)/_components/shared/content-layout"
+import AdminDashboardClient from "@/app/(admin)/_components/dashboard/client"
 import BounceWrapper from "@/components/shared/bounce"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 

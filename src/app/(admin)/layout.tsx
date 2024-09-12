@@ -1,5 +1,5 @@
 // utils
-import SidePanel from "@/app/(admin)/_components/side-panel"
+import SidePanel from "@/app/(admin)/_components/shared/side-panel"
 import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
 
 export default function AdminLayout({

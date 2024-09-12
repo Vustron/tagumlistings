@@ -1,11 +1,11 @@
 // components
-import ContentLayout from "@/app/(admin)/_components/content-layout"
-import PropertiesClient from "@/app/(admin)/admin/properties/_components/client"
+import ContentLayout from "@/app/(admin)/_components/shared/content-layout"
+import PropertiesClient from "@/app/(admin)/_components/properties/client"
 import BounceWrapper from "@/components/shared/bounce"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 
 // utils
-import { properties } from "@/app/(admin)/admin/properties/constants"
+import { properties } from "@/app/(admin)/_components/data/properties"
 import { propertiesItems } from "@/lib/misc/breadcrumb-lists"
 
 // types

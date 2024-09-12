@@ -1,11 +1,11 @@
 // components
-import ContentLayout from "@/app/(admin)/_components/content-layout"
-import PaymentsClient from "@/app/(admin)/admin/payments/_components/client"
+import ContentLayout from "@/app/(admin)/_components/shared/content-layout"
+import PaymentsClient from "@/app/(admin)/_components/payments/client"
 import BounceWrapper from "@/components/shared/bounce"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 
 // utils
-import { payments } from "@/app/(admin)/admin/payments/constants"
+import { payments } from "@/app/(admin)/_components/data/payments"
 import { paymentsItems } from "@/lib/misc/breadcrumb-lists"
 
 // types

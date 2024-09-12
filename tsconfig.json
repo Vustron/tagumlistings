@@ -45,5 +45,5 @@
     ".next/types/**/*.ts",
     "tailwindcss-modules.d.ts"
   ],
-  "exclude": ["node_modules", "vendor"]
+  "exclude": ["node_modules", "vendor", "backend"]
 }

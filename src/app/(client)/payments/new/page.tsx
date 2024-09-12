@@ -1,5 +1,5 @@
 // components
-import AddPropertyClient from "@/app/(admin)/admin/properties/new/_components/client"
+import AddPropertyClient from "@/app/(admin)/_components/new-property/client"
 import BounceWrapper from "@/components/shared/bounce"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 

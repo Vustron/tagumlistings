@@ -1,5 +1,5 @@
 // components
-import AppointmentsClient from "@/app/(client)/appointments/_components/client"
+import AppointmentsClient from "@/app/(client)/_components/appointments/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // types

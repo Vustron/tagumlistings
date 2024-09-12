@@ -1,14 +1,14 @@
 "use client"
 
 // components
-import ImageCarousel from "@/app/(client)/properties/[id]/_components/image-carousel"
+import ImageCarousel from "@/app/(client)/_components/property-id/image-carousel"
 
 // hooks
 import { useParams } from "next/navigation"
 import { useState, useEffect } from "react"
 
 // utils
-import { properties } from "@/app/(admin)/admin/properties/constants"
+import { properties } from "@/app/(admin)/_components/data/properties"
 
 // types
 

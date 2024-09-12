@@ -1,5 +1,5 @@
 // components
-import LoginForm from "@/app/(auth)/login/_components/login-form"
+import LoginForm from "@/app/(auth)/_components/login/form"
 import BounceWrapper from "@/components/shared/bounce"
 
 // assets

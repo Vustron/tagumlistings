@@ -1,11 +1,11 @@
 // components
-import ContentLayout from "@/app/(admin)/_components/content-layout"
-import UsersClient from "@/app/(admin)/admin/users/_components/client"
+import ContentLayout from "@/app/(admin)/_components/shared/content-layout"
+import UsersClient from "@/app/(admin)/_components/users/client"
 import BounceWrapper from "@/components/shared/bounce"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 
 // utils
-import { users } from "@/app/(admin)/admin/users/constants"
+import { users } from "@/app/(admin)/_components/data/users"
 import { usersItems } from "@/lib/misc/breadcrumb-lists"
 
 // types

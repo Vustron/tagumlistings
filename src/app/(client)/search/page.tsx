@@ -1,6 +1,6 @@
 // components
 import { BlurFade } from "@/components/shared/blur-fade"
-import SearchClient from "@/app/(client)/search/_components/client"
+import SearchClient from "@/app/(client)/_components/search/client"
 
 export default function SearchPage() {
   return (

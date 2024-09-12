@@ -1,6 +1,6 @@
 // components
-import ClientHeader from "@/app/(client)/_components/header"
-import ClientFooter from "@/app/(client)/_components/footer"
+import ClientHeader from "@/app/(client)/_components/shared/header"
+import ClientFooter from "@/app/(client)/_components/shared/footer"
 
 // utils
 import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"

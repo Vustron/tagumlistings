@@ -1,6 +1,6 @@
 // components
-import ContentLayout from "@/app/(admin)/_components/content-layout"
-import AddPropertyClient from "@/app/(admin)/admin/properties/new/_components/client"
+import ContentLayout from "@/app/(admin)/_components/shared/content-layout"
+import AddPropertyClient from "@/app/(admin)/_components/new-property/client"
 import BounceWrapper from "@/components/shared/bounce"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 

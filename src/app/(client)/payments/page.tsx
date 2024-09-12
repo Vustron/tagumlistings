@@ -1,9 +1,9 @@
 // components
-import PaymentsClient from "@/app/(client)/payments/_components/client"
+import PaymentsClient from "@/app/(client)/_components/payments/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // utils
-import { payments } from "@/app/(admin)/admin/payments/constants"
+import { payments } from "@/app/(admin)/_components/data/payments"
 
 // types
 import type { Metadata } from "next"

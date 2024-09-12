@@ -2,7 +2,7 @@
 
 // components
 // import CreateReportModal from "@/components/modals/create-report"
-import CreateUserModal from "@/app/(admin)/admin/users/_components/create-user"
+import CreateUserModal from "@/app/(admin)/_components/users/create-user"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
