@@ -49,8 +49,10 @@
         "useAwait": "off"
       },
       "a11y": {
+        "useFocusableInteractive": "off",
         "noSvgWithoutTitle": "off",
-        "useKeyWithClickEvents": "off"
+        "useKeyWithClickEvents": "off",
+        "useSemanticElements": "off"
       }
     }
   },
@@ -84,9 +86,7 @@
   // overrides section
   "overrides": [
     {
-      "include": [
-        "*.json"
-      ],
+      "include": ["*.json"],
       "formatter": {
         "indentWidth": 2
       }
