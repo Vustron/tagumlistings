@@ -12,7 +12,40 @@ use Illuminate\Support\Facades\Log;
 
 class AppointmentController extends Controller
 {
+
+    // Client API Methods
+    public function requestAppointment(Request $request)
+    {
+        try {
+
+            $data = $request->validate([
+                'appointment_date' => 'required',
+                'property_id' => 'required',
+            ]);
+
+            Appointment::create([
+                'appointment_date' => $data['appointment_date'],
+                'user_id' => Auth::id(),
+                'property_id' => $data['property_id'],
+            ]);
+
+            return response()->json(['message' => 'Appointment Request Sent!'], 201);
+
+        } catch (\Exception $e) {
+
+            Log::error('Appointment Request Failed:' . $e->getMessage());
+            Log::error($e->getTraceAsString());
+
+            return response()->json([
+                'message' => 'Setting Appointments Error',
+                'error' => $e->getMessage(),
+            ], $e->getCode());
+        }
+
+    }
     
+    // Company Representative API Methods
+
     public function index()
     {
         try {
@@ -42,35 +75,6 @@ class AppointmentController extends Controller
     }
 
     
-    public function setAppointmentRequest(Request $request)
-    {
-        try {
-
-            $data = $request->validate([
-                'appointment_date' => 'required',
-                'property_id' => 'required',
-            ]);
-
-            Appointment::create([
-                'appointment_date' => $data['appointment_date'],
-                'user_id' => Auth::id(),
-                'property_id' => $data['property_id'],
-            ]);
-
-            return response()->json(['message' => 'Appointment Request Sent!'], 201);
-
-        } catch (\Exception $e) {
-
-            Log::error('Appointment Request Failed:' . $e->getMessage());
-            Log::error($e->getTraceAsString());
-
-            return response()->json([
-                'message' => 'Setting Appointments Error',
-                'error' => $e->getMessage(),
-            ], $e->getCode());
-        }
-
-    }
 
     public function confirmAppointmentRequest(Request $request, string $appointment_id)
     {

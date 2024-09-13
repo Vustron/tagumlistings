@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
+
+    // Client API Methods
     
     public function getPaymentHistory(string $property_id)
     {
@@ -36,6 +38,8 @@ class PaymentController extends Controller
         }
     }
 
+
+    // Company Representative API Methods
 
     public function addPayment(Request $request)
     {
