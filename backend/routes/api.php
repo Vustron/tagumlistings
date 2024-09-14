@@ -17,7 +17,6 @@ Route::middleware(['web', 'auth:sanctum', 'check.token.expiration'])->group(func
 
     // User management routes
     Route::get('/get/profile', [AuthController::class, 'getProfile']);
-    Route::get('/get/accounts', [AuthController::class, 'getAllAccounts']);
     Route::get('/get/account/{id}', [AuthController::class, 'getAccountByID']);
 
     Route::patch('/account/update/{id}', [AuthController::class, 'updateAccount']);
@@ -28,12 +27,19 @@ Route::middleware(['web', 'auth:sanctum', 'check.token.expiration'])->group(func
     // Client routes
     Route::middleware('role:client')->group(function () {
         Route::get('/payment/history/{property_id}', [PaymentController::class, 'getPaymentHistory']);
-        Route::post('/set/appointment', [AppointmentController::class, 'setAppointmentRequest']);
+
+        Route::get('/all/available/property', [PropertyController::class, 'searchAvailablePropertyDetails']);
+        Route::get('/property/{status}', [PropertyController::class, 'getPropertyByStatus']);
+
+        Route::post('/request/appointment', [AppointmentController::class, 'requestAppointment']);
     });
 
     
     // Client representative routes
     Route::middleware('role:company_representative')->group(function () {
+        Route::get('/get/accounts', [AuthController::class, 'getAllAccounts']);
+
+
         Route::apiResource('property', PropertyController::class);
         Route::apiResource('appointments', AppointmentController::class);
 

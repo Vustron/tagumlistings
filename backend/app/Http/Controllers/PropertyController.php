@@ -5,20 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use App\Models\Property;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class PropertyController extends Controller
 {
-  
-    public function index(Request $request)
+    // Client API Methods
+    public function searchAvailablePropertyDetails(Request $request)
     {
         $properties = Property::query()
-            ->when($request->status, function ($query) use ($request) {
-                $query->where('status', strtolower($request->status));
-            })
             ->when($request->price, function ($query) use ($request) {
                 $query->where('price', floatval($request->price));
+            })
+            ->when($request->reservation_fee, function ($query) use ($request) {
+                $query->where('reservation_fee', floatval($request->reservation_fee));
             })
             ->when($request->search, function ($query) use ($request) {
                 $searchTerm = strtolower($request->search);
@@ -28,13 +29,38 @@ class PropertyController extends Controller
                         ->orWhere('location', 'like', "%{$searchTerm}%");
                 });
             })
+            ->where('status', '=', 'available')
             ->paginate(10);
-            // ->withQueryString();
-        
+
         return response()->json($properties, 200);
     }
 
+    public function getPropertyByStatus(string $status)
+    {
+        try {
+            
+            $properties = Property::select('id', 'property_name', 'description', 'location', 'price')
+                          ->where('status', '=', $status)
+                          ->where('user_id', '=', Auth::id())
+                          ->get();
+
+            return $properties;
+
+        } catch (\Exception $e) {
+
+            Log::error('Fetching Property Request Failed:' . $e->getMessage());
+            Log::error($e->getTraceAsString());
+
+            return response()->json([
+                'message' => 'Fetching Property Error',
+                'error' => $e->getMessage(),
+            ], $e->getCode());
+        }
+    }
+
   
+    // Company Representative API Methods
+
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -161,18 +187,12 @@ class PropertyController extends Controller
             ]);
 
             if($propertyStatusUpdated){
-                $appointment = Appointment::where('property_id', $property->id);
+                DB::commit();
 
-                if($appointment){
-                    $appointment->delete();
-
-                    DB::commit();
-
-                    return response()->json([
-                        'message' => 'Property Sold Successfully',
-                        'property' => $property,
-                    ], 200);
-                }
+                return response()->json([
+                    'message' => 'Property Sold Successfully',
+                    'property' => $property,
+                ], 200);
                     
             }
 
