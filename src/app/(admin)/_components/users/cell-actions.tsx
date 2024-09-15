@@ -15,10 +15,10 @@ import { Edit, MoreHorizontal, Trash } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 // types
-import type { User } from "@/app/(admin)/_components/data"
+import type { SessionData } from "@/lib/config/session"
 
 interface CellActionProps {
-  data: User
+  data: SessionData
 }
 
 const CellActions = ({ data }: CellActionProps) => {

@@ -4,64 +4,72 @@
 import DynamicForm from "@/components/shared/dynamic-form"
 
 // utils
+import { dataSerializer } from "@/lib/utils"
 import { updateAccountFields } from "@/lib/misc/field-configs"
-// import { clientErrorHandler } from "@/lib/utils"
-import { registerSchema } from "@/lib/validation"
+import { clientErrorHandler } from "@/lib/utils"
+import { updateAccountSchema } from "@/lib/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
-// import toast from "react-hot-toast"
+import toast from "react-hot-toast"
 
 // hooks
-// import { useRegisterAccount } from "@/app/(auth)/register/api"
+import { useGetAccount } from "@/app/(auth)/_hooks/use-get-account"
+import { useUpdateAccount } from "@/app/(auth)/_hooks/use-update-account"
 import { useForm } from "react-hook-form"
 
 // types
-import type { RegisterValues } from "@/lib/validation"
+import type { UpdateAccountValues } from "@/lib/validation"
+import type { SessionData } from "@/lib/config/session"
 
 interface AccountFormProps {
-  onSuccess?: () => void
-  onError?: () => void
+  id?: string | undefined
 }
 
-const AccountForm = () => {
-  // init mutation
-  // const registerMutation = useRegisterAccount()
+const AccountForm = ({ id }: AccountFormProps) => {
+  const { data: user } = useGetAccount(id)
 
-  // init form
-  const form = useForm<RegisterValues>({
-    resolver: zodResolver(registerSchema),
+  const userData: SessionData | undefined = user
+    ? dataSerializer(user)
+    : undefined
+
+  const updateAccountMutation = useUpdateAccount(id)
+
+  const form = useForm<UpdateAccountValues>({
+    resolver: zodResolver(updateAccountSchema),
     defaultValues: {
-      username: "",
-      password: "",
+      id: userData?.id,
+      name: userData?.name,
+      address: userData?.address,
+      contact_number: userData?.contact_number,
+      email: userData?.email,
+      role: userData?.role,
+      password: undefined,
+      newpassword: undefined,
     },
   })
 
   // submit handler
-  const submitHandler = async (values: RegisterValues) => {
-    // await toast.promise(registerMutation.mutateAsync(values), {
-    //   loading: <span className="animate-pulse">Updating account...</span>,
-    //   success: "Account updated",
-    //   error: (error: unknown) => clientErrorHandler(error),
-    // })
-
-    form.reset()
-    // if (registerMutation.isSuccess) {
-    //   onSuccess?.()
-    // } else {
-    //   onError?.()
-    // }
-    console.log(values)
+  const onSubmit = async (values: UpdateAccountValues) => {
+    console.log("Form Submitted", values)
+    await toast.promise(updateAccountMutation.mutateAsync(values), {
+      loading: <span className="animate-pulse">Updating account...</span>,
+      success: "Account updated",
+      error: (error: unknown) => clientErrorHandler(error),
+    })
+    form.reset(values)
   }
 
   return (
-    <DynamicForm<RegisterValues>
-      form={form}
-      onSubmit={submitHandler}
-      fields={updateAccountFields}
-      submitButtonTitle="Update"
-      submitButtonClassname="bg-green-500 rounded-3xl"
-      submitButtonTitleClassname="text-md font-medium"
-      // mutation={registerMutation}
-    />
+    <>
+      <DynamicForm<UpdateAccountValues>
+        form={form}
+        onSubmit={onSubmit}
+        fields={updateAccountFields}
+        submitButtonTitle="Update"
+        submitButtonClassname="bg-green-500 rounded-3xl"
+        submitButtonTitleClassname="text-md font-medium"
+        mutation={updateAccountMutation}
+      />
+    </>
   )
 }
 

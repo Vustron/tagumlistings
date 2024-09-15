@@ -3,14 +3,16 @@
 // components
 import CellActions from "@/app/(admin)/_components/users/cell-actions"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Badge } from "@/components/ui/badge"
+
+// utils
+import { getRoleBadgeColor } from "@/lib/utils"
 
 // types
-import type { User } from "@/app/(admin)/_components/data/users"
-import { Badge } from "@/components/ui/badge"
-import { getRoleBadgeColor } from "@/lib/utils"
 import type { ColumnDef } from "@tanstack/react-table"
+import type { SessionData } from "@/lib/config/session"
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<SessionData>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -35,8 +37,12 @@ export const columns: ColumnDef<User>[] = [
     header: "Name",
   },
   {
-    accessorKey: "username",
-    header: "Username",
+    accessorKey: "address",
+    header: "Address",
+  },
+  {
+    accessorKey: "contact_number",
+    header: "Contact",
   },
   {
     accessorKey: "email",

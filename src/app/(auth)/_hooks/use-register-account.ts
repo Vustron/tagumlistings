@@ -12,46 +12,43 @@ import DOMPurify from "dompurify"
 
 // types
 import type { RegisterValues } from "@/lib/validation"
+import type { QueryFilters } from "@tanstack/react-query"
+import type { Accounts } from "@/app/(auth)/_actions/get-accounts"
 
-// set purify dom
 const purify = DOMPurify
 
-/* --------------create account---------------- */
 export const useRegisterAccount = () => {
-  // init router
   const router = useRouter()
-
-  // init query client
   const queryClient = useQueryClient()
 
   return useMutation({
-    // set mutation key
     mutationKey: ["register-account"],
-
-    // create user function
     mutationFn: async (values: RegisterValues) => {
-      // set unsanitized data
-      const unsanitizedData = values
-
-      // init sanitizer
       const sanitizedData = sanitizer<RegisterValues>(
-        unsanitizedData,
+        values,
         registerSchema,
         purify,
       )
-
-      await registerAccount(sanitizedData)
+      return await registerAccount(sanitizedData)
     },
-
-    // on success redirect to verification page
+    onSuccess: async (newUser) => {
+      const queryFilter: QueryFilters = {
+        queryKey: ["accounts"],
+      }
+      await queryClient.cancelQueries(queryFilter)
+      queryClient.setQueryData<Accounts>(["accounts"], (oldData) => {
+        if (!oldData) {
+          return { accounts: [newUser] }
+        }
+        return {
+          ...oldData,
+          accounts: [...oldData.accounts, newUser],
+        }
+      })
+    },
     onSettled: () => {
-      // Always refetch after error or success:
-      void queryClient.invalidateQueries({ queryKey: ["accounts"] })
-
       router.refresh()
     },
-
-    // handler error
     onError: (error) => clientErrorHandler(error),
   })
 }

@@ -11,34 +11,30 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import toast from "react-hot-toast"
 
 // hooks
-// import { useLoginAccount } from "@/app/(auth)/login/api"
+import { useLoginAccount } from "@/app/(auth)/_hooks/use-login-account"
 import { useForm } from "react-hook-form"
 
 // types
 import type { LoginValues } from "@/lib/validation"
 
-// TODO: 🛠️ work in progress login mutation
-
 const LoginForm = () => {
-  // init mutation
-  // const loginMutation = useLoginAccount()
-
-  // init form
+  const loginMutation = useLoginAccount()
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   })
 
   // submit handler
   const submitHandler = async (values: LoginValues) => {
-    // await toast.promise(loginMutation.mutateAsync(values), {
-    //   loading: <span className="animate-pulse">Logging in...</span>,
-    //   success: "User logged in",
-    //   error: (error: unknown) => clientErrorHandler(error),
-    // })
+    console.log(values)
+    await toast.promise(loginMutation.mutateAsync(values), {
+      loading: <span className="animate-pulse">Logging in...</span>,
+      success: "User logged in",
+      error: (error: unknown) => clientErrorHandler(error),
+    })
 
     form.reset()
   }
@@ -51,7 +47,7 @@ const LoginForm = () => {
       submitButtonTitle="Login"
       submitButtonClassname="bg-green-500 rounded-3xl"
       submitButtonTitleClassname="text-md font-medium"
-      // mutation={() => {}}
+      mutation={loginMutation}
     />
   )
 }

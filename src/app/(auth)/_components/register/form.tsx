@@ -30,7 +30,10 @@ const RegisterForm = ({ onSuccess, onError }: RegisterFormProps) => {
   const form = useForm<RegisterValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      username: "",
+      name: "",
+      address: "",
+      contact_number: "",
+      email: "",
       password: "",
     },
   })

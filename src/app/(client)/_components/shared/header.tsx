@@ -88,7 +88,7 @@ const ClientHeader = () => {
           </div>
           <div className="hidden md:flex items-center space-x-2">
             <ThemeToggle />
-            <UserButton isOnClient />
+            {/* <UserButton isOnClient /> */}
           </div>
 
           <Sheet open={isOpen} onOpenChange={setIsOpen}>

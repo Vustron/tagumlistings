@@ -14,6 +14,7 @@ export const env = createEnv({
   server: {
     API_URL: z.string().url(),
     PRIVATE_KEY: z.string(),
+    SECRET_KEY: z.string(),
   },
   // client env
   client: {
@@ -28,6 +29,7 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     API_URL: process.env.API_URL,
     PRIVATE_KEY: process.env.PRIVATE_KEY,
+    SECRET_KEY: process.env.SECRET_KEY,
     // client
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME:

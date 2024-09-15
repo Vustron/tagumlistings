@@ -12,6 +12,14 @@ import type DOMPurify from "dompurify"
 import type { NextRequest } from "next/server"
 import type { z } from "zod"
 
+export const getInitials = (name: string) => {
+  if (!name) return ""
+  const [firstName, lastName] = name.split(" ")
+  const firstLetter = firstName ? firstName[0] : ""
+  const lastLetter = lastName ? lastName.slice(-1) : firstName?.slice(-1)
+  return `${firstLetter}${lastLetter}`.toUpperCase()
+}
+
 // Helper function to format date
 export const formatDate = (dateString: string) => {
   const date = new Date(dateString)

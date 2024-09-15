@@ -159,7 +159,7 @@ const FormMessage = React.forwardRef<
       {...props}
     >
       <Badge
-        className="w-full bg-transparent hover:bg-white hover:text-black"
+        className="w-full bg-transparent hover:bg-transparent hover:text-black"
         variant="destructive"
       >
         <span className="text-xs font-medium text-red-600">{body}</span>

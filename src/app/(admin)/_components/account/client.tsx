@@ -8,26 +8,7 @@ import { Separator } from "@/components/ui/separator"
 // hooks
 // import { useRouter } from "next/navigation"
 
-// types
-import type { User } from "@/app/(admin)/_components/data/users"
-import type { Row } from "@tanstack/react-table"
-
-interface UsersClientProps {
-  data?: User[]
-}
-
-const AccountClient = ({ data }: UsersClientProps) => {
-  // init delete handler
-  const handleDelete = async (rows: Row<User>[]) => {
-    // const ids = rows.map((r) => r.original.id)
-    // await toast.promise(deleteAccounts.mutateAsync({ ids }), {
-    //   loading: <span className="animate-pulse">Deleting users...</span>,
-    //   success: "Users deleted",
-    //   error: (error: unknown) => clientErrorHandler(error),
-    // })
-    console.log(rows.map((r) => r.original.id))
-  }
-
+const AccountClient = ({ id }: { id?: string }) => {
   return (
     <>
       <div className="flex items-start justify-between">
@@ -39,7 +20,7 @@ const AccountClient = ({ data }: UsersClientProps) => {
       <Separator className="mt-2" />
 
       <div className="container flex flex-col justify-center items-center lg:w-[400px] sm:w-[300px] h-auto p-5 mt-5">
-        <AccountForm />
+        <AccountForm id={id} />
       </div>
     </>
   )

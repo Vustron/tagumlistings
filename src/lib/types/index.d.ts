@@ -47,10 +47,12 @@ interface SelectOption {
 interface FieldConfig<TFieldValues> {
   name: Path<TFieldValues>
   type: "text" | "password" | "email" | "number" | "select" | "image"
+
   label: string
   placeholder: string
   className?: string
   options?: SelectOption[]
+  isPhone?: boolean
 }
 
 /* Mutation Type */

@@ -6,23 +6,20 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PropertyController;
 use Illuminate\Support\Facades\Route;
 
+// Auth
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware(['web', 'guest'])->group(function () {
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
-});
+// User management routes
+Route::get('/account/get', [AuthController::class, 'getAllAccounts']);
+Route::get('/account/get/{id}', [AuthController::class, 'getAccountByID']);
+Route::patch('/account/update/{id}', [AuthController::class, 'updateAccount']);
 
 // Protected routes
 Route::middleware(['web', 'auth:sanctum', 'check.token.expiration'])->group(function () {
 
-    // User management routes
-    Route::get('/get/profile', [AuthController::class, 'getProfile']);
-    Route::get('/get/account/{id}', [AuthController::class, 'getAccountByID']);
-
-    Route::patch('/account/update/{id}', [AuthController::class, 'updateAccount']);
     Route::delete('/account/delete/{id}', [AuthController::class, 'deleteAccount']);
     Route::post('/logout', [AuthController::class, 'logout']);
-
 
     // Client routes
     Route::middleware('role:client')->group(function () {
@@ -34,7 +31,7 @@ Route::middleware(['web', 'auth:sanctum', 'check.token.expiration'])->group(func
         Route::post('/request/appointment', [AppointmentController::class, 'requestAppointment']);
     });
 
-    
+
     // Client representative routes
     Route::middleware('role:company_representative')->group(function () {
         Route::get('/get/accounts', [AuthController::class, 'getAllAccounts']);
@@ -50,9 +47,7 @@ Route::middleware(['web', 'auth:sanctum', 'check.token.expiration'])->group(func
 
         Route::patch('/reserve/property/{property_id}', [PropertyController::class, 'reserve']);
         Route::patch('/sold/property/{property_id}', [PropertyController::class, 'sold']);
-
     });
-
 });
 
 

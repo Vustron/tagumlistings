@@ -10,16 +10,29 @@ import type {
 // register form fields
 export const registerFields: FieldConfig<RegisterValues>[] = [
   {
+    name: "name",
+    type: "text",
+    label: "Name",
+    placeholder: "john",
+  },
+  {
+    name: "address",
+    type: "text",
+    label: "Address",
+    placeholder: "tagum",
+  },
+  {
+    name: "contact_number",
+    type: "text",
+    label: "Phone Number",
+    placeholder: "0987423213",
+    isPhone: true,
+  },
+  {
     name: "email",
     type: "email",
     label: "Email address",
     placeholder: "john@test.com",
-  },
-  {
-    name: "username",
-    type: "text",
-    label: "Username",
-    placeholder: "john",
   },
   {
     name: "password",
@@ -32,16 +45,39 @@ export const registerFields: FieldConfig<RegisterValues>[] = [
 // register form fields
 export const updateAccountFields: FieldConfig<UpdateAccountValues>[] = [
   {
+    name: "name",
+    type: "text",
+    label: "Name",
+    placeholder: "john",
+  },
+  {
+    name: "address",
+    type: "text",
+    label: "Address",
+    placeholder: "tagum",
+  },
+  {
+    name: "contact_number",
+    type: "text",
+    label: "Phone Number",
+    placeholder: "0987423213",
+    isPhone: true,
+  },
+  {
     name: "email",
     type: "email",
     label: "Email address",
     placeholder: "john@test.com",
   },
   {
-    name: "username",
-    type: "text",
-    label: "Username",
-    placeholder: "john",
+    name: "role",
+    label: "Role",
+    type: "select",
+    placeholder: "Select your role",
+    options: [
+      { value: "user", label: "User" },
+      { value: "admin", label: "Admin" },
+    ],
   },
   {
     name: "password",
@@ -49,15 +85,21 @@ export const updateAccountFields: FieldConfig<UpdateAccountValues>[] = [
     label: "Password",
     placeholder: "******",
   },
+  {
+    name: "newpassword",
+    type: "password",
+    label: "New Password",
+    placeholder: "******",
+  },
 ]
 
 // login form fields
 export const loginFields: FieldConfig<LoginValues>[] = [
   {
-    name: "username",
-    type: "text",
-    label: "Username",
-    placeholder: "john",
+    name: "email",
+    type: "email",
+    label: "Email address",
+    placeholder: "john@test.com",
   },
   {
     name: "password",

@@ -3,6 +3,7 @@ import MediaImage from "@/components/shared/media-image"
 import SubmitButton from "@/components/shared/submit-button"
 import { Button } from "@/components/ui/button"
 import { FloatingLabelInput } from "@/components/ui/floating-label-input"
+import { InputPhone } from "@/components/ui/input-phone"
 import {
   Form,
   FormControl,
@@ -82,14 +83,17 @@ const DynamicForm = <TFieldValues extends FieldValues>({
                       <SelectTrigger
                         className={cn(
                           form.formState.errors[field.name]
-                            ? "border-red-600 focus:ring-0"
-                            : "",
+                            ? "border-red-600 focus:ring-0 text-red-500"
+                            : "text-black dark:text-white",
                           field.className,
                         )}
                       >
-                        <SelectValue placeholder={field.placeholder} />
+                        <SelectValue
+                          className="text-black dark:text-white"
+                          placeholder={field.placeholder}
+                        />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="text-black dark:text-white">
                         {field.options?.map((option) => (
                           <SelectItem key={option.value} value={option.value}>
                             {option.label}
@@ -171,6 +175,23 @@ const DynamicForm = <TFieldValues extends FieldValues>({
                           )}
                       </div>
                     </div>
+                  ) : field.isPhone ? (
+                    <InputPhone
+                      {...formField}
+                      id={field.name}
+                      placeholder={field.placeholder}
+                      disabled={mutation?.isPending || disabled}
+                      className={cn(
+                        form.formState.errors[field.name]
+                          ? "border-red-600 focus:ring-0"
+                          : "",
+                        field.className,
+                      )}
+                      onChange={(value) =>
+                        formField.onChange(value?.toString() || "")
+                      }
+                      value={formField.value || ""}
+                    />
                   ) : (
                     <FloatingLabelInput
                       {...formField}
@@ -201,7 +222,7 @@ const DynamicForm = <TFieldValues extends FieldValues>({
           title={submitButtonTitle}
           disabled={mutation?.isPending || disabled}
           buttonClassName={cn(
-            "w-full focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-600",
+            "w-full focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-600 dark:hover:text-black",
             submitButtonClassname,
           )}
           titleClassName={submitButtonTitleClassname}

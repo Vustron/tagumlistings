@@ -1,3 +1,5 @@
+"use client"
+
 // components
 import { Button } from "@/components/ui/button"
 import { CollapseMenuButton } from "@/components/ui/collapse-menu-button"
@@ -10,13 +12,18 @@ import {
 } from "@/components/ui/tooltip"
 import { Ellipsis, Loader2, LogOut } from "lucide-react"
 
+// actions
+import { logout } from "@/app/(auth)/_actions/logout"
+
 // hooks
 import { useRouter } from "next-nprogress-bar"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 
 // utils
+import { clientErrorHandler } from "@/lib/utils"
 import { getMenuList } from "@/lib/misc/menu-lists"
+import toast from "react-hot-toast"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 
@@ -25,22 +32,25 @@ interface MenuProps {
 }
 
 const Menu = ({ isOpen }: MenuProps) => {
-  // init router
   const router = useRouter()
-
-  // init pathname
   const pathname = usePathname()
-
-  // init menulist
   const menuList = getMenuList(pathname)
+  const [signOut, setIsSignOut] = useState(false)
 
-  // logout state
-  // const [signOut, setIsSignOut] = useState(false)
-
-  // logout handler
   const handleLogout = async () => {
-    // router.replace("/sign-in")
+    setIsSignOut(true)
+    await toast
+      .promise(logout(), {
+        loading: <span className="animate-pulse">Logging out...</span>,
+        success: "Logged out",
+        error: (error: unknown) => clientErrorHandler(error),
+      })
+      .then(() => {
+        setIsSignOut(false)
+      })
+    router.replace("/login")
   }
+
   return (
     <ScrollArea className="[&>div>div[style]]:!block">
       <nav className="mt-7">
@@ -128,9 +138,9 @@ const Menu = ({ isOpen }: MenuProps) => {
                     onClick={handleLogout}
                     variant="outline"
                     className="w-full justify-center h-10 mt-5"
-                    // disabled={signOut}
+                    disabled={signOut}
                   >
-                    {/* {signOut ? (
+                    {signOut ? (
                       <Loader2 className="animate-spin size-4" />
                     ) : (
                       <>
@@ -149,8 +159,7 @@ const Menu = ({ isOpen }: MenuProps) => {
                           Sign out
                         </p>
                       </>
-                    )} */}
-                    Sign out
+                    )}
                   </Button>
                 </TooltipTrigger>
                 {isOpen === false && (

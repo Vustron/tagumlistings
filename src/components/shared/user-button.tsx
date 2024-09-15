@@ -1,7 +1,7 @@
 "use client"
 
 // components
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -18,31 +18,25 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import {
-  User as FallbackUser,
-  Home,
-  LayoutGrid,
-  Loader2,
-  LogOut,
-  UserCog,
-} from "lucide-react"
+import { Home, LayoutGrid, Loader2, LogOut, UserCog } from "lucide-react"
 
-// // server actions
-// import { logout } from "@/lib/server-actions/logout"
+// actions
+import { logout } from "@/app/(auth)/_actions/logout"
 
 // hooks
-// import { useGetAccount } from "@/lib/api/account/get-account"
+import { useSession } from "@/components/providers/session"
+import { useGetAccount } from "@/app/(auth)/_hooks/use-get-account"
 import { useState } from "react"
 import { useRouter } from "next-nprogress-bar"
 
 // utils
 import { motion, AnimatePresence } from "framer-motion"
-import { clientErrorHandler, dataSerializer } from "@/lib/utils"
+import { clientErrorHandler, dataSerializer, getInitials } from "@/lib/utils"
 import Link from "next/link"
 import toast from "react-hot-toast"
 
 // types
-// import type { SessionData } from "@/lib/types"
+import type { SessionData } from "@/lib/config/session"
 
 interface UserButtonProps {
   isOnClient?: boolean
@@ -51,23 +45,21 @@ interface UserButtonProps {
 const UserButton = ({ isOnClient }: UserButtonProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const router = useRouter()
+  const session = useSession()
+  const { data: user, isLoading } = useGetAccount(session.id)
 
-  // get user
-  // const { data: user, isLoading, error, status } = useGetAccount(id!)
-
-  // // stringify and parse user data
-  // const userData: SessionData | undefined = user
-  //   ? dataSerializer(user)
-  //   : undefined
+  const userData: SessionData | undefined = user
+    ? dataSerializer(user)
+    : undefined
 
   // logout handler
   const handleLogout = async () => {
-    // await toast.promise(logout(), {
-    //   loading: <span className="animate-pulse">Logging out...</span>,
-    //   success: "Logged out",
-    //   error: (error: unknown) => clientErrorHandler(error),
-    // })
-    // router.replace("/sign-in")
+    await toast.promise(logout(), {
+      loading: <span className="animate-pulse">Logging out...</span>,
+      success: "Logged out",
+      error: (error: unknown) => clientErrorHandler(error),
+    })
+    router.push("/login")
   }
 
   return (
@@ -84,12 +76,15 @@ const UserButton = ({ isOnClient }: UserButtonProps) => {
                   variant="outline"
                   className="relative size-8 rounded-full"
                 >
-                  <Avatar className="size-8">
-                    <AvatarImage src="/images/vustron.png" alt="Avatar" />
-                    <AvatarFallback className="bg-transparent">
-                      <FallbackUser className="size-6" />
-                    </AvatarFallback>
-                  </Avatar>
+                  {isLoading ? (
+                    <Loader2 className="animate-spin size-10" />
+                  ) : (
+                    <Avatar className="hover:scale-110  size-8">
+                      <AvatarFallback className="bg-gray-200 text-black">
+                        {getInitials(userData?.name || "User")}
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
                 </Button>
               </motion.div>
             </DropdownMenuTrigger>
@@ -120,7 +115,7 @@ const UserButton = ({ isOnClient }: UserButtonProps) => {
                     transition={{ delay: 0.1 }}
                     className="font-extrabold dark:text-white text-black leading-none"
                   >
-                    Vustron
+                    {userData?.name}
                   </motion.h2>
                   <motion.h6
                     initial={{ opacity: 0 }}
@@ -128,7 +123,7 @@ const UserButton = ({ isOnClient }: UserButtonProps) => {
                     transition={{ delay: 0.2 }}
                     className="text-xs text-muted-foreground leading-none"
                   >
-                    vustron@email.com
+                    {userData?.email}
                   </motion.h6>
                 </div>
               </DropdownMenuLabel>

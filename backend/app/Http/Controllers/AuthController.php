@@ -8,14 +8,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-
     public function register(Request $request)
     {
         try {
-
             $data = $request->validate([
                 "name" => "nullable|string",
                 "address" => "nullable|string",
@@ -25,26 +24,19 @@ class AuthController extends Controller
                 "role" => "nullable|string"
             ]);
 
-            $data['password'] = Hash::make($data['password']);
-
-            User::create([
+            $user = User::create([
                 'name' => $data['name'],
                 'address' => $data['address'],
                 'contact_number' => $data['contact_number'],
                 'email' => $data['email'],
-                'password' => $data['password'],
-                'name' => $data['name'] ?? null,
+                'password' => Hash::make($data['password']),
                 'role' => $data['role'] ?? 'client'
             ]);
 
-
-            return response()->json(["message" => "Registered Successfully"], 201);
-            
+            return response()->json($user, 200);
         } catch (\Exception $e) {
-
             Log::error('Registration failed: ' . $e->getMessage());
             Log::error($e->getTraceAsString());
-
             return response()->json([
                 "message" => "Registration failed",
                 "error" => $e->getMessage()
@@ -54,116 +46,101 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-
         try {
-
             $request->validate([
                 "email" => "required|exists:users,email",
                 "password" => "required"
             ]);
-    
-    
+
             if (!Auth::attempt($request->only('email', 'password'))) {
                 return response()->json(['message' => 'Invalid credentials'], 401);
             }
-    
-            $request->session()->regenerate();
-    
-            return response()->json(['message' => 'Login successful']);;
 
+            $user = User::where('email', $request->email)->first();
+
+            return response()->json($user, 200);
         } catch (\Exception $e) {
-
             Log::error('Login failed: ' . $e->getMessage());
-
             return response()->json([
                 "message" => "Login Error",
                 "error"   => $e->getMessage()
             ], 401);
         }
-       
-    }
-
-
-    public function getProfile(){
-        $authenticatedUser = Auth::user();
-        return response()->json(['user' => $authenticatedUser], 200);
     }
 
     public function getAllAccounts()
     {
-
         try {
-
             $users = User::all();
-
+            return response()->json(['accounts' => $users], 200);
+        } catch (\Exception $e) {
+            Log::error('Error retrieving accounts: ' . $e->getMessage());
             return response()->json([
-                "message" => "Accounts retrieved successfully",
-                "users" => $users
-            ], 200);
-
-        } catch (\Exception $e){
-            return response()->json(['error' => "Internal Server Error Occurred: {$e}"], $e->getCode());
+                'error' => "An error occurred while retrieving accounts. Please try again later."
+            ], 500);
         }
-       
     }
-
 
     public function getAccountByID(string $id)
     {
         try {
-
-            $users = User::findOrFail($id);
-            return response()->json(['user' => $users], 200);
-
+            $user = User::findOrFail($id);
+            return response()->json($user, 200);
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => 'Account not found',
                 'error'   => $e->getMessage()
             ], 404);
-
         } catch (\Exception $e){
-            return response()->json(['error' => "Internal Server Error Occurred: {$e}"], $e->getCode());
+            return response()->json([
+                'error' => "Internal Server Error Occurred: {$e}"
+            ], 500);
         }
     }
-
-
 
     public function updateAccount(Request $request, string $id)
     {
-
         try {
-
             $data = $request->validate([
                 "name" => "nullable|string",
-                "username" => "required",
-                "email" => "required|email|unique:users",
-                "password" => "nullable|string|min:8|confirmed"
+                "address" => "nullable|string",
+                "contact_number" => "nullable|string",
+                "email" => "nullable|string|email|unique:users,email",
+                "password" => "nullable|string|min:8",
+                "newpassword" => "nullable|string|min:8",
+                "role" => "nullable|string"
             ]);
 
             $user = User::findOrFail($id);
-            $user->fill($data);
 
-            if(!empty($data['password'])){
-                $user->password = Hash::make($data['password']);
+            if (!empty($data['password']) && !empty($data['newpassword'])) {
+                if (!Hash::check($data['password'], $user->password)) {
+                    return response()->json([
+                        'error' => 'Current password is incorrect.'
+                    ], 400);
+                }
+
+                if ($data['password'] === $data['newpassword']) {
+                    return response()->json([
+                        'error' => 'New password cannot be the same as the current password.'
+                    ], 400);
+                }
+
+                $user->password = Hash::make($data['newpassword']);
             }
 
+            $user->fill($data);
             $user->save();
 
-
-            return response()->json([
-                "message" => "User updated successfully",
-                "user" => $user
-            ], 200);
-           
+            return response()->json($user, 200);
         } catch (\Exception $e){
-            Log::error('Update Account Failed:' . $e->getMessage());
+            Log::error('Update Account Failed: ' . $e->getMessage());
             Log::error($e->getTraceAsString());
-
-            return response()->json(['error' => "Internal Server Error Occurred: {$e}"], $e->getCode());
+            return response()->json([
+                'error' => "Internal Server Error Occurred: {$e}"
+            ],$e->getCode() ?: 500);
         }
-        
     }
-
 
     public function deleteAccount(string $id)
     {
@@ -184,8 +161,6 @@ class AuthController extends Controller
             return response()->json(['error' => "Internal Server Error Occurred: {$e}"], $e->getCode());
         }
     }
-
-
 
     public function logout(Request $request)
     {

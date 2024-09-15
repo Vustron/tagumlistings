@@ -6,11 +6,10 @@ const requiredString = z.string().trim().min(1, "Required")
 
 // signUpSchema
 export const registerSchema = z.object({
+  name: requiredString,
+  address: requiredString,
+  contact_number: requiredString,
   email: requiredString.email("Invalid email address"),
-  username: requiredString.regex(
-    /^[a-zA-Z0-9_-]+$/,
-    "Only letters, numbers, - and _ are allowed",
-  ),
   password: requiredString.min(8, "Must be at least 8 characters"),
 })
 
@@ -19,12 +18,16 @@ export type RegisterValues = z.infer<typeof registerSchema>
 
 // updateAccountSchema
 export const updateAccountSchema = z.object({
-  email: requiredString.email("Invalid email address"),
-  username: requiredString.regex(
-    /^[a-zA-Z0-9_-]+$/,
-    "Only letters, numbers, - and _ are allowed",
-  ),
-  password: requiredString.min(8, "Must be at least 8 characters"),
+  id: requiredString.optional(),
+  name: requiredString.optional(),
+  address: requiredString.optional(),
+  contact_number: requiredString.optional(),
+  email: requiredString.email("Invalid email address").optional(),
+  role: requiredString.optional(),
+  password: requiredString.min(8, "Must be at least 8 characters").optional(),
+  newpassword: requiredString
+    .min(8, "Must be at least 8 characters")
+    .optional(),
 })
 
 /* UpdateAccountValues Type */
@@ -32,7 +35,7 @@ export type UpdateAccountValues = z.infer<typeof updateAccountSchema>
 
 // loginSchema
 export const loginSchema = z.object({
-  username: requiredString,
+  email: requiredString.email("Invalid email address"),
   password: requiredString,
 })
 

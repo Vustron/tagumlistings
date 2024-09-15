@@ -4,19 +4,14 @@
 import { CircleAlert, CircleCheckBig, Loader2 } from "lucide-react"
 
 // utils
-import { keyframes, styled } from "goober"
-import type React from "react"
-
-import toast, { Toaster, resolveValue } from "react-hot-toast"
+import { Toaster, resolveValue } from "react-hot-toast"
+import { motion, AnimatePresence } from "framer-motion"
 
 // types
-import type { ToastType } from "react-hot-toast"
+import type { ToastType, Toast } from "react-hot-toast"
+import type { FC } from "react"
 
-interface ToastProps {
-  type: ToastType
-}
-
-// init toast colors
+// Define the colors for each toast type
 const colors: Record<ToastType, string> = {
   success: "#16A34A",
   error: "#DC2626",
@@ -25,101 +20,13 @@ const colors: Record<ToastType, string> = {
   custom: "#094CC9",
 }
 
-// init get colors method
-const getColor = (type: ToastType): string => {
-  return colors[type] || colors.error
-}
+// Get the primary color based on the toast type
+const getColor = (type: ToastType): string => colors[type] || colors.error
 
-// init get background colors method
-const getBackgroundColor = (type: ToastType): string => {
-  return `${getColor(type)}20`
-}
+// Get the background color with transparency
+const getBackgroundColor = (type: ToastType): string => `${getColor(type)}20`
 
-// set toast body using goober
-const BaseToast = styled("div")<ToastProps>`
-  background: #ffffff;
-  border-radius: 10px;
-  color: ${(p) => getColor(p.type)};
-  display: flex;
-  align-items: center;
-  padding: 5px;
-  padding-right: 10px;
-  height: 50px;
-  border: 2px solid ${(p) => getBackgroundColor(p.type)};
-  width: auto;
-  max-width: 100%;
-`
-
-// set toast content using goober
-const Content = styled("div")`
-  flex: 1;
-  padding: 10px;
-  text-align: left;
-  word-wrap: break-word;
-`
-
-// set toast icon wrapper using goober
-const IconWrapper = styled("div")`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  margin-right: 0px;
-  margin-left: 5px;
-`
-
-// set toast indicator using goober
-const Indicator = styled("div")<ToastProps>`
-  background: ${(p) => getColor(p.type)};
-  border-radius: 99px;
-  width: 5px;
-  height: 100%;
-  transition: all 0.2s ease-in-out;
-`
-
-// set toast dismiss button using goober
-const DismissButton = styled("button")`
-  width: 16px;
-  height: 16px;
-  font-size: 24px;
-  display: flex;
-  justify-items: center;
-  align-items: center;
-  background: transparent;
-  padding: 12px;
-  border: none;
-  color: gray;
-  &:hover {
-    color: black;
-  }
-`
-
-// set toast enter animation using goober
-const enterAnimation = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(-30px) scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0px) scale(1);
-  }
-`
-
-// set toast exit animation using goober
-const exitAnimation = keyframes`
-  from {
-    opacity: 1;
-    transform: translateY(0px) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-30px) scale(0.8);
-  }
-`
-
-// init toast icon setter
+// Icon mapping based on toast type
 const getIcon = (type: ToastType): JSX.Element => {
   switch (type) {
     case "loading":
@@ -133,27 +40,36 @@ const getIcon = (type: ToastType): JSX.Element => {
   }
 }
 
-const ToastProvider: React.FC = () => {
+const ToastProvider: FC = () => {
   return (
     <Toaster position="top-center">
-      {(t) => (
-        <BaseToast
-          type={t.type}
-          style={{
-            animation: t.visible
-              ? `${enterAnimation} 0.2s ease-out forwards`
-              : `${exitAnimation} 0.4s ease-in forwards`,
-          }}
-        >
-          <Indicator type={t.type} />
-          <IconWrapper>{getIcon(t.type)}</IconWrapper>
-          <Content>{resolveValue(t.message, t)}</Content>
-          {t.type !== "loading" && (
-            <DismissButton onClick={() => toast.dismiss(t.id)}>
-              &#215;
-            </DismissButton>
+      {(t: Toast) => (
+        <AnimatePresence>
+          {t.visible && (
+            <motion.div
+              initial={{ opacity: 0, y: -30, scale: 0.8 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -30, scale: 0.8 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="flex items-center max-w-full dark:bg-black bg-white border-2 rounded-lg shadow-md p-2"
+              style={{
+                color: getColor(t.type),
+                borderColor: getBackgroundColor(t.type),
+              }}
+            >
+              <div
+                className="flex items-center justify-center w-2 h-full mr-2"
+                style={{ background: getColor(t.type) }}
+              />
+              <div className="flex items-center justify-center size-8 mr-2">
+                {getIcon(t.type)}
+              </div>
+              <div className="flex-1 text-sm mr-4">
+                {resolveValue(t.message, t)}
+              </div>
+            </motion.div>
           )}
-        </BaseToast>
+        </AnimatePresence>
       )}
     </Toaster>
   )

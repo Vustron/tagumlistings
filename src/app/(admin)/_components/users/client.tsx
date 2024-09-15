@@ -5,21 +5,29 @@ import { columns } from "@/app/(admin)/_components/users/columns"
 import DataTable from "@/components/ui/data-table"
 import { Heading } from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
+import { Loader2, ServerCrash } from "lucide-react"
 
 // hooks
-import { useRouter } from "next/navigation"
+import { useFetchScroll } from "@/lib/hooks/use-fetch-scroll"
+import { useGetAccounts } from "@/app/(auth)/_hooks/use-get-accounts"
+import { useRef } from "react"
 
 // types
-import type { User } from "@/app/(admin)/_components/data/users"
+import type { SessionData } from "@/lib/config/session"
 import type { Row } from "@tanstack/react-table"
+import type { ElementRef } from "react"
 
-interface UsersClientProps {
-  data: User[]
-}
+const UsersClient = () => {
+  const topRef = useRef<ElementRef<"div">>(null)
+  const bottomRef = useRef<ElementRef<"div">>(null)
+  const { data, status, isLoading } = useGetAccounts()
 
-const UsersClient = ({ data }: UsersClientProps) => {
-  // init delete handler
-  const handleDelete = async (rows: Row<User>[]) => {
+  useFetchScroll({
+    topRef,
+    bottomRef,
+  })
+
+  const handleDelete = async (rows: Row<SessionData>[]) => {
     // const ids = rows.map((r) => r.original.id)
     // await toast.promise(deleteAccounts.mutateAsync({ ids }), {
     //   loading: <span className="animate-pulse">Deleting users...</span>,
@@ -28,20 +36,43 @@ const UsersClient = ({ data }: UsersClientProps) => {
     // })
   }
 
+  const accountCount = data?.accounts?.length || 0
+  const accountsData = data?.accounts ?? []
+
   return (
     <>
       <div className="flex items-start justify-between">
-        <Heading title={`Users (${data.length})`} description="Manage users" />
+        <Heading title={`Users (${accountCount})`} description="Manage users" />
       </div>
       <Separator className="mt-2" />
-      <DataTable
-        filterKey="name"
-        placeholder="John Doe"
-        columns={columns}
-        isOnUsers
-        data={data || []}
-        onDelete={handleDelete}
-      />
+      {isLoading && (
+        <div className="flex flex-col items-center justify-center">
+          <Loader2 className="size-10 animate-spin" />
+        </div>
+      )}
+
+      {status === "error" && (
+        <div className="flex flex-col items-center justify-center">
+          <ServerCrash className="size-7 text-zinc-500 my-4" />
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            Something went wrong!
+          </p>
+        </div>
+      )}
+
+      <div ref={topRef}>
+        {status === "success" && data && (
+          <DataTable
+            filterKey="name"
+            placeholder="John Doe"
+            columns={columns}
+            isOnUsers
+            data={accountsData}
+            onDelete={handleDelete}
+          />
+        )}
+      </div>
+      <div ref={bottomRef} />
     </>
   )
 }

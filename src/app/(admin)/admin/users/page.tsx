@@ -24,7 +24,7 @@ export default function UsersPage() {
         <DynamicBreadcrumb items={usersItems} />
 
         {/* client */}
-        <UsersClient data={users} />
+        <UsersClient />
       </BounceWrapper>
     </ContentLayout>
   )

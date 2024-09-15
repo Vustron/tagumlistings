@@ -3,15 +3,66 @@ import { NextResponse, userAgent } from "next/server"
 
 // types
 import type { NextRequest } from "next/server"
+import type { SessionData } from "@/lib/config/session"
 
-// middleware
+/**
+ * An array of routes that are protected
+ * @type {string[]}
+ */
+
+const protectedRoutes: string[] = [
+  "/admin",
+  "/admin/appointments",
+  "/admin/appointments/*",
+  "/admin/properties",
+  "/admin/properties/*",
+  "/admin/payments",
+  "/admin/payments/*",
+  "/admin/messages",
+  "/admin/users",
+  "/admin/users/*",
+  "/admin/account",
+]
+
+/**
+ * An array of routes that are used for authentication
+ * @type {string[]}
+ */
+
+const authRoutes: string[] = ["/login", "/register"]
+
+/**
+ * Prefix for API authentication routes
+ * Routes with this prefix are used for API authentication
+ * @type {string}
+ */
+
 export default function middleware(request: NextRequest) {
-  // init bot protection
+  const path = request.nextUrl.pathname
+  const isProtectedRoute = protectedRoutes.includes(path)
+  const isAuthRoute = authRoutes.includes(path)
+
+  const authSession = request.cookies.get("client-auth-session")?.value
+
+  if (!authSession && isProtectedRoute) {
+    return NextResponse.redirect(new URL("/login", request.url))
+  }
+
+  if (authSession) {
+    const auth: SessionData = JSON.parse(JSON.stringify(authSession))
+
+    if (!authSession && isProtectedRoute && auth.id === undefined) {
+      return NextResponse.redirect(new URL("/login", request.url))
+    }
+
+    if (isAuthRoute && authSession) {
+      return NextResponse.redirect(new URL("/admin", request.url))
+    }
+  }
+
   const { isBot, ua, browser, device, engine, os, cpu } = userAgent(request)
 
-  // if bot log and block
   if (isBot) {
-    // log bot details
     console.log("Bot detected:", {
       userAgent: ua,
       browserName: browser.name,
