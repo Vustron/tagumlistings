@@ -2,12 +2,7 @@
 import { env } from "@/lib/config/env.mjs"
 
 // utils
-import {
-  HttpError,
-  buildQueryString,
-  clientErrorHandler,
-  dataSerializer,
-} from "@/lib/utils"
+import { HttpError, buildQueryString, dataSerializer } from "@/lib/utils"
 
 // types
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH"
@@ -36,12 +31,15 @@ async function makeHttpRequest<RequestType = unknown, ResponseType = unknown>(
     body,
     transformResponse,
     customURL,
-    timeout = 24 * 60 * 60,
+    timeout = 24 * 60 * 60 * 1000,
     retries = 3,
   } = config
 
   const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), timeout)
+  const timeoutId = setTimeout(() => {
+    controller.abort()
+    throw new HttpError(408, "Request timed out")
+  }, timeout)
 
   const makeRequest = async (attempt: number): Promise<ResponseType> => {
     try {
@@ -87,7 +85,7 @@ async function makeHttpRequest<RequestType = unknown, ResponseType = unknown>(
       const response = await fetch(requestUrl, requestOptions)
 
       if (!response.ok) {
-        const errorData = await response.json()
+        const errorData = await response.json().catch(() => ({}))
         throw new HttpError(
           response.status,
           errorData.error || "A network error occurred.",
@@ -115,21 +113,24 @@ async function makeHttpRequest<RequestType = unknown, ResponseType = unknown>(
         throw error
       }
 
-      if (attempt < retries) {
+      if (attempt < retries - 1) {
         console.warn(`Request failed, retrying (${attempt + 1}/${retries})`)
         return makeRequest(attempt + 1)
       }
 
-      throw error
-    } finally {
-      clearTimeout(timeoutId)
+      console.error(`Request failed after ${retries} attempts`)
+      throw new HttpError(500, "The request failed after multiple attempts")
     }
   }
 
   try {
-    return await makeRequest(0)
+    const result = await makeRequest(0)
+    clearTimeout(timeoutId)
+    return result
   } catch (error) {
-    throw clientErrorHandler(error)
+    clearTimeout(timeoutId)
+    controller.abort()
+    throw error
   }
 }
 

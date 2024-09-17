@@ -10,12 +10,18 @@ import type {
 
 /* --------------HTTP Requests Types---------------- */
 
-/* RequestConfig Type */
+/* Compatible Request Type */
+export interface CompatibleRequest extends IncomingMessage {
+  headers: Record<string, string | string[]>
+}
+
+// init request config
 export type RequestConfig<T> = {
-  url: string
+  url?: string
   params?: Record<string, string | number | boolean>
   headers?: HeadersInit
   transformResponse?: (data: unknown) => T
+  customURL?: string
 }
 
 /* ErrorResponseData Type */
@@ -47,7 +53,6 @@ interface SelectOption {
 interface FieldConfig<TFieldValues> {
   name: Path<TFieldValues>
   type: "text" | "password" | "email" | "number" | "select" | "image"
-
   label: string
   placeholder: string
   className?: string

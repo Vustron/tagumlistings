@@ -13,8 +13,6 @@ import { useGetAccounts } from "@/app/(auth)/_hooks/use-get-accounts"
 import { useRef } from "react"
 
 // types
-import type { SessionData } from "@/lib/config/session"
-import type { Row } from "@tanstack/react-table"
 import type { ElementRef } from "react"
 
 const UsersClient = () => {
@@ -27,7 +25,7 @@ const UsersClient = () => {
     bottomRef,
   })
 
-  const handleDelete = async (rows: Row<SessionData>[]) => {
+  const handleDelete = async () => {
     // const ids = rows.map((r) => r.original.id)
     // await toast.promise(deleteAccounts.mutateAsync({ ids }), {
     //   loading: <span className="animate-pulse">Deleting users...</span>,

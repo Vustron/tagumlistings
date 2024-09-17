@@ -4,7 +4,6 @@
 import DynamicForm from "@/components/shared/dynamic-form"
 
 // utils
-import { dataSerializer } from "@/lib/utils"
 import { updateAccountFields } from "@/lib/misc/field-configs"
 import { clientErrorHandler } from "@/lib/utils"
 import { updateAccountSchema } from "@/lib/validation"
@@ -12,7 +11,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import toast from "react-hot-toast"
 
 // hooks
-import { useGetAccount } from "@/app/(auth)/_hooks/use-get-account"
 import { useUpdateAccount } from "@/app/(auth)/_hooks/use-update-account"
 import { useForm } from "react-hook-form"
 
@@ -22,26 +20,21 @@ import type { SessionData } from "@/lib/config/session"
 
 interface AccountFormProps {
   id?: string | undefined
+  data: SessionData
 }
 
-const AccountForm = ({ id }: AccountFormProps) => {
-  const { data: user } = useGetAccount(id)
-
-  const userData: SessionData | undefined = user
-    ? dataSerializer(user)
-    : undefined
-
+const AccountForm = ({ id, data }: AccountFormProps) => {
   const updateAccountMutation = useUpdateAccount(id)
 
   const form = useForm<UpdateAccountValues>({
     resolver: zodResolver(updateAccountSchema),
     defaultValues: {
-      id: userData?.id,
-      name: userData?.name,
-      address: userData?.address,
-      contact_number: userData?.contact_number,
-      email: userData?.email,
-      role: userData?.role,
+      id: data.id,
+      name: data.name,
+      address: data.address,
+      contact_number: data.contact_number,
+      email: data.email,
+      role: data.role,
       password: undefined,
       newpassword: undefined,
     },

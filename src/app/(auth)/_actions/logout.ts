@@ -7,7 +7,7 @@
 import { getSession } from "@/app/(auth)/_actions/get-session"
 
 // utils
-import { dataSerializer } from "@/lib/utils"
+// import { dataSerializer } from "@/lib/utils"
 
 export async function logout() {
   const session = await getSession()

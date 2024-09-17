@@ -9,24 +9,20 @@ import { Separator } from "@/components/ui/separator"
 // import { useRouter } from "next/navigation"
 
 // types
-import type { User } from "@/app/(admin)/_components/data/users"
-import type { Row } from "@tanstack/react-table"
+// import type { User } from "@/app/(admin)/_components/data/users"
+// import type { Row } from "@tanstack/react-table"
 
-interface UsersClientProps {
-  data?: User[]
-}
-
-const AccountClient = ({ data }: UsersClientProps) => {
+const AccountClient = () => {
   // init delete handler
-  const handleDelete = async (rows: Row<User>[]) => {
-    // const ids = rows.map((r) => r.original.id)
-    // await toast.promise(deleteAccounts.mutateAsync({ ids }), {
-    //   loading: <span className="animate-pulse">Deleting users...</span>,
-    //   success: "Users deleted",
-    //   error: (error: unknown) => clientErrorHandler(error),
-    // })
-    console.log(rows.map((r) => r.original.id))
-  }
+  // const handleDelete = async (rows: Row<User>[]) => {
+  // const ids = rows.map((r) => r.original.id)
+  // await toast.promise(deleteAccounts.mutateAsync({ ids }), {
+  //   loading: <span className="animate-pulse">Deleting users...</span>,
+  //   success: "Users deleted",
+  //   error: (error: unknown) => clientErrorHandler(error),
+  // })
+  // console.log(rows.map((r) => r.original.id))
+  // }
 
   return (
     <div className="container p-5">

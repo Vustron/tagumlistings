@@ -12,7 +12,7 @@ import { motion } from "framer-motion"
 import Image from "next/image"
 
 // types
-import type { PropertyCardProps } from "@/app/(client)/constants"
+import type { PropertyCardProps } from "@/app/(client)/_components/data/properties"
 
 const PropertyCard = ({ id, image, title, price }: PropertyCardProps) => {
   const router = useRouter()

@@ -1,6 +1,6 @@
 // types
-import type { Property } from "@/app/(admin)/_components/data"
-import type { User } from "@/app/(admin)/_components/data"
+import type { Property } from "@/app/(admin)/_components/data/properties"
+import type { User } from "@/app/(admin)/_components/data/users"
 
 export type Payments = {
   id: string

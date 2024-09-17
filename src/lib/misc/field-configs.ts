@@ -71,9 +71,9 @@ export const updateAccountFields: FieldConfig<UpdateAccountValues>[] = [
   },
   {
     name: "role",
-    label: "Role",
     type: "select",
-    placeholder: "Select your role",
+    label: "Role",
+    placeholder: "Select role",
     options: [
       { value: "user", label: "User" },
       { value: "admin", label: "Admin" },

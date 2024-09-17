@@ -1,7 +1,7 @@
 "use client"
 
 // components
-import NewPropertyForm from "@/app/(admin)/admin/properties/new/_components/new-property-form"
+import NewPropertyForm from "@/app/(admin)/_components/new-property/form"
 import { Heading } from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
 

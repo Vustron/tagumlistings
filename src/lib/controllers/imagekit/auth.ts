@@ -1,6 +1,6 @@
 // utils
 import crypto from "node:crypto"
-import { handleErrorResponse } from "@/lib/api-helpers"
+import { handleErrorResponse } from "@/lib/helpers"
 import { createUniqueId } from "@/lib/utils"
 import { NextResponse } from "next/server"
 

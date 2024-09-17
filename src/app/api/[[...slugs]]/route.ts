@@ -1,5 +1,5 @@
 // utils
-import { handleRequest } from "@/lib/api-helpers"
+import { handleRequest } from "@/lib/helpers"
 
 // types
 import type { NextRequest, NextResponse } from "next/server"

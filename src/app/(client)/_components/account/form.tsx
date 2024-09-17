@@ -6,7 +6,7 @@ import DynamicForm from "@/components/shared/dynamic-form"
 // utils
 import { updateAccountFields } from "@/lib/misc/field-configs"
 // import { clientErrorHandler } from "@/lib/utils"
-import { registerSchema } from "@/lib/validation"
+import { updateAccountSchema } from "@/lib/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
 // import toast from "react-hot-toast"
 
@@ -15,28 +15,28 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
 // types
-import type { RegisterValues } from "@/lib/validation"
+import type { UpdateAccountValues } from "@/lib/validation"
 
-interface AccountFormProps {
-  onSuccess?: () => void
-  onError?: () => void
-}
+// interface AccountFormProps {
+//   onSuccess?: () => void
+//   onError?: () => void
+// }
 
 const AccountForm = () => {
   // init mutation
   // const registerMutation = useRegisterAccount()
 
   // init form
-  const form = useForm<RegisterValues>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<UpdateAccountValues>({
+    resolver: zodResolver(updateAccountSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   })
 
   // submit handler
-  const submitHandler = async (values: RegisterValues) => {
+  const submitHandler = async (values: UpdateAccountValues) => {
     // await toast.promise(registerMutation.mutateAsync(values), {
     //   loading: <span className="animate-pulse">Updating account...</span>,
     //   success: "Account updated",
@@ -53,7 +53,7 @@ const AccountForm = () => {
   }
 
   return (
-    <DynamicForm<RegisterValues>
+    <DynamicForm<UpdateAccountValues>
       form={form}
       onSubmit={submitHandler}
       fields={updateAccountFields}

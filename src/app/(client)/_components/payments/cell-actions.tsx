@@ -15,7 +15,7 @@ import { Edit, MoreHorizontal, Trash } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 // types
-import type { Payments } from "@/app/(admin)/admin/payments/constants"
+import type { Payments } from "@/app/(admin)/_components/data/payments"
 
 interface CellActionProps {
   data: Payments
