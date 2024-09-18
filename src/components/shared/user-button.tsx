@@ -1,8 +1,6 @@
 "use client"
 
 // components
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,21 +17,28 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { Home, LayoutGrid, Loader2, LogOut, UserCog } from "lucide-react"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 
 // actions
 import { logout } from "@/app/(auth)/_actions/logout"
 
 // hooks
-import { useSession } from "@/components/providers/session"
 import { useGetAccount } from "@/app/(auth)/_hooks/use-get-account"
-import { useState } from "react"
+import { useSession } from "@/components/providers/session"
 import { useRouter } from "next-nprogress-bar"
+import { useState } from "react"
 
 // utils
+import {
+  clientErrorHandler,
+  dataSerializer,
+  getInitials,
+  isValidSessionData,
+} from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
-import { clientErrorHandler, dataSerializer, getInitials } from "@/lib/utils"
-import Link from "next/link"
 import toast from "react-hot-toast"
+import Link from "next/link"
 
 // types
 import type { SessionData } from "@/lib/config/session"
@@ -48,9 +53,10 @@ const UserButton = ({ isOnClient }: UserButtonProps) => {
   const session = useSession()
   const { data: user, isLoading } = useGetAccount(session.id)
 
-  const userData: SessionData | undefined = user
-    ? dataSerializer(user)
-    : undefined
+  const userData: SessionData | undefined =
+    user && isValidSessionData(user)
+      ? dataSerializer<SessionData>(user)
+      : undefined
 
   // logout handler
   const handleLogout = async () => {
@@ -105,14 +111,14 @@ const UserButton = ({ isOnClient }: UserButtonProps) => {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.001 }}
             >
               <DropdownMenuLabel>
                 <div className="flex flex-col space-y-1">
                   <motion.h2
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.1 }}
+                    transition={{ delay: 0.001 }}
                     className="font-extrabold dark:text-white text-black leading-none"
                   >
                     {userData?.name}
@@ -120,7 +126,7 @@ const UserButton = ({ isOnClient }: UserButtonProps) => {
                   <motion.h6
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.2 }}
+                    transition={{ delay: 0.001 }}
                     className="text-xs text-muted-foreground leading-none"
                   >
                     {userData?.email}
@@ -135,13 +141,13 @@ const UserButton = ({ isOnClient }: UserButtonProps) => {
                   icon={isOnClient ? Home : LayoutGrid}
                   text={isOnClient ? "Home" : "Dashboard"}
                   href={isOnClient ? "/" : "/admin"}
-                  delay={0.3}
+                  delay={0.001}
                 />
                 <MenuItem
                   icon={UserCog}
                   text="Account"
                   href={isOnClient ? "/account" : "/admin/account"}
-                  delay={0.4}
+                  delay={0.001}
                 />
               </DropdownMenuGroup>
 
@@ -151,7 +157,7 @@ const UserButton = ({ isOnClient }: UserButtonProps) => {
                 icon={LogOut}
                 text="Sign out"
                 onClick={handleLogout}
-                delay={0.5}
+                delay={0.001}
               />
             </motion.div>
           </DropdownMenuContent>

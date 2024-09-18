@@ -52,9 +52,9 @@ interface SelectOption {
 /* FieldConfig Type */
 interface FieldConfig<TFieldValues> {
   name: Path<TFieldValues>
-  type: "text" | "password" | "email" | "number" | "select" | "image"
+  type: "text" | "password" | "email" | "number" | "select" | "image" | "switch"
   label: string
-  placeholder: string
+  placeholder?: string
   className?: string
   options?: SelectOption[]
   isPhone?: boolean
@@ -87,3 +87,16 @@ interface DynamicFormProps<TFieldValues extends FieldValues> {
 
 /* Unique Id Type */
 export type UniqueId = string
+
+export interface UserData {
+  id?: string
+  name: string
+  address: string
+  contact_number: string
+  email: string
+  role: string
+  password?: string
+  loggedIn?: boolean
+  createdAt?: string
+  updatedAt?: string
+}

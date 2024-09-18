@@ -1,5 +1,5 @@
 // hooks
-import { useQuery } from "@tanstack/react-query"
+import { useSuspenseQuery } from "@tanstack/react-query"
 
 // actions
 import { getAccounts } from "@/app/(auth)/_actions/get-accounts"
@@ -8,7 +8,7 @@ import { getAccounts } from "@/app/(auth)/_actions/get-accounts"
 import type { Accounts } from "@/app/(auth)/_actions/get-accounts"
 
 export const useGetAccounts = () => {
-  return useQuery<Accounts, Error>({
+  return useSuspenseQuery<Accounts, Error>({
     queryKey: ["accounts"],
     queryFn: () => getAccounts(),
   })

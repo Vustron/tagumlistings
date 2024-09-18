@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
 import { IKUpload } from "imagekitio-next"
 import { Loader2, Upload, X } from "lucide-react"
 
@@ -175,6 +176,22 @@ const DynamicForm = <TFieldValues extends FieldValues>({
                           )}
                       </div>
                     </div>
+                  ) : field.type === "switch" ? (
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        checked={formField.value === "admin"}
+                        onCheckedChange={(checked) => {
+                          formField.onChange(checked ? "admin" : "client")
+                        }}
+                        disabled={mutation?.isPending || disabled}
+                      />
+                      <label
+                        htmlFor={field.name}
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        {formField.value === "admin" ? "Admin" : "Client"}
+                      </label>
+                    </div>
                   ) : field.isPhone ? (
                     <InputPhone
                       {...formField}
@@ -190,7 +207,6 @@ const DynamicForm = <TFieldValues extends FieldValues>({
                       onChange={(value) =>
                         formField.onChange(value?.toString() || "")
                       }
-                      value={formField.value || ""}
                     />
                   ) : (
                     <FloatingLabelInput

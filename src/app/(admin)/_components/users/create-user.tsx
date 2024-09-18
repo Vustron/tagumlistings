@@ -55,7 +55,11 @@ const CreateUserModal = () => {
             </DialogDescription>
           </DialogHeader>
 
-          <RegisterForm onSuccess={handleClose} onError={handleClose} />
+          <RegisterForm
+            status="admin"
+            onSuccess={handleClose}
+            onError={handleClose}
+          />
         </DialogContent>
       </Dialog>
     )

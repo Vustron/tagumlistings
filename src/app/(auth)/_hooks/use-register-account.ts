@@ -17,7 +17,7 @@ import type { Accounts } from "@/app/(auth)/_actions/get-accounts"
 
 const purify = DOMPurify
 
-export const useRegisterAccount = () => {
+export const useRegisterAccount = (status?: "client" | "admin") => {
   const router = useRouter()
   const queryClient = useQueryClient()
 
@@ -35,6 +35,7 @@ export const useRegisterAccount = () => {
       const queryFilter: QueryFilters = {
         queryKey: ["accounts"],
       }
+
       await queryClient.cancelQueries(queryFilter)
       queryClient.setQueryData<Accounts>(["accounts"], (oldData) => {
         if (!oldData) {
@@ -45,6 +46,15 @@ export const useRegisterAccount = () => {
           accounts: [...oldData.accounts, newUser],
         }
       })
+
+      if (status === "client") {
+        router.push("/")
+        router.refresh()
+      }
+
+      if (status === "admin") {
+        router.refresh()
+      }
     },
     onSettled: () => {
       router.refresh()

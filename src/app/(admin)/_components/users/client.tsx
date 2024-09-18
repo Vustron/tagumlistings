@@ -2,36 +2,45 @@
 
 // components
 import { columns } from "@/app/(admin)/_components/users/columns"
-import DataTable from "@/components/ui/data-table"
-import { Heading } from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
 import { Loader2, ServerCrash } from "lucide-react"
+import DataTable from "@/components/ui/data-table"
+import { Heading } from "@/components/ui/heading"
 
 // hooks
-import { useFetchScroll } from "@/lib/hooks/use-fetch-scroll"
+import { useDeleteAccounts } from "@/app/(auth)/_hooks/use-delete-accounts"
 import { useGetAccounts } from "@/app/(auth)/_hooks/use-get-accounts"
+import { useFetchScroll } from "@/lib/hooks/use-fetch-scroll"
 import { useRef } from "react"
 
+// utils
+import { clientErrorHandler } from "@/lib/utils"
+import toast from "react-hot-toast"
+
 // types
+import type { Row } from "@tanstack/react-table"
+import type { UserData } from "@/lib/types"
 import type { ElementRef } from "react"
 
 const UsersClient = () => {
   const topRef = useRef<ElementRef<"div">>(null)
   const bottomRef = useRef<ElementRef<"div">>(null)
   const { data, status, isLoading } = useGetAccounts()
+  const deleteAccounts = useDeleteAccounts()
 
   useFetchScroll({
     topRef,
     bottomRef,
   })
 
-  const handleDelete = async () => {
-    // const ids = rows.map((r) => r.original.id)
-    // await toast.promise(deleteAccounts.mutateAsync({ ids }), {
-    //   loading: <span className="animate-pulse">Deleting users...</span>,
-    //   success: "Users deleted",
-    //   error: (error: unknown) => clientErrorHandler(error),
-    // })
+  const handleDelete = async (rows: Row<UserData>[]) => {
+    const ids = rows.map((r) => r.original.id)
+
+    await toast.promise(deleteAccounts.mutateAsync({ ids }), {
+      loading: <span className="animate-pulse">Deleting accounts...</span>,
+      success: "Accounts deleted",
+      error: (error: unknown) => clientErrorHandler(error),
+    })
   }
 
   const accountCount = data?.accounts?.length || 0
@@ -59,7 +68,7 @@ const UsersClient = () => {
       )}
 
       <div ref={topRef}>
-        {status === "success" && data && (
+        {status === "success" && accountsData && (
           <DataTable
             filterKey="name"
             placeholder="John Doe"

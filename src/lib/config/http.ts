@@ -52,6 +52,8 @@ async function makeHttpRequest<RequestType = unknown, ResponseType = unknown>(
         : ""
       let requestUrl = customURL || fullUrl
 
+      console.log(fullUrl)
+
       // Validate URL
       try {
         new URL(requestUrl)

@@ -1,16 +1,16 @@
 "use client"
 
 // components
-import { Button } from "@/components/ui/button"
-import { CollapseMenuButton } from "@/components/ui/collapse-menu-button"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { CollapseMenuButton } from "@/components/ui/collapse-menu-button"
 import { Ellipsis, Loader2, LogOut } from "lucide-react"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Button } from "@/components/ui/button"
 
 // actions
 import { logout } from "@/app/(auth)/_actions/logout"
@@ -21,8 +21,8 @@ import { usePathname } from "next/navigation"
 import { useState } from "react"
 
 // utils
-import { clientErrorHandler } from "@/lib/utils"
 import { getMenuList } from "@/lib/misc/menu-lists"
+import { clientErrorHandler } from "@/lib/utils"
 import toast from "react-hot-toast"
 import { cn } from "@/lib/utils"
 import Link from "next/link"

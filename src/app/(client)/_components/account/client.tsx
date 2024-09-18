@@ -1,7 +1,7 @@
 "use client"
 
 // components
-import AccountForm from "@/app/(admin)/_components/account/form"
+// import AccountForm from "@/app/(admin)/_components/account/form"
 import { Heading } from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
 
@@ -35,7 +35,7 @@ const AccountClient = () => {
       <Separator className="mt-2" />
 
       <div className="container flex flex-col justify-center items-center lg:w-[400px] sm:w-[300px] h-auto p-5 mt-5">
-        <AccountForm />
+        {/* <AccountForm data={[]} /> */}
       </div>
     </div>
   )

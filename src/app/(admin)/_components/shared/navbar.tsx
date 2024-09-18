@@ -5,10 +5,6 @@ import SheetMenu from "@/app/(admin)/_components/shared/sheet-menu"
 import UserButton from "@/components/shared/user-button"
 import ThemeToggle from "@/components/ui/theme-toggle"
 
-// hooks
-// import { useRange } from "@/lib/hooks/use-range"
-// import useScrollPosition from "@react-hook/window-scroll"
-
 interface NavbarProps {
   title: string
 }

@@ -1,16 +1,28 @@
 // utils
-import { clsx } from "clsx"
 import { NextResponse } from "next/server"
-import toast from "react-hot-toast"
 import { twMerge } from "tailwind-merge"
+import toast from "react-hot-toast"
 import { ZodError } from "zod"
+import { clsx } from "clsx"
 
 // types
 import type { ErrorResponseData, UniqueId } from "@/lib/types"
+import type { SessionData } from "@/lib/config/session"
+import type { NextRequest } from "next/server"
 import type { ClassValue } from "clsx"
 import type DOMPurify from "dompurify"
-import type { NextRequest } from "next/server"
 import type { z } from "zod"
+
+export const isValidSessionData = (user: any): user is SessionData => {
+  return (
+    typeof user.id === "string" &&
+    typeof user.name === "string" &&
+    typeof user.address === "string" &&
+    typeof user.contact_number === "string" &&
+    typeof user.email === "string" &&
+    typeof user.role === "string"
+  )
+}
 
 export const getInitials = (name: string) => {
   if (!name) return ""

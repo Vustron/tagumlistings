@@ -1,26 +1,25 @@
 "use server"
 
 // configs
-import { env } from "@/lib/config/env.mjs"
 import { httpRequest } from "@/lib/config/http"
 
 // actions
 import { setSession } from "@/app/(auth)/_actions/set-session"
 
 // types
-import type { SessionData } from "@/lib/config/session"
 import type { LoginValues } from "@/lib/validation"
+import type { UserData } from "@/lib/types"
 
 export async function loginAccount(credentials: LoginValues) {
-  const URL = `${env.API_URL}/api/login`
-  const data = await httpRequest<LoginValues, SessionData>(URL, "POST", {
+  const URL = "auth/login"
+  const data = await httpRequest<LoginValues, UserData>(URL, "POST", {
     body: credentials,
   })
 
-  const userData: SessionData = {
+  const userData: UserData = {
     id: data.id || "",
-    name: data.name || "",
     address: data.address || "",
+    name: data.name || "",
     contact_number: data.contact_number || "",
     email: data.email || "",
     role: data.role || "",

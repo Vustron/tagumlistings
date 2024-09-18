@@ -2,14 +2,15 @@
 
 // components
 import AccountForm from "@/app/(admin)/_components/account/form"
-import { Heading } from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
+import { Heading } from "@/components/ui/heading"
 
 // hooks
 import { useGetAccount } from "@/app/(auth)/_hooks/use-get-account"
 // import { useRouter } from "next/navigation"
 
 // utils
+import { isValidSessionData } from "@/lib/utils"
 import { dataSerializer } from "@/lib/utils"
 
 // types
@@ -17,12 +18,12 @@ import type { SessionData } from "@/lib/config/session"
 import { Loader2 } from "lucide-react"
 
 const AccountClient = ({ id }: { id?: string }) => {
-  const { data: user, isLoading, error, status } = useGetAccount(id)
+  const { data: user, isLoading, error, status } = useGetAccount(id!)
 
-  // stringify and parse user data
-  const userData: SessionData | undefined = user
-    ? dataSerializer(user)
-    : undefined
+  const userData: SessionData | undefined =
+    user && isValidSessionData(user)
+      ? dataSerializer<SessionData>(user)
+      : undefined
 
   return (
     <>

@@ -3,7 +3,6 @@ import SessionProvider from "@/components/providers/session"
 
 // utils
 import SidePanel from "@/app/(admin)/_components/shared/side-panel"
-import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
 import { dataSerializer } from "@/lib/utils"
 
 // actions
@@ -22,9 +21,7 @@ export default async function AdminLayout({
 
   return (
     <SessionProvider value={userData}>
-      <HydrationBoundaryWrapper accountId={userData.id}>
-        <SidePanel>{children}</SidePanel>
-      </HydrationBoundaryWrapper>
+      <SidePanel>{children}</SidePanel>
     </SessionProvider>
   )
 }

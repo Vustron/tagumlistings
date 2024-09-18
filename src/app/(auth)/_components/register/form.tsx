@@ -20,11 +20,12 @@ import type { RegisterValues } from "@/lib/validation"
 interface RegisterFormProps {
   onSuccess?: () => void
   onError?: () => void
+  status?: "client" | "admin"
 }
 
-const RegisterForm = ({ onSuccess, onError }: RegisterFormProps) => {
+const RegisterForm = ({ onSuccess, onError, status }: RegisterFormProps) => {
   // init mutation
-  const registerMutation = useRegisterAccount()
+  const registerMutation = useRegisterAccount(status)
 
   // init form
   const form = useForm<RegisterValues>({

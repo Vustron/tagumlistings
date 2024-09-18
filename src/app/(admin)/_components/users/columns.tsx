@@ -10,9 +10,9 @@ import { getRoleBadgeColor } from "@/lib/utils"
 
 // types
 import type { ColumnDef } from "@tanstack/react-table"
-import type { SessionData } from "@/lib/config/session"
+import type { UserData } from "@/lib/types"
 
-export const columns: ColumnDef<SessionData>[] = [
+export const columns: ColumnDef<UserData>[] = [
   {
     id: "select",
     header: ({ table }) => (

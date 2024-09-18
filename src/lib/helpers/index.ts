@@ -1,12 +1,16 @@
 // utils
-import { rateLimiter } from "@/lib/config/redis"
+import redis, { rateLimiter } from "@/lib/config/redis"
 import { ErrorHandler } from "@/lib/utils"
 import { NextResponse } from "next/server"
 import { getClientIp } from "request-ip"
 import { routes } from "@/lib/routes"
 
 // types
-import type { CompatibleRequest, ErrorResponseData } from "@/lib/types"
+import type {
+  CompatibleRequest,
+  ErrorResponseData,
+  UserData,
+} from "@/lib/types"
 import type { NextRequest } from "next/server"
 import type { HttpMethod } from "@/lib/routes"
 
@@ -45,9 +49,7 @@ export async function handleErrorResponse(error: unknown) {
   return NextResponse.json({ error: message }, { status: statusCode })
 }
 
-// rate limitter
 export async function convertAndCheckRateLimit(request: NextRequest) {
-  // Convert NextRequest to CompatibleRequest
   const compatibleRequest: CompatibleRequest = {
     headers: Object.fromEntries(request.headers.entries()),
     url: request.url,
@@ -71,4 +73,40 @@ export async function convertAndCheckRateLimit(request: NextRequest) {
   }
 
   return { clientIp, compatibleRequest }
+}
+
+export async function getAccountsFromDB(dbKey: string): Promise<UserData[]> {
+  const existingUserData = await redis.get(dbKey)
+
+  const users: UserData[] = existingUserData
+    ? (JSON.parse(existingUserData) as UserData[])
+    : []
+
+  return users
+}
+
+export async function findAccountByParams<T extends keyof UserData>(
+  accounts: UserData[],
+  param: T,
+  value: UserData[T],
+): Promise<{ account: UserData | undefined; response?: NextResponse }> {
+  // Find the user index based on the dynamic parameter
+  const accountIndex = accounts.findIndex(
+    (account: UserData) => account[param] === value,
+  )
+
+  // Return error response if user isn't found
+  if (accountIndex === -1) {
+    return {
+      account: undefined,
+      response: NextResponse.json(
+        { error: "Account not found" },
+        { status: 404 },
+      ),
+    }
+  }
+
+  // Return the existing user data
+  const existingAccount = accounts[accountIndex]
+  return { account: existingAccount }
 }

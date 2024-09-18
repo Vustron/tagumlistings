@@ -5,9 +5,9 @@ import DynamicForm from "@/components/shared/dynamic-form"
 
 // utils
 import { updateAccountFields } from "@/lib/misc/field-configs"
-import { clientErrorHandler } from "@/lib/utils"
 import { updateAccountSchema } from "@/lib/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { clientErrorHandler } from "@/lib/utils"
 import toast from "react-hot-toast"
 
 // hooks
@@ -16,11 +16,11 @@ import { useForm } from "react-hook-form"
 
 // types
 import type { UpdateAccountValues } from "@/lib/validation"
-import type { SessionData } from "@/lib/config/session"
+import type { UserData } from "@/lib/types"
 
 interface AccountFormProps {
   id?: string | undefined
-  data: SessionData
+  data: UserData
 }
 
 const AccountForm = ({ id, data }: AccountFormProps) => {
@@ -42,7 +42,6 @@ const AccountForm = ({ id, data }: AccountFormProps) => {
 
   // submit handler
   const onSubmit = async (values: UpdateAccountValues) => {
-    console.log("Form Submitted", values)
     await toast.promise(updateAccountMutation.mutateAsync(values), {
       loading: <span className="animate-pulse">Updating account...</span>,
       success: "Account updated",

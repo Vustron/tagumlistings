@@ -12,7 +12,6 @@ export const env = createEnv({
   },
   // server env
   server: {
-    API_URL: z.string().url(),
     PRIVATE_KEY: z.string(),
     SECRET_KEY: z.string(),
     REDIS_URL: z.string().url(),
@@ -34,7 +33,6 @@ export const env = createEnv({
   runtimeEnv: {
     // server
     NODE_ENV: process.env.NODE_ENV,
-    API_URL: process.env.API_URL,
     PRIVATE_KEY: process.env.PRIVATE_KEY,
     SECRET_KEY: process.env.SECRET_KEY,
     REDIS_URL: process.env.REDIS_URL,

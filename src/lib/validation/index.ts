@@ -52,3 +52,10 @@ export const addPropertySchema = z.object({
 
 /* postSchema Type */
 export type AddPropertyValues = z.infer<typeof addPropertySchema>
+
+// bulkDeleteAccountsSchema
+export const bulkDeleteAccountsSchema = z.object({
+  ids: z.array(requiredString.or(z.undefined())),
+})
+/* BulkDeleteAccountValues Type */
+export type BulkDeleteAccountValues = z.infer<typeof bulkDeleteAccountsSchema>

@@ -42,7 +42,7 @@ export const registerFields: FieldConfig<RegisterValues>[] = [
   },
 ]
 
-// register form fields
+// update account form fields
 export const updateAccountFields: FieldConfig<UpdateAccountValues>[] = [
   {
     name: "name",
@@ -71,13 +71,8 @@ export const updateAccountFields: FieldConfig<UpdateAccountValues>[] = [
   },
   {
     name: "role",
-    type: "select",
+    type: "switch",
     label: "Role",
-    placeholder: "Select role",
-    options: [
-      { value: "user", label: "User" },
-      { value: "admin", label: "Admin" },
-    ],
   },
   {
     name: "password",

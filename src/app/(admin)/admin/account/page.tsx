@@ -1,8 +1,9 @@
 // components
+import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
 import ContentLayout from "@/app/(admin)/_components/shared/content-layout"
+import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 import AccountClient from "@/app/(admin)/_components/account/client"
 import BounceWrapper from "@/components/shared/bounce"
-import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 
 // actions
 import { getSession } from "@/app/(auth)/_actions/get-session"
@@ -25,14 +26,14 @@ export default async function AccountPage() {
   const userData = dataSerializer(session)
 
   return (
-    <ContentLayout title="Account">
-      <BounceWrapper>
-        {/* breadcrumb */}
-        <DynamicBreadcrumb items={accountItems} />
+    <HydrationBoundaryWrapper accountId={userData.id}>
+      <ContentLayout title="Account">
+        <BounceWrapper>
+          <DynamicBreadcrumb items={accountItems} />
 
-        {/* client */}
-        <AccountClient id={userData.id} />
-      </BounceWrapper>
-    </ContentLayout>
+          <AccountClient id={userData.id} />
+        </BounceWrapper>
+      </ContentLayout>
+    </HydrationBoundaryWrapper>
   )
 }

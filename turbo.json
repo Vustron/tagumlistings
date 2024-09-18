@@ -3,7 +3,6 @@
   "tasks": {
     "build": {
       "env": [
-        "API_URL",
         "NEXT_PUBLIC_APP_URL",
         "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME",
         "NEXT_PUBLIC_UPLOAD_PRESET",

@@ -36,33 +36,38 @@ export const useUpdateAccount = (id?: string) => {
       return await updateAccount(sanitizedData)
     },
     onSuccess: async (updatedUser) => {
-      // // get session
-      // const session = await getSession()
-      // const accountQueryFilter: QueryFilters = {
-      //   queryKey: ["account", id],
-      // }
-      // if (id !== session.id) {
-      //   const accountsQueryFilter: QueryFilters = {
-      //     queryKey: ["accounts"],
-      //   }
-      //   await queryClient.cancelQueries(accountsQueryFilter)
-      // }
-      // await queryClient.cancelQueries(accountQueryFilter)
-      // queryClient.setQueryData<SessionData>(["account", id], (oldData) => ({
-      //   ...oldData,
-      //   ...updatedUser,
-      // }))
-      // if (id !== session.id) {
-      //   queryClient.setQueryData<Accounts>(["accounts"], (oldData) => {
-      //     if (!oldData) return { accounts: [updatedUser] }
-      //     return {
-      //       ...oldData,
-      //       accounts: oldData.accounts.map((account) =>
-      //         account.id === id ? updatedUser : account,
-      //       ),
-      //     }
-      //   })
-      // }
+      const session = await getSession()
+
+      const accountQueryFilter: QueryFilters = {
+        queryKey: ["account", id],
+      }
+
+      if (id !== session.id) {
+        const accountsQueryFilter: QueryFilters = {
+          queryKey: ["accounts"],
+        }
+        await queryClient.cancelQueries(accountsQueryFilter)
+        router.push("/admin/users")
+        router.refresh()
+      }
+
+      await queryClient.cancelQueries(accountQueryFilter)
+      queryClient.setQueryData<SessionData>(["account", id], (oldData) => ({
+        ...oldData,
+        ...updatedUser,
+      }))
+
+      if (id !== session.id) {
+        queryClient.setQueryData<Accounts>(["accounts"], (oldData) => {
+          if (!oldData) return { accounts: [updatedUser] }
+          return {
+            ...oldData,
+            accounts: oldData.accounts.map((account) =>
+              account.id === id ? updatedUser : account,
+            ),
+          }
+        })
+      }
     },
     onSettled: () => {
       router.refresh()
