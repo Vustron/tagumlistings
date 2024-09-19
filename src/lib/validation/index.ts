@@ -39,7 +39,7 @@ export const loginSchema = z.object({
   password: requiredString,
 })
 
-/* loginSchema Type */
+/* LoginValues Type */
 export type LoginValues = z.infer<typeof loginSchema>
 
 // addPropertySchema
@@ -47,10 +47,12 @@ export const addPropertySchema = z.object({
   category: requiredString,
   location: requiredString,
   status: requiredString,
-  propertyPics: z.array(z.string().url("Invalid URL")).optional(),
+  propertyPics: z
+    .array(z.object({ url: z.string().url("Invalid URL") }))
+    .optional(),
 })
 
-/* postSchema Type */
+/* AddPropertyValues Type */
 export type AddPropertyValues = z.infer<typeof addPropertySchema>
 
 // bulkDeleteAccountsSchema
@@ -59,3 +61,26 @@ export const bulkDeleteAccountsSchema = z.object({
 })
 /* BulkDeleteAccountValues Type */
 export type BulkDeleteAccountValues = z.infer<typeof bulkDeleteAccountsSchema>
+
+// updatePropertySchema
+export const updatePropertySchema = z.object({
+  id: requiredString.optional(),
+  category: requiredString.optional(),
+  location: requiredString.optional(),
+  status: requiredString.optional(),
+  propertyPics: z
+    .array(z.object({ url: z.string().url("Invalid URL") }))
+    .optional(),
+})
+
+/* UpdatePropertyValues Type */
+export type UpdatePropertyValues = z.infer<typeof updatePropertySchema>
+
+// bulkDeleteAccountsSchema
+export const bulkDeletePropertiesSchema = z.object({
+  ids: z.array(requiredString.or(z.undefined())),
+})
+/* BulkDeleteAccountValues Type */
+export type BulkDeletePropertiesValues = z.infer<
+  typeof bulkDeletePropertiesSchema
+>

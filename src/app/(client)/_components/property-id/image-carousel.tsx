@@ -11,7 +11,7 @@ import Image from "next/image"
 import React from "react"
 
 interface CarouselProps {
-  images: string[]
+  images: { url: string }[]
 }
 
 const ImageCarousel = ({ images }: CarouselProps) => {
@@ -19,7 +19,7 @@ const ImageCarousel = ({ images }: CarouselProps) => {
   const [direction, setDirection] = useState(0)
 
   const validImages = useMemo(
-    () => images?.filter((img): img is string => typeof img === "string") ?? [],
+    () => images?.filter((img): img is { url: string } => !!img.url) ?? [],
     [images],
   )
 
@@ -106,7 +106,7 @@ const ImageCarousel = ({ images }: CarouselProps) => {
             className="absolute inset-0"
           >
             <Image
-              src={validImages[currentIndex]!}
+              src={validImages[currentIndex]!.url}
               alt={`Property image ${currentIndex + 1}`}
               layout="fill"
               objectFit="cover"
@@ -180,7 +180,7 @@ const ImageCarousel = ({ images }: CarouselProps) => {
               aria-label={`Go to image ${index + 1}`}
             >
               <Image
-                src={image}
+                src={image.url}
                 alt={`Thumbnail ${index + 1}`}
                 width={64}
                 height={64}

@@ -1,8 +1,9 @@
 "use server"
 
 // actions
-import { preFetchAccount } from "@/app/(auth)/_actions/get-account"
+import { preFetchProperties } from "@/app/(admin)/_actions/get-properties"
 import { preFetchAccounts } from "@/app/(auth)/_actions/get-accounts"
+import { preFetchAccount } from "@/app/(auth)/_actions/get-account"
 
 // utils
 import {
@@ -28,6 +29,11 @@ const HydrationBoundaryWrapper = ({
   void queryClient.prefetchQuery({
     queryKey: ["accounts"],
     queryFn: async () => preFetchAccounts(),
+  })
+
+  void queryClient.prefetchQuery({
+    queryKey: ["properties"],
+    queryFn: async () => preFetchProperties(),
   })
 
   return (

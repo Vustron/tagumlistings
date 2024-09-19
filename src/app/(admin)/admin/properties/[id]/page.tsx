@@ -1,15 +1,15 @@
 // components
 import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
 import ContentLayout from "@/app/(admin)/_components/shared/content-layout"
-import PropertiesClient from "@/app/(admin)/_components/properties/client"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
+import PropertyClient from "@/app/(admin)/_components/property/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions
 import { getSession } from "@/app/(auth)/_actions/get-session"
 
 // utils
-import { propertiesItems } from "@/lib/misc/breadcrumb-lists"
+import { propertyItems } from "@/lib/misc/breadcrumb-lists"
 import { dataSerializer } from "@/lib/utils"
 
 // types
@@ -17,23 +17,25 @@ import type { Metadata } from "next"
 
 // meta data
 export const metadata: Metadata = {
-  title: "Properties",
+  title: "Property",
 }
 
-export default async function PropertiesPage() {
-  // get session
+export default async function PropertyIdPage({
+  params,
+}: {
+  params: { id: string }
+}) {
   const session = await getSession()
 
-  // session serialize
   const userData = dataSerializer(session)
 
   return (
     <HydrationBoundaryWrapper accountId={userData.id}>
-      <ContentLayout title="Properties">
+      <ContentLayout title="Property">
         <BounceWrapper>
-          <DynamicBreadcrumb items={propertiesItems} />
+          <DynamicBreadcrumb items={propertyItems} />
 
-          <PropertiesClient />
+          <PropertyClient id={params.id} />
         </BounceWrapper>
       </ContentLayout>
     </HydrationBoundaryWrapper>

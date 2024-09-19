@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server"
 import { twMerge } from "tailwind-merge"
 import toast from "react-hot-toast"
+import { format } from "date-fns"
 import { ZodError } from "zod"
 import { clsx } from "clsx"
 
@@ -12,6 +13,16 @@ import type { NextRequest } from "next/server"
 import type { ClassValue } from "clsx"
 import type DOMPurify from "dompurify"
 import type { z } from "zod"
+
+export function convertTimestampToDateString(timestamp: {
+  seconds: number
+  nanoseconds: number
+}): string {
+  const date = new Date(
+    timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000,
+  )
+  return format(date, "yyyy-MM-dd'T'HH:mm:ssXXX")
+}
 
 export const isValidSessionData = (user: any): user is SessionData => {
   return (
@@ -57,8 +68,10 @@ export const getRoleBadgeColor = (role: string) => {
       return "bg-blue-100 text-blue-800 hover:text-white dark:hover:text-black"
     case "admin":
       return "bg-green-100 text-green-800 hover:text-white dark:hover:text-black"
+    case "available":
+      return "bg-yellow-100 text-yellow-800 hover:text-white dark:hover:text-black"
     case "sold":
-      return "bg-green-100 text-green-800 hover:text-white dark:hover:text-black"
+      return "bg-red-100 text-red-800 hover:text-white dark:hover:text-black"
     case "reserved":
       return "bg-blue-100 text-blue-800 hover:text-white dark:hover:text-black"
     default:

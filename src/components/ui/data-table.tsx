@@ -81,7 +81,7 @@ export default function DataTable<TData, TValue>({
   // confirmation state
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure?",
-    "You are about to perform a bulk delete accounts.",
+    "You are about to perform a bulk delete.",
   )
 
   // init sorting state

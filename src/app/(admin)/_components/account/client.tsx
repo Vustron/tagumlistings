@@ -4,6 +4,7 @@
 import AccountForm from "@/app/(admin)/_components/account/form"
 import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
+import { Loader2 } from "lucide-react"
 
 // hooks
 import { useGetAccount } from "@/app/(auth)/_hooks/use-get-account"
@@ -15,7 +16,6 @@ import { dataSerializer } from "@/lib/utils"
 
 // types
 import type { SessionData } from "@/lib/config/session"
-import { Loader2 } from "lucide-react"
 
 const AccountClient = ({ id }: { id?: string }) => {
   const { data: user, isLoading, error, status } = useGetAccount(id!)

@@ -67,7 +67,11 @@ export const useConfirm = (
               <Button onClick={handleCancel} variant="outline" size="sm">
                 Cancel
               </Button>
-              <Button onClick={handleConfirm} size="sm">
+              <Button
+                onClick={handleConfirm}
+                size="sm"
+                className="dark:text-black"
+              >
                 Confirm
               </Button>
             </>

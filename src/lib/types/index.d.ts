@@ -56,8 +56,10 @@ interface FieldConfig<TFieldValues> {
   label: string
   placeholder?: string
   className?: string
+  accept?: "image/*"
   options?: SelectOption[]
   isPhone?: boolean
+  multiple?: boolean
 }
 
 /* Mutation Type */
