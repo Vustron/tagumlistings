@@ -1,32 +1,44 @@
+"use client"
+
 // components
-import Calendar from "@/app/(admin)/_components/appointments/calendar"
+import AppointmentCalendar from "@/app/(admin)/_components/appointments/calendar"
+import { Loader2, ServerCrash } from "lucide-react"
+
+// hooks
+import { useGetAppointments } from "@/app/(admin)/_hooks/appointment/get-all"
+import { useGetAppointmentDates } from "@/app/(admin)/_hooks/appointment/get-dates"
 
 const AppointmentsClient = () => {
-  const events = [
-    {
-      id: "1",
-      title: "Meeting 1",
-      date: new Date(2024, 7, 1, 10, 0),
-      description: "Team meeting",
-    },
-    {
-      id: "2",
-      title: "Lunch",
-      date: new Date(2024, 7, 2, 12, 30),
-      description: "Lunch with client",
-    },
-    {
-      id: "3",
-      title: "Conference",
-      date: new Date(2024, 7, 5, 9, 0),
-      description: "Annual conference",
-    },
-    // Add more events as needed
-  ]
+  const { data: appointmentsData, status, isLoading } = useGetAppointments()
+  const {
+    data: datesData,
+    status: datesStatus,
+    isLoading: datesLoading,
+  } = useGetAppointmentDates()
 
   return (
     <div className="mt-6 mb-2">
-      <Calendar events={events} />
+      {(isLoading || datesLoading) && (
+        <div className="flex flex-col items-center justify-center">
+          <Loader2 className="size-10 animate-spin" />
+        </div>
+      )}
+
+      {(status === "error" || datesStatus === "error") && (
+        <div className="flex flex-col items-center justify-center">
+          <ServerCrash className="size-7 text-zinc-500 my-4" />
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            Something went wrong!
+          </p>
+        </div>
+      )}
+
+      {status === "success" && appointmentsData && (
+        <AppointmentCalendar
+          events={appointmentsData.appointments}
+          appointmentDates={datesData.dates}
+        />
+      )}
     </div>
   )
 }

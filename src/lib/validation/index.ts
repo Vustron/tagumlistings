@@ -84,3 +84,33 @@ export const bulkDeletePropertiesSchema = z.object({
 export type BulkDeletePropertiesValues = z.infer<
   typeof bulkDeletePropertiesSchema
 >
+
+// addAppointmentSchema
+export const addAppointmentSchema = z.object({
+  user: requiredString.optional(),
+  date: requiredString.optional(),
+  description: requiredString.optional(),
+  color: requiredString.optional(),
+})
+
+/* AddAppointmentValues Type */
+export type AddAppointmentValues = z.infer<typeof addAppointmentSchema>
+
+// addAppointmentSchema
+export const addAppointmentDateSchema = z.object({
+  id: requiredString.optional(),
+  dates: z.array(z.date()),
+})
+
+/* AddAppointmentValues Type */
+export type AddAppointmentDateValues = z.infer<typeof addAppointmentDateSchema>
+
+// addAppointmentSchema
+export const deleteAppointmentDateSchema = z.object({
+  id: requiredString.optional(),
+})
+
+/* deleteAppointmentDateSchema Type */
+export type DeleteAppointmentDateValues = z.infer<
+  typeof deleteAppointmentDateSchema
+>

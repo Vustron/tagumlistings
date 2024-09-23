@@ -5,8 +5,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next-nprogress-bar"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/get-session"
-import { updateAccount } from "@/app/(auth)/_actions/update-account"
+import { updateAccount } from "@/app/(auth)/_actions/auth/update"
+import { getSession } from "@/app/(auth)/_actions/session/get"
 
 // utils
 import { clientErrorHandler, sanitizer } from "@/lib/utils"
@@ -14,9 +14,9 @@ import { updateAccountSchema } from "@/lib/validation"
 import DOMPurify from "dompurify"
 
 // types
+import type { Accounts } from "@/app/(auth)/_actions/auth/get-all"
 import type { UpdateAccountValues } from "@/lib/validation"
 import type { QueryFilters } from "@tanstack/react-query"
-import type { Accounts } from "@/app/(auth)/_actions/get-accounts"
 import type { SessionData } from "@/lib/config/session"
 
 const purify = DOMPurify

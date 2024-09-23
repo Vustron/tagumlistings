@@ -12,7 +12,7 @@ import { Edit, MoreHorizontal, Trash } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 // hooks
-import { useDeleteProperty } from "@/app/(admin)/_hooks/use-delete-property"
+import { useDeleteProperty } from "@/app/(admin)/_hooks/property/delete"
 import { useConfirm } from "@/lib/hooks/use-confirm"
 import { useRouter } from "next/navigation"
 

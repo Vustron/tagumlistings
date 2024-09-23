@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next-nprogress-bar"
 
 // actions
-import { updateProperty } from "@/app/(admin)/_actions/update-property"
+import { updateProperty } from "@/app/(admin)/_actions/property/update"
 
 // utils
 import { clientErrorHandler, sanitizer } from "@/lib/utils"
@@ -14,7 +14,7 @@ import DOMPurify from "dompurify"
 
 // types
 import type { Property } from "@/app/(admin)/_components/data/properties"
-import type { Properties } from "@/app/(admin)/_actions/get-properties"
+import type { Properties } from "@/app/(admin)/_actions/property/get-all"
 import type { UpdatePropertyValues } from "@/lib/validation"
 import type { QueryFilters } from "@tanstack/react-query"
 
@@ -51,10 +51,10 @@ export const useUpdateProperty = (id?: string) => {
       }))
 
       queryClient.setQueryData<Properties>(["properties"], (oldData) => {
-        if (!oldData) return { properties: [updatedProperty] }
+        if (!oldData) return { appointments: [updatedProperty] }
         return {
           ...oldData,
-          properties: oldData.properties.map((property) =>
+          appointments: oldData.appointments.map((property) =>
             property.id === id ? updatedProperty : property,
           ),
         }

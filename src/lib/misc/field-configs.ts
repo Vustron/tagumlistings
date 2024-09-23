@@ -5,8 +5,11 @@ import type {
   RegisterValues,
   UpdateAccountValues,
   UpdatePropertyValues,
+  AddAppointmentValues,
 } from "@/lib/validation"
-import type { FieldConfig } from "@/lib/types"
+import type { AppointmentDate } from "@/app/(admin)/_components/appointments/date"
+import type { FieldConfig, UserData } from "@/lib/types"
+import { format } from "date-fns"
 
 // register form fields
 export const registerFields: FieldConfig<RegisterValues>[] = [
@@ -182,5 +185,50 @@ export const updatePropertyFields: FieldConfig<UpdatePropertyValues>[] = [
       { value: "sold", label: "Sold" },
       { value: "reserved", label: "Reserved" },
     ],
+  },
+]
+
+// add appointment form fields
+export const addAppointmentFields = (
+  accounts: UserData[],
+  appointmentDates: AppointmentDate[],
+): FieldConfig<AddAppointmentValues>[] => [
+  {
+    name: "user",
+    type: "select",
+    label: "User Appointed",
+    placeholder: "Select a user",
+    options: accounts
+      .filter((account) => account.id !== undefined)
+      .map((account) => ({
+        value: account.name,
+        label: account.name,
+      })),
+  },
+  {
+    name: "date",
+    type: "select",
+    label: "Select Appointment Date",
+    placeholder: "Select appointment date",
+    options: appointmentDates.map((appointmentDate) => ({
+      value: appointmentDate.dates?.[0]
+        ? appointmentDate.dates[0].toString()
+        : "",
+      label: appointmentDate.dates?.[0]
+        ? format(new Date(appointmentDate.dates[0]), "yyyy-MM-dd")
+        : "",
+    })),
+  },
+  {
+    name: "description",
+    type: "text",
+    label: "Appointment Description",
+    placeholder: "Enter description",
+  },
+  {
+    name: "color",
+    type: "color",
+    label: "Color",
+    placeholder: "Select color",
   },
 ]

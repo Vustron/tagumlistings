@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next-nprogress-bar"
 
 // actions
-import { registerAccount } from "@/app/(auth)/_actions/register-account"
+import { registerAccount } from "@/app/(auth)/_actions/auth/register"
 
 // utils
 import { clientErrorHandler, sanitizer } from "@/lib/utils"
@@ -13,7 +13,7 @@ import DOMPurify from "dompurify"
 // types
 import type { RegisterValues } from "@/lib/validation"
 import type { QueryFilters } from "@tanstack/react-query"
-import type { Accounts } from "@/app/(auth)/_actions/get-accounts"
+import type { Accounts } from "@/app/(auth)/_actions/auth/get-all"
 
 const purify = DOMPurify
 

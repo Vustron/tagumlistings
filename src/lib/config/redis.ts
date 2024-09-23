@@ -3,38 +3,41 @@ import RateLimiter from "async-ratelimiter"
 import { Redis } from "ioredis"
 
 // configs
-import { env } from "@/lib/config/env.mjs"
+// import { env } from "@/lib/config/env.mjs"
 
-// init redis url from env
+// TODO(Vustron): nagbug and env sa url so e direct sa nato nig butang dri
+
+const url =
+  "rediss://default:AdkuAAIjcDFhMTE3MTFhZWI0NDk0OWEwODRlNzE4YTQ1NTNiOWUxOHAxMA@feasible-marmoset-55598.upstash.io:6379"
+
 const getRedisUrl = () => {
-  if (env.REDIS_URL) {
-    return env.REDIS_URL
+  if (url) {
+    return url
   }
-
   throw new Error("REDIS_URL is not defined")
 }
 
-// set redis url
-let redis = new Redis(getRedisUrl())
+const redis = new Redis(getRedisUrl(), {
+  connectTimeout: 10000,
+  retryStrategy: (times) => {
+    const delay = Math.min(times * 50, 2000)
+    console.log(
+      `Retrying Redis connection... Attempt ${times}, retry in ${delay} ms`,
+    )
+    return delay
+  },
+})
 
-if (!redis) {
-  redis = new Redis(env.REDIS_URL, {
-    connectTimeout: 10000,
-    retryStrategy: (times) => {
-      return Math.min(times * 50, 2000)
-    },
-  })
+redis.on("error", (err) => {
+  console.error("Redis error:", err)
+})
 
-  // Enable keyspace notifications for expiration events
-  redis.config("SET", "notify-keyspace-events", "Ex")
-}
+redis.config("SET", "notify-keyspace-events", "Ex").catch((err) => {
+  console.error("Failed to configure keyspace notifications:", err)
+})
 
-// Enable keyspace notifications for expiration events
-redis.config("SET", "notify-keyspace-events", "Ex")
-
-// init rate limiter
 export const rateLimiter = new RateLimiter({
-  db: new Redis(env.REDIS_URL),
+  db: redis,
   max: 3,
   duration: 10_000,
 })

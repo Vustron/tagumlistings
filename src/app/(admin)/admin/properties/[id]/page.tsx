@@ -6,7 +6,7 @@ import PropertyClient from "@/app/(admin)/_components/property/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/get-session"
+import { getSession } from "@/app/(auth)/_actions/session/get"
 
 // utils
 import { propertyItems } from "@/lib/misc/breadcrumb-lists"

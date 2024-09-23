@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server"
 import { twMerge } from "tailwind-merge"
 import toast from "react-hot-toast"
-import { format } from "date-fns"
+import { format, isValid, parseISO } from "date-fns"
 import { ZodError } from "zod"
 import { clsx } from "clsx"
 
@@ -44,13 +44,14 @@ export const getInitials = (name: string) => {
 }
 
 // Helper function to format date
-export const formatDate = (dateString: string) => {
-  const date = new Date(dateString)
-  return date.toLocaleDateString("en-US", {
-    month: "2-digit",
-    day: "2-digit",
-    year: "numeric",
-  })
+export const formatDate = (date: Date | string): string => {
+  if (typeof date === "string") {
+    const parsedDate = parseISO(date)
+    return isValid(parsedDate)
+      ? format(parsedDate, "MMMM d, yyyy h:mm a")
+      : "Invalid Date"
+  }
+  return format(date, "MMMM d, yyyy h:mm a")
 }
 
 // change color badge function

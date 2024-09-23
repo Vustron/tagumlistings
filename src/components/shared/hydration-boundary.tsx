@@ -1,9 +1,11 @@
 "use server"
 
 // actions
-import { preFetchProperties } from "@/app/(admin)/_actions/get-properties"
-import { preFetchAccounts } from "@/app/(auth)/_actions/get-accounts"
-import { preFetchAccount } from "@/app/(auth)/_actions/get-account"
+import { preFetchAppointmentDates } from "@/app/(admin)/_actions/appointment/get-dates"
+import { preFetchAppointments } from "@/app/(admin)/_actions/appointment/get-all"
+import { preFetchProperties } from "@/app/(admin)/_actions/property/get-all"
+import { preFetchAccounts } from "@/app/(auth)/_actions/auth/get-all"
+import { preFetchAccount } from "@/app/(auth)/_actions/auth/get"
 
 // utils
 import {
@@ -34,6 +36,16 @@ const HydrationBoundaryWrapper = ({
   void queryClient.prefetchQuery({
     queryKey: ["properties"],
     queryFn: async () => preFetchProperties(),
+  })
+
+  void queryClient.prefetchQuery({
+    queryKey: ["appointments"],
+    queryFn: async () => preFetchAppointments(),
+  })
+
+  void queryClient.prefetchQuery({
+    queryKey: ["appointment-dates"],
+    queryFn: async () => preFetchAppointmentDates(),
   })
 
   return (

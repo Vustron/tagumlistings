@@ -1,9 +1,17 @@
+// components
 import {
   BellPlus,
   BookMarked,
   CircleDollarSign,
   MapPinHouse,
 } from "lucide-react"
+
+// types
+import type { Appointment } from "@/app/(admin)/_components/appointments/new"
+
+export interface Appointments {
+  appointments: Appointment[]
+}
 
 export const dashboardItems = [
   {

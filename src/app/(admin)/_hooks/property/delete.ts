@@ -1,7 +1,7 @@
 "use client"
 
 // action
-import { deleteProperty } from "@/app/(admin)/_actions/delete-property"
+import { deleteProperty } from "@/app/(admin)/_actions/property/delete"
 
 // hooks
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -11,7 +11,7 @@ import { useRouter } from "next-nprogress-bar"
 import { clientErrorHandler } from "@/lib/utils"
 
 // types
-import type { Properties } from "@/app/(admin)/_actions/get-properties"
+import type { Properties } from "@/app/(admin)/_actions/property/get-all"
 import type { QueryFilters } from "@tanstack/react-query"
 
 export const useDeleteProperty = (id: string | undefined) => {
@@ -34,7 +34,7 @@ export const useDeleteProperty = (id: string | undefined) => {
 
         return {
           ...oldData,
-          properties: oldData.properties.filter(
+          appointments: oldData.appointments.filter(
             (property) => property.id !== id,
           ),
         }

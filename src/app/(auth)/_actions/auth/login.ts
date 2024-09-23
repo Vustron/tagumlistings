@@ -4,7 +4,7 @@
 import { httpRequest } from "@/lib/config/http"
 
 // actions
-import { setSession } from "@/app/(auth)/_actions/set-session"
+import { setSession } from "@/app/(auth)/_actions/session/set"
 
 // types
 import type { LoginValues } from "@/lib/validation"

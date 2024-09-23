@@ -11,7 +11,7 @@ import { clientErrorHandler } from "@/lib/utils"
 import toast from "react-hot-toast"
 
 // hooks
-import { useUpdateAccount } from "@/app/(auth)/_hooks/use-update-account"
+import { useUpdateAccount } from "@/app/(auth)/_hooks/auth/update"
 import { useForm } from "react-hook-form"
 
 // types

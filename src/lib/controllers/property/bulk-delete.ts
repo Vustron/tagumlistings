@@ -15,7 +15,7 @@ import { NextResponse } from "next/server"
 import { firestore, firebaseStorage } from "@/lib/config/firebase"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/get-session"
+import { getSession } from "@/app/(auth)/_actions/session/get"
 
 // types
 import type { Property } from "@/app/(admin)/_components/data/properties"

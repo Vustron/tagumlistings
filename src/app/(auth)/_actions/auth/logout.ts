@@ -4,7 +4,7 @@
 import redis from "@/lib/config/redis"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/get-session"
+import { getSession } from "@/app/(auth)/_actions/session/get"
 
 // types
 import type { SessionData } from "@/lib/config/session"

@@ -50,9 +50,7 @@ async function makeHttpRequest<RequestType = unknown, ResponseType = unknown>(
       const fullUrl = url
         ? `${env.NEXT_PUBLIC_APP_URL}/api/v1/${url}${buildQueryString(params)}`
         : ""
-      let requestUrl = customURL || fullUrl
-
-      console.log(fullUrl)
+      const requestUrl = customURL || fullUrl
 
       // Validate URL
       try {
@@ -72,18 +70,14 @@ async function makeHttpRequest<RequestType = unknown, ResponseType = unknown>(
       }
 
       if (method === "GET" && body) {
-        const serializedBody = dataSerializer(body)
-        const bodyParams = new URLSearchParams(
-          serializedBody as Record<string, string>,
-        )
-        requestUrl +=
-          (requestUrl.includes("?") ? "&" : "?") + bodyParams.toString()
-      } else if (body) {
+        throw new HttpError(400, "GET request should not have a body")
+      }
+
+      if (body) {
         const serializedBody = dataSerializer(body)
         requestOptions.body = JSON.stringify(serializedBody)
       }
 
-      // Perform fetch request
       const response = await fetch(requestUrl, requestOptions)
 
       if (!response.ok) {
@@ -94,8 +88,9 @@ async function makeHttpRequest<RequestType = unknown, ResponseType = unknown>(
         )
       }
 
-      let data: unknown
       const textResponse = await response.text()
+      let data: unknown
+
       try {
         data = JSON.parse(textResponse)
       } catch (error) {
@@ -104,7 +99,6 @@ async function makeHttpRequest<RequestType = unknown, ResponseType = unknown>(
       }
 
       const serializedData = dataSerializer(data)
-
       const transformedData: ResponseType = transformResponse
         ? transformResponse(serializedData)
         : (serializedData as ResponseType)

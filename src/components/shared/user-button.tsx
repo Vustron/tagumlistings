@@ -21,10 +21,10 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 
 // actions
-import { logout } from "@/app/(auth)/_actions/logout"
+import { logout } from "@/app/(auth)/_actions/auth/logout"
 
 // hooks
-import { useGetAccount } from "@/app/(auth)/_hooks/use-get-account"
+import { useGetAccount } from "@/app/(auth)/_hooks/auth/get"
 import { useSession } from "@/components/providers/session"
 import { useRouter } from "next-nprogress-bar"
 import { useState } from "react"

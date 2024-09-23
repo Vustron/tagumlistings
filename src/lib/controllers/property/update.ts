@@ -8,7 +8,7 @@ import { NextResponse } from "next/server"
 import { firestore } from "@/lib/config/firebase"
 
 // actions
-import * as getSession from "@/app/(auth)/_actions/get-session"
+import * as getSession from "@/app/(auth)/_actions/session/get"
 
 // types
 import type { Property } from "@/app/(admin)/_components/data/properties"

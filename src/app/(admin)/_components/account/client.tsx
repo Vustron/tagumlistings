@@ -7,7 +7,7 @@ import { Heading } from "@/components/ui/heading"
 import { Loader2 } from "lucide-react"
 
 // hooks
-import { useGetAccount } from "@/app/(auth)/_hooks/use-get-account"
+import { useGetAccount } from "@/app/(auth)/_hooks/auth/get"
 // import { useRouter } from "next/navigation"
 
 // utils

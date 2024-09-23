@@ -52,7 +52,16 @@ interface SelectOption {
 /* FieldConfig Type */
 interface FieldConfig<TFieldValues> {
   name: Path<TFieldValues>
-  type: "text" | "password" | "email" | "number" | "select" | "image" | "switch"
+  type:
+    | "text"
+    | "password"
+    | "email"
+    | "number"
+    | "select"
+    | "image"
+    | "switch"
+    | "date"
+    | "color"
   label: string
   placeholder?: string
   className?: string

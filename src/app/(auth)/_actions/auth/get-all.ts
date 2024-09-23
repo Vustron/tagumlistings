@@ -4,7 +4,7 @@
 import { httpRequest } from "@/lib/config/http"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/get-session"
+import { getSession } from "@/app/(auth)/_actions/session/get"
 
 // utils
 import { queryOptions } from "@tanstack/react-query"

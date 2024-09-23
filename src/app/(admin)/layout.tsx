@@ -6,7 +6,7 @@ import SidePanel from "@/app/(admin)/_components/shared/side-panel"
 import { dataSerializer } from "@/lib/utils"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/get-session"
+import { getSession } from "@/app/(auth)/_actions/session/get"
 
 export default async function AdminLayout({
   children,

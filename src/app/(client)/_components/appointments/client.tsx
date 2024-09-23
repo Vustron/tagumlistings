@@ -1,11 +1,10 @@
 // components
-import Calendar from "@/app/(admin)/_components/appointments/calendar"
-import { events } from "@/app/(client)/_components/data/appointments"
+import AppointmentCalendar from "@/app/(admin)/_components/appointments/calendar"
 
 const AppointmentsClient = () => {
   return (
     <div className="mt-6 mb-2">
-      <Calendar events={events} />
+      <AppointmentCalendar events={[]} appointmentDates={[]} />
     </div>
   )
 }

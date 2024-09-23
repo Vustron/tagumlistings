@@ -57,7 +57,7 @@ const ClientFooter = () => {
                   <Button
                     variant="outline"
                     size="icon"
-                    className="bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800"
+                    className="bg-transparent hover:bg-green-400"
                   >
                     <a href={href} target="_blank" rel="noopener noreferrer">
                       <Icon className="h-5 w-5" />

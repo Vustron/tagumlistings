@@ -1,9 +1,9 @@
 "use client"
 
 // action
-import { deleteAccount } from "@/app/(auth)/_actions/delete-account"
-import { getSession } from "@/app/(auth)/_actions/get-session"
-import { logout } from "@/app/(auth)/_actions/logout"
+import { deleteAccount } from "@/app/(auth)/_actions/auth/delete"
+import { getSession } from "@/app/(auth)/_actions/session/get"
+import { logout } from "@/app/(auth)/_actions/auth/logout"
 
 // hooks
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -13,7 +13,7 @@ import { useRouter } from "next-nprogress-bar"
 import { clientErrorHandler } from "@/lib/utils"
 
 // types
-import type { Accounts } from "@/app/(auth)/_actions/get-accounts"
+import type { Accounts } from "@/app/(auth)/_actions/auth/get-all"
 import type { QueryFilters } from "@tanstack/react-query"
 import type { UserData } from "@/lib/types"
 

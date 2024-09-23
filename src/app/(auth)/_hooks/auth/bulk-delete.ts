@@ -1,8 +1,8 @@
 "use client"
 
 // actions
-import { deleteAccounts } from "@/app/(auth)/_actions/delete-accounts"
-import { getSession } from "@/app/(auth)/_actions/get-session"
+import { deleteAccounts } from "@/app/(auth)/_actions/auth/bulk-delete"
+import { getSession } from "@/app/(auth)/_actions/session/get"
 
 // hooks
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -16,7 +16,7 @@ import DOMPurify from "dompurify"
 import { bulkDeleteAccountsSchema } from "@/lib/validation"
 
 // types
-import type { Accounts } from "@/app/(auth)/_actions/get-accounts"
+import type { Accounts } from "@/app/(auth)/_actions/auth/get-all"
 import type { BulkDeleteAccountValues } from "@/lib/validation"
 import type { QueryFilters } from "@tanstack/react-query"
 import type { UserData } from "@/lib/types"

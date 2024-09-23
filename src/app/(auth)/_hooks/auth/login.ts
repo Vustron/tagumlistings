@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query"
 import { useRouter } from "next-nprogress-bar"
 
 // actions
-import { loginAccount } from "@/app/(auth)/_actions/login-account"
+import { loginAccount } from "@/app/(auth)/_actions/auth/login"
 
 // utils
 import { clientErrorHandler, sanitizer } from "@/lib/utils"

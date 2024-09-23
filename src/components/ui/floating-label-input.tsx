@@ -1,10 +1,14 @@
 import * as React from "react"
 
+import { EyeIcon, EyeOffIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+
+// utils
 import { cn } from "@/lib/utils"
-import { EyeIcon, EyeOffIcon } from "lucide-react"
+
+// hooks
 import { useState } from "react"
 
 // types
@@ -48,7 +52,7 @@ const FloatingInput = React.forwardRef<HTMLInputElement, InputProps>(
               type="button"
               variant="ghost"
               size="sm"
-              className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+              className="hover:text-green-600 dark:hover:text-green-600 absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
               onClick={() => setShowPassword((prev) => !prev)}
               disabled={disabled}
             >

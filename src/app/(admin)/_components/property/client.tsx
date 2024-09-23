@@ -7,7 +7,7 @@ import { Heading } from "@/components/ui/heading"
 import { Loader2 } from "lucide-react"
 
 // hooks
-import { useGetProperty } from "@/app/(admin)/_hooks/use-get-property"
+import { useGetProperty } from "@/app/(admin)/_hooks/property/get"
 
 // utils
 // import { clientErrorHandler } from "@/lib/utils"

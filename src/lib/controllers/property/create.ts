@@ -15,7 +15,7 @@ import { NextResponse } from "next/server"
 import { firestore } from "@/lib/config/firebase"
 
 // actions
-import * as getSession from "@/app/(auth)/_actions/get-session"
+import { getSession } from "@/app/(auth)/_actions/session/get"
 
 // types
 import type { Property } from "@/app/(admin)/_components/data/properties"
@@ -30,7 +30,7 @@ export async function createPropertyController(request: NextRequest) {
       return rateLimitCheck
     }
 
-    const session = await getSession.getSession()
+    const session = await getSession()
 
     if (!session) {
       return NextResponse.json({ error: "Missing session" }, { status: 400 })

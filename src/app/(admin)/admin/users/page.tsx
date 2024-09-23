@@ -6,7 +6,7 @@ import UsersClient from "@/app/(admin)/_components/users/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/get-session"
+import { getSession } from "@/app/(auth)/_actions/session/get"
 
 // utils
 import { usersItems } from "@/lib/misc/breadcrumb-lists"

@@ -13,7 +13,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 
 // actions
-import { logout } from "@/app/(auth)/_actions/logout"
+import { logout } from "@/app/(auth)/_actions/auth/logout"
 
 // hooks
 import { useRouter } from "next-nprogress-bar"

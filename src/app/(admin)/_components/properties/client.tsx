@@ -8,8 +8,8 @@ import DataTable from "@/components/ui/data-table"
 import { Heading } from "@/components/ui/heading"
 
 // hooks
-import { useDeleteProperties } from "@/app/(admin)/_hooks/use-delete-properties"
-import { useGetProperties } from "@/app/(admin)/_hooks/use-get-properties"
+import { useDeleteProperties } from "@/app/(admin)/_hooks/property/bulk-delete"
+import { useGetProperties } from "@/app/(admin)/_hooks/property/get-all"
 import { useFetchScroll } from "@/lib/hooks/use-fetch-scroll"
 import { useRef } from "react"
 
@@ -42,8 +42,8 @@ const PropertiesClient = () => {
     })
   }
 
-  const propertyCount = data?.properties?.length || 0
-  const propertiesData = data?.properties ?? []
+  const propertyCount = data?.appointments?.length || 0
+  const propertiesData = data?.appointments ?? []
 
   return (
     <>

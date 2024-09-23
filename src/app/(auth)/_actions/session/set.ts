@@ -1,7 +1,7 @@
 "use server"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/get-session"
+import { getSession } from "@/app/(auth)/_actions/session/get"
 
 // configs
 import redis from "@/lib/config/redis"

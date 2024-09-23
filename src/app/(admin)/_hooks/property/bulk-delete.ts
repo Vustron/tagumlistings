@@ -1,7 +1,7 @@
 "use client"
 
 // actions
-import { deleteProperties } from "@/app/(admin)/_actions/delete-properties"
+import { deleteProperties } from "@/app/(admin)/_actions/property/bulk-delete"
 
 // hooks
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -15,7 +15,7 @@ import DOMPurify from "dompurify"
 import { bulkDeletePropertiesSchema } from "@/lib/validation"
 
 // types
-import type { Properties } from "@/app/(admin)/_actions/get-properties"
+import type { Properties } from "@/app/(admin)/_actions/property/get-all"
 import type { BulkDeletePropertiesValues } from "@/lib/validation"
 import type { QueryFilters } from "@tanstack/react-query"
 
@@ -57,7 +57,7 @@ export const useDeleteProperties = () => {
 
         return {
           ...oldData,
-          properties: oldData.properties.filter(
+          appointments: oldData.appointments.filter(
             (property) => !deletedIds.has(property.id),
           ),
         }

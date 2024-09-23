@@ -4,7 +4,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 
 // actions
-import { getAccount } from "@/app/(auth)/_actions/get-account"
+import { getAccount } from "@/app/(auth)/_actions/auth/get"
 
 // types
 import type { UserData } from "@/lib/types"

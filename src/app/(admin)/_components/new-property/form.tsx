@@ -14,7 +14,7 @@ import { clientErrorHandler } from "@/lib/utils"
 import toast from "react-hot-toast"
 
 // hooks
-import { useCreateProperty } from "@/app/(admin)/_hooks/use-create-property"
+import { useCreateProperty } from "@/app/(admin)/_hooks/property/create"
 import { useForm } from "react-hook-form"
 
 // types
@@ -35,7 +35,6 @@ const NewPropertyForm = () => {
 
   // submit handler
   const submitHandler = async (values: AddPropertyValues) => {
-    console.log("Submitted values: ", values)
     await toast.promise(newProperty.mutateAsync(values), {
       loading: <span className="animate-pulse">Adding property...</span>,
       success: "Property added",

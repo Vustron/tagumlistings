@@ -8,8 +8,8 @@ import DataTable from "@/components/ui/data-table"
 import { Heading } from "@/components/ui/heading"
 
 // hooks
-import { useDeleteAccounts } from "@/app/(auth)/_hooks/use-delete-accounts"
-import { useGetAccounts } from "@/app/(auth)/_hooks/use-get-accounts"
+import { useDeleteAccounts } from "@/app/(auth)/_hooks/auth/bulk-delete"
+import { useGetAccounts } from "@/app/(auth)/_hooks/auth/get-all"
 import { useFetchScroll } from "@/lib/hooks/use-fetch-scroll"
 import { useRef } from "react"
 

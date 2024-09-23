@@ -18,6 +18,12 @@ import { getPropertiesController } from "@/lib/controllers/property/get-all"
 import { deletePropertyController } from "@/lib/controllers/property/delete"
 import { getPropertyController } from "@/lib/controllers/property/get"
 
+// appointment controllers
+import { saveAppointmentDateController } from "@/lib/controllers/appointment/save"
+import { createAppointmentController } from "@/lib/controllers/appointment/create"
+import { getAppointmentsController } from "@/lib/controllers/appointment/get-all"
+import { getAppointmentDatesController } from "@/lib/controllers/appointment/get-dates"
+
 // types
 import type { NextRequest, NextResponse } from "next/server"
 
@@ -35,6 +41,14 @@ export const routes: Record<HttpMethod, Route[]> = {
     { path: "/api/v1/auth/get-all", handler: getAccountsController },
     { path: "/api/v1/property/get-all", handler: getPropertiesController },
     { path: "/api/v1/property/get", handler: getPropertyController },
+    {
+      path: "/api/v1/appointment/get-all",
+      handler: getAppointmentsController,
+    },
+    {
+      path: "/api/v1/appointment/get-dates",
+      handler: getAppointmentDatesController,
+    },
   ],
   POST: [
     { path: "/api/v1/auth/register", handler: registerAccountController },
@@ -44,6 +58,14 @@ export const routes: Record<HttpMethod, Route[]> = {
     {
       path: "/api/v1/property/bulk-delete",
       handler: deletePropertiesController,
+    },
+    {
+      path: "/api/v1/appointment/create",
+      handler: createAppointmentController,
+    },
+    {
+      path: "/api/v1/appointment/save-date",
+      handler: saveAppointmentDateController,
     },
   ],
   PATCH: [

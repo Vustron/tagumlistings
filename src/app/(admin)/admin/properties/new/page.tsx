@@ -6,7 +6,7 @@ import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/get-session"
+import { getSession } from "@/app/(auth)/_actions/session/get"
 
 // utils
 import { addPropertiesItems } from "@/lib/misc/breadcrumb-lists"
