@@ -1,3 +1,6 @@
+"use client"
+
+// components
 import { Loader2, ServerCrash } from "lucide-react"
 
 export const LoadingFallback = () => {

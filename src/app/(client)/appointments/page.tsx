@@ -1,5 +1,5 @@
 // components
-import AppointmentsClient from "@/app/(client)/_components/appointments/client"
+// import AppointmentsClient from "@/app/(client)/_components/appointments/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // types
@@ -10,13 +10,12 @@ export const metadata: Metadata = {
   title: "Appointments",
 }
 
-export default function AppointmentsClientPage() {
+export default async function AppointmentsClientPage() {
   return (
     <div className="container p-5">
       <BounceWrapper>
-        {/* client */}
-
-        <AppointmentsClient />
+        <h1 className="text-3xl font-bold">Appointments</h1>
+        {/* <AppointmentsClient /> */}
       </BounceWrapper>
     </div>
   )

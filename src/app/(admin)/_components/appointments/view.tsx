@@ -9,7 +9,14 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import EventItem from "@/app/(admin)/_components/appointments/event-item"
-import { Edit,Trash,Search, Calendar, Filter, MoreVertical } from "lucide-react"
+import {
+  Edit,
+  Trash,
+  Search,
+  Calendar,
+  Filter,
+  MoreVertical,
+} from "lucide-react"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
@@ -220,7 +227,7 @@ const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                         onSelect={() => onDelete?.(appointment.id!)}
                         onClick={() => handleDelete(appointment.id!)}
                       >
-                         <Trash className="mr-2 size-4" />
+                        <Trash className="mr-2 size-4" />
                         Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>

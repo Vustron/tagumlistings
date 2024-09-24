@@ -1,3 +1,4 @@
+"use client"
 // components
 import AppointmentCalendar from "@/app/(admin)/_components/appointments/calendar"
 
