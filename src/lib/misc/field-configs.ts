@@ -148,7 +148,7 @@ export const addPropertyFields: FieldConfig<AddPropertyValues>[] = [
   },
 ]
 
-// add property form fields
+// update property form fields
 export const updatePropertyFields: FieldConfig<UpdatePropertyValues>[] = [
   {
     name: "propertyPics",
@@ -196,8 +196,53 @@ export const addAppointmentFields = (
   {
     name: "user",
     type: "select",
-    label: "User Appointed",
-    placeholder: "Select a user",
+    label: "Select a Client",
+    placeholder: "Select a client",
+    options: accounts
+      .filter((account) => account.id !== undefined)
+      .map((account) => ({
+        value: account.name,
+        label: account.name,
+      })),
+  },
+  {
+    name: "date",
+    type: "select",
+    label: "Select Appointment Date",
+    placeholder: "Select appointment date",
+    options: appointmentDates.map((appointmentDate) => ({
+      value: appointmentDate.dates?.[0]
+        ? appointmentDate.dates[0].toString()
+        : "",
+      label: appointmentDate.dates?.[0]
+        ? format(new Date(appointmentDate.dates[0]), "yyyy-MM-dd")
+        : "",
+    })),
+  },
+  {
+    name: "description",
+    type: "text",
+    label: "Appointment Description",
+    placeholder: "Enter description",
+  },
+  {
+    name: "color",
+    type: "color",
+    label: "Color",
+    placeholder: "Select color",
+  },
+]
+
+// update appointment form fields
+export const updateAppointmentFields = (
+  accounts: UserData[],
+  appointmentDates: AppointmentDate[],
+): FieldConfig<AddAppointmentValues>[] => [
+  {
+    name: "user",
+    type: "select",
+    label: "Select a Client",
+    placeholder: "Select a client",
     options: accounts
       .filter((account) => account.id !== undefined)
       .map((account) => ({

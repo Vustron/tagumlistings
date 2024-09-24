@@ -114,3 +114,15 @@ export const deleteAppointmentDateSchema = z.object({
 export type DeleteAppointmentDateValues = z.infer<
   typeof deleteAppointmentDateSchema
 >
+
+// updateAppointmentSchema
+export const updateAppointmentSchema = z.object({
+  id: requiredString.optional(),
+  user: requiredString.optional(),
+  date: requiredString.optional(),
+  description: requiredString.optional(),
+  color: requiredString.optional(),
+})
+
+/* UpdateAppointmentValues Type */
+export type UpdateAppointmentValues = z.infer<typeof updateAppointmentSchema>

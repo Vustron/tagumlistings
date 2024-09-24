@@ -1,9 +1,6 @@
 "use client"
 
-import { useState, useMemo, useCallback } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { format } from "date-fns"
-import { Search, Calendar, Filter, MoreVertical } from "lucide-react"
+// components
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -11,12 +8,25 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
+import EventItem from "@/app/(admin)/_components/appointments/event-item"
+import { Edit,Trash,Search, Calendar, Filter, MoreVertical } from "lucide-react"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import EventItem from "@/app/(admin)/_components/appointments/event-item"
+
+// hooks
+import { useDeleteAppointment } from "@/app/(admin)/_hooks/appointment/delete"
+import { useState, useMemo, useCallback } from "react"
+import { useConfirm } from "@/lib/hooks/use-confirm"
+import { useRouter } from "next-nprogress-bar"
+
+// utils
+import { motion, AnimatePresence } from "framer-motion"
+import { clientErrorHandler } from "@/lib/utils"
+import toast from "react-hot-toast"
+import { format } from "date-fns"
 
 // types
 import type React from "react"
@@ -44,8 +54,14 @@ const AppointmentsView: React.FC<AppointmentsViewProps> = ({
   const [showPastEvents, setShowPastEvents] = useState(false)
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
   const [view, setView] = useState<"list" | "grid">("list")
+  const deleteMutation = useDeleteAppointment()
+  const router = useRouter()
+  const [ConfirmDialog, confirm] = useConfirm(
+    "Are you sure?",
+    "You are about to delete this account",
+  )
 
-  const filteredEvents = useMemo(() => {
+  const filteredAppointments = useMemo(() => {
     return events
       .filter((event) => {
         const query = searchQuery.toLowerCase()
@@ -81,114 +97,147 @@ const AppointmentsView: React.FC<AppointmentsViewProps> = ({
     visible: { opacity: 1, y: 0 },
   }
 
+  const handleDelete = async (id: string) => {
+    const ok = await confirm()
+
+    if (ok) {
+      await toast.promise(deleteMutation.mutateAsync(id), {
+        loading: <span className="animate-pulse">Deleting appointment...</span>,
+        success: "Appointment deleted",
+        error: (error: unknown) => clientErrorHandler(error),
+      })
+    }
+  }
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.3 }}
-      className="space-y-4"
-    >
-      <div className="flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0 sm:space-x-2">
-        <div className="relative w-full sm:w-1/2">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          <Input
-            type="text"
-            placeholder="Search appointments..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 w-full"
-          />
+    <>
+      <ConfirmDialog />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.3 }}
+        className="space-y-4"
+      >
+        <div className="flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0 sm:space-x-2">
+          <div className="relative w-full sm:w-1/2">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <Input
+              type="text"
+              placeholder="Search appointments..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 w-full"
+            />
+          </div>
+          <div className="flex space-x-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Filter className="size-4 mr-2" />
+                  Filter
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem
+                  onSelect={() => setShowPastEvents((prev) => !prev)}
+                >
+                  {showPastEvents ? "Hide Past Events" : "Show Past Events"}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onSelect={toggleSortOrder}>
+                  Sort by Date (
+                  {sortOrder === "asc" ? "Ascending" : "Descending"})
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Tabs
+              value={view}
+              onValueChange={(value) => setView(value as "list" | "grid")}
+            >
+              <TabsList>
+                <TabsTrigger value="list">List</TabsTrigger>
+                <TabsTrigger value="grid">Grid</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
         </div>
-        <div className="flex space-x-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                <Filter className="w-4 h-4 mr-2" />
-                Filter
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem
-                onSelect={() => setShowPastEvents((prev) => !prev)}
-              >
-                {showPastEvents ? "Hide Past Events" : "Show Past Events"}
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onSelect={toggleSortOrder}>
-                Sort by Date ({sortOrder === "asc" ? "Ascending" : "Descending"}
-                )
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Tabs
-            value={view}
-            onValueChange={(value) => setView(value as "list" | "grid")}
-          >
-            <TabsList>
-              <TabsTrigger value="list">List</TabsTrigger>
-              <TabsTrigger value="grid">Grid</TabsTrigger>
-            </TabsList>
-          </Tabs>
+        <ScrollArea className="h-[calc(100vh-200px)]">
+          <AnimatePresence>
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className={
+                view === "list"
+                  ? "space-y-2"
+                  : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
+              }
+            >
+              {filteredAppointments.map((appointment) => (
+                <motion.div
+                  key={appointment.id}
+                  variants={itemVariants}
+                  className={`p-3 border rounded-lg ${view === "list" ? "flex items-center justify-between" : ""}`}
+                >
+                  <div className="flex-grow">
+                    <EventItem
+                      event={appointment}
+                      showDate={view === "list"}
+                      compact={view === "grid"}
+                    />
+                    {view === "grid" && (
+                      <div className="mt-2 text-sm text-gray-500">
+                        <Calendar className="inline-block size-4 mr-1" />
+                        {format(
+                          new Date(appointment.date),
+                          "MMM d, yyyy HH:mm",
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="hover:bg-transparent hover:text-green-600"
+                      >
+                        <MoreVertical className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem
+                        onSelect={() => onUpdate?.(appointment.id!)}
+                        onClick={() =>
+                          router.push(`/admin/appointments/${appointment.id}`)
+                        }
+                      >
+                        <Edit className="mr-2 size-4" />
+                        Update
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onSelect={() => onDelete?.(appointment.id!)}
+                        onClick={() => handleDelete(appointment.id!)}
+                      >
+                         <Trash className="mr-2 size-4" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </motion.div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+        </ScrollArea>
+        <div className="flex justify-between items-center mt-4">
+          <Badge variant="outline">
+            {filteredAppointments.length} appointment
+            {filteredAppointments.length !== 1 ? "s" : ""}
+          </Badge>
         </div>
-      </div>
-      <ScrollArea className="h-[calc(100vh-200px)]">
-        <AnimatePresence>
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className={
-              view === "list"
-                ? "space-y-2"
-                : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
-            }
-          >
-            {filteredEvents.map((event) => (
-              <motion.div
-                key={event.id}
-                variants={itemVariants}
-                className={`p-3 border rounded-lg ${view === "list" ? "flex items-center justify-between" : ""}`}
-              >
-                <div className="flex-grow">
-                  <EventItem
-                    event={event}
-                    showDate={view === "list"}
-                    compact={view === "grid"}
-                  />
-                  {view === "grid" && (
-                    <div className="mt-2 text-sm text-gray-500">
-                      <Calendar className="inline-block w-4 h-4 mr-1" />
-                      {format(new Date(event.date), "MMM d, yyyy HH:mm")}
-                    </div>
-                  )}
-                </div>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm">
-                      <MoreVertical className="w-4 h-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem onSelect={() => onUpdate?.(event.id!)}>
-                      Update
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => onDelete?.(event.id!)}>
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </motion.div>
-            ))}
-          </motion.div>
-        </AnimatePresence>
-      </ScrollArea>
-      <div className="flex justify-between items-center mt-4">
-        <Badge variant="outline">
-          {filteredEvents.length} event{filteredEvents.length !== 1 ? "s" : ""}
-        </Badge>
-      </div>
-    </motion.div>
+      </motion.div>
+    </>
   )
 }
 

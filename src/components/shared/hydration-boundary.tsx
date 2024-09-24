@@ -13,13 +13,16 @@ import {
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query"
+import { preFetchAppointment } from "@/app/(admin)/_actions/appointment/get"
 
 const HydrationBoundaryWrapper = ({
   children,
   accountId,
+  appointmentId,
 }: {
   children: React.ReactNode
   accountId?: string
+  appointmentId?: string
 }) => {
   const queryClient = new QueryClient()
 
@@ -46,6 +49,11 @@ const HydrationBoundaryWrapper = ({
   void queryClient.prefetchQuery({
     queryKey: ["appointment-dates"],
     queryFn: async () => preFetchAppointmentDates(),
+  })
+
+  void queryClient.prefetchQuery({
+    queryKey: ["appointment", appointmentId],
+    queryFn: async () => preFetchAppointment(appointmentId!),
   })
 
   return (

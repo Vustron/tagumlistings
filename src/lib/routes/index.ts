@@ -19,10 +19,14 @@ import { deletePropertyController } from "@/lib/controllers/property/delete"
 import { getPropertyController } from "@/lib/controllers/property/get"
 
 // appointment controllers
+import { getAppointmentDatesController } from "@/lib/controllers/appointment/get-dates"
+import { deleteAppointmentDatesController } from "@/lib/controllers/appointment/delete-date"
 import { saveAppointmentDateController } from "@/lib/controllers/appointment/save"
 import { createAppointmentController } from "@/lib/controllers/appointment/create"
 import { getAppointmentsController } from "@/lib/controllers/appointment/get-all"
-import { getAppointmentDatesController } from "@/lib/controllers/appointment/get-dates"
+import { deleteAppointmentController } from "@/lib/controllers/appointment/delete"
+import { updateAppointmentController } from "@/lib/controllers/appointment/update"
+import { getAppointmentController } from "@/lib/controllers/appointment/get"
 
 // types
 import type { NextRequest, NextResponse } from "next/server"
@@ -49,6 +53,10 @@ export const routes: Record<HttpMethod, Route[]> = {
       path: "/api/v1/appointment/get-dates",
       handler: getAppointmentDatesController,
     },
+    {
+      path: "/api/v1/appointment/get",
+      handler: getAppointmentController,
+    },
   ],
   POST: [
     { path: "/api/v1/auth/register", handler: registerAccountController },
@@ -71,9 +79,21 @@ export const routes: Record<HttpMethod, Route[]> = {
   PATCH: [
     { path: "/api/v1/auth/update", handler: updateAccountController },
     { path: "/api/v1/property/update", handler: updatePropertyController },
+    {
+      path: "/api/v1/appointments/update",
+      handler: updateAppointmentController,
+    },
   ],
   DELETE: [
     { path: "/api/v1/auth/delete", handler: deleteAccountController },
     { path: "/api/v1/property/delete", handler: deletePropertyController },
+    {
+      path: "/api/v1/appointments/delete-date",
+      handler: deleteAppointmentDatesController,
+    },
+    {
+      path: "/api/v1/appointments/delete",
+      handler: deleteAppointmentController,
+    },
   ],
 }
