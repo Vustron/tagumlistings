@@ -1,7 +1,7 @@
 "use client"
 
 // components
-import { Button } from "@/components/ui/button"
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,42 +10,72 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Edit, MoreHorizontal, Trash } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 // hooks
-import { useRouter } from "next/navigation"
+import { useDeletePayment } from "@/app/(admin)/_hooks/payment/delete"
+import { useConfirm } from "@/lib/hooks/use-confirm"
+import { useRouter } from "next-nprogress-bar"
+
+// utils
+import { clientErrorHandler } from "@/lib/utils"
+import toast from "react-hot-toast"
 
 // types
-import type { Payments } from "@/app/(admin)/_components/data/payments"
+import type { Payment } from "@/app/(admin)/_components/data/payments"
 
 interface CellActionProps {
-  data: Payments
+  data: Payment
 }
 
 const CellActions = ({ data }: CellActionProps) => {
   // init router
   const router = useRouter()
+  const deleteMutation = useDeletePayment(data.id)
+
+  const isPending = deleteMutation.isPending
+
+  const [ConfirmDialog, confirm] = useConfirm(
+    "Are you sure?",
+    "You are about to delete this payment",
+  )
+
+  const handleDelete = async () => {
+    const ok = await confirm()
+
+    if (ok) {
+      await toast.promise(deleteMutation.mutateAsync(), {
+        loading: <span className="animate-pulse">Deleting payment...</span>,
+        success: "Payment deleted",
+        error: (error: unknown) => clientErrorHandler(error),
+      })
+    }
+  }
 
   return (
-    <DropdownMenu modal={false}>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+    <>
+      <ConfirmDialog />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="size-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-        <DropdownMenuItem
-          onClick={() => router.push(`/dashboard/payments/${data.id}}`)}
-        >
-          <Edit className="mr-2 h-4 w-4" /> Update
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Trash className="mr-2 h-4 w-4" /> Delete
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <DropdownMenuItem
+            onClick={() => router.push(`/admin/payments/${data.id}`)}
+          >
+            <Edit className="mr-2 size-4" /> Update
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleDelete} disabled={isPending}>
+            <Trash className="mr-2 size-4" /> Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   )
 }
 

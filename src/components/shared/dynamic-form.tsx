@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils"
 // types
 import type { DynamicFormProps } from "@/lib/types"
 import type { FieldValues } from "react-hook-form"
+import AmountInput from "./amount-input"
 
 const DynamicForm = <TFieldValues extends FieldValues>({
   form,
@@ -125,6 +126,13 @@ const DynamicForm = <TFieldValues extends FieldValues>({
                       onChange={(value) =>
                         formField.onChange(value?.toString() || "")
                       }
+                    />
+                  ) : field.type === "currency" ? (
+                    <AmountInput
+                      value={formField.value}
+                      onChange={(value) => formField.onChange(value)}
+                      placeholder={field.placeholder}
+                      disabled={mutation?.isPending || disabled}
                     />
                   ) : (
                     <FloatingLabelInput

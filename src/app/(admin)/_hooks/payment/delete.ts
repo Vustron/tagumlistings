@@ -1,7 +1,7 @@
 "use client"
 
 // action
-import { deleteProperty } from "@/app/(admin)/_actions/property/delete"
+import { deletePayment } from "@/app/(admin)/_actions/payment/delete"
 
 // hooks
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -11,37 +11,35 @@ import { useRouter } from "next-nprogress-bar"
 import { clientErrorHandler } from "@/lib/utils"
 
 // types
-import type { Properties } from "@/app/(admin)/_actions/property/get-all"
+import type { Payments } from "@/app/(admin)/_components/data/payments"
 import type { QueryFilters } from "@tanstack/react-query"
 
-export const useDeleteProperty = (id: string | undefined) => {
+export const useDeletePayment = (id: string | undefined) => {
   const router = useRouter()
-
-  // init query client
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationKey: ["delete-property", id],
-    mutationFn: async () => await deleteProperty(id!),
-    onSuccess: async () => {
+    mutationKey: ["delete-payment"],
+    mutationFn: async () => await deletePayment(id!),
+    onSuccess: async (deletedId: string) => {
       const queryFilter: QueryFilters = {
-        queryKey: ["properties"],
+        queryKey: ["payments"],
       }
 
       await queryClient.cancelQueries(queryFilter)
-      queryClient.setQueryData<Properties>(["properties"], (oldData) => {
+      queryClient.setQueryData<Payments>(["payments"], (oldData) => {
         if (!oldData) return undefined
 
         return {
           ...oldData,
-          properties: oldData.properties.filter(
-            (property) => property.id !== id,
+          payments: oldData.payments.filter(
+            (payment) => payment.id !== deletedId,
           ),
         }
       })
     },
     onSettled: async () => {
-      router.push("/admin/properties")
+      router.push("/admin/payments")
       router.refresh()
     },
     onError: (error) => clientErrorHandler(error),

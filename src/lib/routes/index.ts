@@ -28,6 +28,14 @@ import { deleteAppointmentController } from "@/lib/controllers/appointment/delet
 import { updateAppointmentController } from "@/lib/controllers/appointment/update"
 import { getAppointmentController } from "@/lib/controllers/appointment/get"
 
+// payment controllers
+import { deletePaymentsController } from "@/lib/controllers/payment/bulk-delete"
+import { createPaymentController } from "@/lib/controllers/payment/create"
+import { deletePaymentController } from "@/lib/controllers/payment/delete"
+import { updatePaymentController } from "@/lib/controllers/payment/update"
+import { getPaymentsController } from "@/lib/controllers/payment/get-all"
+import { getPaymentController } from "@/lib/controllers/payment/get"
+
 // types
 import type { NextRequest, NextResponse } from "next/server"
 
@@ -57,6 +65,14 @@ export const routes: Record<HttpMethod, Route[]> = {
       path: "/api/v1/appointment/get",
       handler: getAppointmentController,
     },
+    {
+      path: "/api/v1/payment/get-all",
+      handler: getPaymentsController,
+    },
+    {
+      path: "/api/v1/payment/get",
+      handler: getPaymentController,
+    },
   ],
   POST: [
     { path: "/api/v1/auth/register", handler: registerAccountController },
@@ -75,6 +91,14 @@ export const routes: Record<HttpMethod, Route[]> = {
       path: "/api/v1/appointment/save-date",
       handler: saveAppointmentDateController,
     },
+    {
+      path: "/api/v1/payment/create",
+      handler: createPaymentController,
+    },
+    {
+      path: "/api/v1/payment/bulk-delete",
+      handler: deletePaymentsController,
+    },
   ],
   PATCH: [
     { path: "/api/v1/auth/update", handler: updateAccountController },
@@ -82,6 +106,10 @@ export const routes: Record<HttpMethod, Route[]> = {
     {
       path: "/api/v1/appointments/update",
       handler: updateAppointmentController,
+    },
+    {
+      path: "/api/v1/payment/update",
+      handler: updatePaymentController,
     },
   ],
   DELETE: [
@@ -94,6 +122,10 @@ export const routes: Record<HttpMethod, Route[]> = {
     {
       path: "/api/v1/appointments/delete",
       handler: deleteAppointmentController,
+    },
+    {
+      path: "/api/v1/payment/delete",
+      handler: deletePaymentController,
     },
   ],
 }

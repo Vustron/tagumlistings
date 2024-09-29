@@ -39,8 +39,7 @@ const PaymentsClient = ({ data }: PaymentsClientProps) => {
       </div>
       <Separator className="mt-2" />
       <DataTable
-        filterKey="property"
-        placeholder="123, Anytown"
+        placeholder="Search..."
         columns={columns}
         data={data || []}
         isOnPayments

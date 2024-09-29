@@ -4,14 +4,11 @@
 import CellActions from "@/app/(admin)/_components/payments/cell-actions"
 import { Checkbox } from "@/components/ui/checkbox"
 
-// utils
-import { formatDate } from "@/lib/utils"
-
 // types
-import type { Payments } from "@/app/(admin)/_components/data/payments"
+import type { Payment } from "@/app/(admin)/_components/data/payments"
 import type { ColumnDef } from "@tanstack/react-table"
 
-export const columns: ColumnDef<Payments>[] = [
+export const columns: ColumnDef<Payment>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -38,8 +35,7 @@ export const columns: ColumnDef<Payments>[] = [
       const property = row.original.property
       return (
         <div className="flex flex-col">
-          <span className="font-medium">{property.location}</span>
-          <span className="text-xs text-gray-500">{property.id}</span>
+          <span className="font-medium">{property}</span>
         </div>
       )
     },
@@ -51,8 +47,7 @@ export const columns: ColumnDef<Payments>[] = [
       const user = row.original.user
       return (
         <div className="flex flex-col">
-          <span className="font-medium">{user.name}</span>
-          <span className="text-xs text-gray-500">{user.email}</span>
+          <span className="font-medium">{user}</span>
         </div>
       )
     },
@@ -60,7 +55,26 @@ export const columns: ColumnDef<Payments>[] = [
   {
     accessorKey: "appointment",
     header: "Appointment",
-    cell: ({ row }) => formatDate(row.original.appointment),
+    cell: ({ row }) => {
+      const appointment = row.original.appointment
+      return (
+        <div className="flex flex-col">
+          <span className="font-medium">{appointment}</span>
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: "paid_date",
+    header: "Date",
+    cell: ({ row }) => {
+      const paid_date = row.original.paid_date
+      return (
+        <div className="flex flex-col">
+          <span className="font-medium">{paid_date}</span>
+        </div>
+      )
+    },
   },
   {
     accessorKey: "amount",
@@ -70,11 +84,7 @@ export const columns: ColumnDef<Payments>[] = [
       return `₱${amount.toFixed(2)}`
     },
   },
-  {
-    accessorKey: "paid_date",
-    header: "Date",
-    cell: ({ row }) => formatDate(row.original.paid_date),
-  },
+
   {
     id: "actions",
     cell: ({ row }) => <CellActions data={row.original} />,

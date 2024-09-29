@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button"
 // hooks
 import { useDeleteAccount } from "@/app/(auth)/_hooks/auth/delete"
 import { useConfirm } from "@/lib/hooks/use-confirm"
-import { useRouter } from "next/navigation"
+import { useRouter } from "next-nprogress-bar"
 
 // utils
 import { clientErrorHandler } from "@/lib/utils"

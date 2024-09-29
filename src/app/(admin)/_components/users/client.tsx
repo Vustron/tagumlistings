@@ -70,8 +70,7 @@ const UsersClient = () => {
       <div ref={topRef}>
         {status === "success" && accountsData && (
           <DataTable
-            filterKey="name"
-            placeholder="John Doe"
+            placeholder="Search.."
             columns={columns}
             isOnUsers
             data={accountsData}

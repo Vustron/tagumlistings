@@ -44,8 +44,8 @@ export type SiteConfig = {
 /* --------------Components Types---------------- */
 
 /* SelectOption Type */
-interface SelectOption {
-  value: string
+interface SelectOption<T = string> {
+  value: T
   label: string
 }
 
@@ -62,6 +62,7 @@ interface FieldConfig<TFieldValues> {
     | "switch"
     | "date"
     | "color"
+    | "currency"
   label: string
   placeholder?: string
   className?: string

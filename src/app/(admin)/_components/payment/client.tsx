@@ -2,7 +2,7 @@
 
 // components
 import { ErrorFallback, LoadingFallback } from "@/components/shared/fallback"
-import NewPaymentForm from "@/app/(admin)/_components/new-payment/form"
+import UpdatePaymentForm from "@/app/(admin)/_components/payment/form"
 import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
 
@@ -10,15 +10,17 @@ import { Heading } from "@/components/ui/heading"
 import { useGetAppointments } from "@/app/(admin)/_hooks/appointment/get-all"
 import { useGetProperties } from "@/app/(admin)/_hooks/property/get-all"
 import { useGetAccounts } from "@/app/(auth)/_hooks/auth/get-all"
+import { useGetPayment } from "@/app/(admin)/_hooks/payment/get"
 
 // utils
 import { ErrorBoundary } from "react-error-boundary"
 import { Suspense } from "react"
 
-const AddPaymentClient = () => {
+const PaymentClient = ({ id }: { id: string }) => {
   const { data: accountsData } = useGetAccounts()
   const { data: appointmentsData } = useGetAppointments()
   const { data: propertiesData } = useGetProperties()
+  const { data: paymentData } = useGetPayment(id)
 
   const accounts = accountsData?.accounts ?? []
   const appointments = appointmentsData?.appointments ?? []
@@ -27,17 +29,21 @@ const AddPaymentClient = () => {
   return (
     <>
       <div className="flex items-start justify-between">
-        <Heading title="Add Payment" description="Add new payment" />
+        <Heading
+          title="Update Payment"
+          description="Manage payment information"
+        />
       </div>
       <Separator className="mt-2" />
 
       <div className="container flex flex-col justify-center items-center lg:w-[400px] sm:w-[300px] h-auto p-5 mt-5">
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Suspense fallback={<LoadingFallback />}>
-            <NewPaymentForm
+            <UpdatePaymentForm
               accounts={accounts}
               appointments={appointments}
               properties={properties}
+              payment={paymentData}
             />
           </Suspense>
         </ErrorBoundary>
@@ -46,4 +52,4 @@ const AddPaymentClient = () => {
   )
 }
 
-export default AddPaymentClient
+export default PaymentClient

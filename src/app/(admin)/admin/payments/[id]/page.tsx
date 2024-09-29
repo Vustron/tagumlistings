@@ -2,14 +2,14 @@
 import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
 import ContentLayout from "@/app/(admin)/_components/shared/content-layout"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
-import PaymentsClient from "@/app/(admin)/_components/payments/client"
+import PaymentClient from "@/app/(admin)/_components/payment/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions
 import { getSession } from "@/app/(auth)/_actions/session/get"
 
 // utils
-import { paymentsItems } from "@/lib/misc/breadcrumb-lists"
+import { paymentItems } from "@/lib/misc/breadcrumb-lists"
 import { dataSerializer } from "@/lib/utils"
 
 // types
@@ -17,10 +17,12 @@ import type { Metadata } from "next"
 
 // meta data
 export const metadata: Metadata = {
-  title: "Payments",
+  title: "Payment",
 }
 
-export default async function PaymentsPage() {
+export default async function PaymentIDPage({
+  params,
+}: { params: { id: string } }) {
   // get session
   const session = await getSession()
 
@@ -28,12 +30,12 @@ export default async function PaymentsPage() {
   const userData = dataSerializer(session)
 
   return (
-    <HydrationBoundaryWrapper accountId={userData.id}>
-      <ContentLayout title="Payments">
+    <HydrationBoundaryWrapper accountId={userData.id} paymentId={params.id}>
+      <ContentLayout title="Appointment">
         <BounceWrapper>
-          <DynamicBreadcrumb items={paymentsItems} />
+          <DynamicBreadcrumb items={paymentItems} />
 
-          <PaymentsClient />
+          <PaymentClient id={params.id} />
         </BounceWrapper>
       </ContentLayout>
     </HydrationBoundaryWrapper>

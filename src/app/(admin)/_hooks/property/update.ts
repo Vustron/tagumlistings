@@ -51,10 +51,10 @@ export const useUpdateProperty = (id?: string) => {
       }))
 
       queryClient.setQueryData<Properties>(["properties"], (oldData) => {
-        if (!oldData) return { appointments: [updatedProperty] }
+        if (!oldData) return { properties: [updatedProperty] }
         return {
           ...oldData,
-          appointments: oldData.appointments.map((property) =>
+          properties: oldData.properties.map((property) =>
             property.id === id ? updatedProperty : property,
           ),
         }

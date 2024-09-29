@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog"
-import { Calendar, AlignLeft, Clock, MapPin } from "lucide-react"
+import { Calendar, AlignLeft, MapPin } from "lucide-react"
 
 // utils
 import { motion, AnimatePresence } from "framer-motion"
@@ -36,11 +36,7 @@ interface EventItemProps {
   compact?: boolean
 }
 
-const EventItem: React.FC<EventItemProps> = ({
-  event,
-  showDate = false,
-  compact = false,
-}) => {
+const EventItem: React.FC<EventItemProps> = ({ event, compact = false }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const dialogVariants = {
@@ -61,12 +57,6 @@ const EventItem: React.FC<EventItemProps> = ({
         >
           <div className="flex items-center">
             <div className="font-bold truncate text-sm mr-4">{event.user}</div>
-            {showDate && !compact && (
-              <div className="text-xs truncate flex items-center">
-                <Clock className="size-3 mr-1" />
-                {format(event.date, "HH:mm")}
-              </div>
-            )}
           </div>
           {!compact && (
             <div className="text-xs truncate flex items-center">
@@ -99,16 +89,6 @@ const EventItem: React.FC<EventItemProps> = ({
                 </DialogDescription>
               </DialogHeader>
               <div className="p-4 md:p-6 space-y-4">
-                <div className="flex items-start">
-                  <Clock className="size-5 mr-3 text-gray-500 mt-1" />
-                  <div>
-                    <p className="text-gray-700 font-medium">Time</p>
-                    <p className="text-gray-600">
-                      {format(event.date, "HH:mm")}
-                      {event.duration && ` (${event.duration} minutes)`}
-                    </p>
-                  </div>
-                </div>
                 {event.location && (
                   <div className="flex items-start">
                     <MapPin className="size-5 mr-3 text-gray-500 mt-1" />

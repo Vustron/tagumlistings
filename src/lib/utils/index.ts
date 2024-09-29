@@ -14,6 +14,20 @@ import type { ClassValue } from "clsx"
 import type DOMPurify from "dompurify"
 import type { z } from "zod"
 
+export const deepSearch = (obj: any, searchTerm: string): boolean => {
+  if (!obj || typeof obj !== "object") return false
+
+  return Object.values(obj).some((value) => {
+    if (typeof value === "object") {
+      return deepSearch(value, searchTerm) // Recursively search nested objects
+    }
+    if (typeof value === "string" || typeof value === "number") {
+      return value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    }
+    return false
+  })
+}
+
 export function convertTimestampToDateString(timestamp: {
   seconds: number
   nanoseconds: number
@@ -48,10 +62,10 @@ export const formatDate = (date: Date | string): string => {
   if (typeof date === "string") {
     const parsedDate = parseISO(date)
     return isValid(parsedDate)
-      ? format(parsedDate, "MMMM d, yyyy h:mm a")
+      ? format(parsedDate, "MM/d/yyyy")
       : "Invalid Date"
   }
-  return format(date, "MMMM d, yyyy h:mm a")
+  return format(date, "MM/d/yyyy")
 }
 
 // change color badge function

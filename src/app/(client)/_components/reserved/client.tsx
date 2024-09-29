@@ -39,8 +39,7 @@ const ReservedPropertiesClient = ({ data }: PropertiesClientProps) => {
       </div>
       <Separator className="mt-2" />
       <DataTable
-        filterKey="location"
-        placeholder="123, Anytown"
+        placeholder="Search..."
         columns={columns}
         isOnProperties
         data={data || []}

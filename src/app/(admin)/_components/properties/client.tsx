@@ -42,8 +42,8 @@ const PropertiesClient = () => {
     })
   }
 
-  const propertyCount = data?.appointments?.length || 0
-  const propertiesData = data?.appointments ?? []
+  const propertyCount = data?.properties?.length || 0
+  const propertiesData = data?.properties ?? []
 
   return (
     <>
@@ -72,8 +72,7 @@ const PropertiesClient = () => {
       <div ref={topRef}>
         {status === "success" && propertiesData && (
           <DataTable
-            filterKey="location"
-            placeholder="tagum"
+            placeholder="Search.."
             columns={columns}
             isOnProperties
             data={propertiesData}

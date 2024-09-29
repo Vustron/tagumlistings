@@ -6,9 +6,15 @@ import type {
   UpdateAccountValues,
   UpdatePropertyValues,
   AddAppointmentValues,
+  AddPaymentValues,
+  UpdatePaymentValues,
 } from "@/lib/validation"
 import type { AppointmentDate } from "@/app/(admin)/_components/appointments/date"
+import type { Appointment } from "@/app/(admin)/_components/appointments/new"
+import type { Property } from "@/app/(admin)/_components/data/properties"
 import type { FieldConfig, UserData } from "@/lib/types"
+
+// utils
 import { format } from "date-fns"
 
 // register form fields
@@ -275,5 +281,109 @@ export const updateAppointmentFields = (
     type: "color",
     label: "Color",
     placeholder: "Select color",
+  },
+]
+
+// add payment form fields
+export const addPaymentFields = (
+  accounts: UserData[],
+  appointments: Appointment[],
+  properties: Property[],
+): FieldConfig<AddPaymentValues>[] => [
+  {
+    name: "property",
+    type: "select",
+    label: "Select Property",
+    placeholder: "Select property",
+    options: properties.map((property) => ({
+      value: property.location || "",
+      label: property.location || "Unknown location",
+    })),
+  },
+  {
+    name: "user",
+    type: "select",
+    label: "Select a Client",
+    placeholder: "Select a client",
+    options: accounts
+      .filter((account) => account.id !== undefined)
+      .map((account) => ({
+        value: account.name,
+        label: account.name,
+      })),
+  },
+  {
+    name: "appointment",
+    type: "select",
+    label: "Select Appointment",
+    placeholder: "Select appointment",
+    options: appointments.map((appointment) => ({
+      value: appointment.description,
+      label: `${appointment.description.substring(0, 20)}`,
+    })),
+  },
+  {
+    name: "amount",
+    type: "currency",
+    label: "Payment Amount",
+    placeholder: "Enter amount",
+  },
+  {
+    name: "paid_date",
+    type: "date",
+    label: "Payment Date",
+    placeholder: "Select payment date",
+  },
+]
+
+// update payment form fields
+export const updatePaymentFields = (
+  accounts: UserData[],
+  appointments: Appointment[],
+  properties: Property[],
+): FieldConfig<UpdatePaymentValues>[] => [
+  {
+    name: "property",
+    type: "select",
+    label: "Select Property",
+    placeholder: "Select property",
+    options: properties.map((property) => ({
+      value: property.location || "",
+      label: property.location || "Unknown location",
+    })),
+  },
+  {
+    name: "user",
+    type: "select",
+    label: "Select a Client",
+    placeholder: "Select a client",
+    options: accounts
+      .filter((account) => account.id !== undefined)
+      .map((account) => ({
+        value: account.name,
+        label: account.name,
+      })),
+  },
+  {
+    name: "appointment",
+    type: "select",
+    label: "Select Appointment",
+    placeholder: "Select appointment",
+    options: appointments.map((appointment) => ({
+      value: appointment.description,
+      label: `${appointment.description.substring(0, 20)}`,
+    })),
+  },
+  {
+    name: "amount",
+    type: "currency",
+    label: "Payment Amount",
+    placeholder: "Enter amount",
+  },
+  {
+    name: "paid_date",
+    type: "date",
+    label: "Payment Date",
+    placeholder: "Select payment date",
   },
 ]

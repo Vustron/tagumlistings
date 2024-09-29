@@ -1,61 +1,60 @@
 "use client"
 
 // components
-// import CreateReportModal from "@/components/modals/create-report"
-import CreateUserModal from "@/app/(admin)/_components/users/create-user"
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { FloatingLabelInput } from "@/components/ui/floating-label-input"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import {
   Table,
+  TableRow,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
 } from "@/components/ui/table"
 import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuCheckboxItem,
+} from "@/components/ui/dropdown-menu"
+import {
+  Trash,
+  Settings2,
+  PlusIcon,
   ChevronLeft,
   ChevronRight,
-  PlusIcon,
-  Settings2,
-  Trash,
 } from "lucide-react"
+import CreateUserModal from "@/app/(admin)/_components/users/create-user"
+import { FloatingLabelInput } from "@/components/ui/floating-label-input"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Button } from "@/components/ui/button"
 
 // hooks
-import { useConfirm } from "@/lib/hooks/use-confirm"
 import { useReactTable } from "@tanstack/react-table"
+import { useConfirm } from "@/lib/hooks/use-confirm"
+import { useRouter } from "next-nprogress-bar"
 
 // utils
 import {
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
 } from "@tanstack/react-table"
+import { deepSearch } from "@/lib/utils"
 import * as React from "react"
 
 // types
 import type {
-  ColumnDef,
-  ColumnFiltersState,
   Row,
+  ColumnDef,
   SortingState,
   VisibilityState,
+  ColumnFiltersState,
 } from "@tanstack/react-table"
-import { useRouter } from "next-nprogress-bar"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  filterKey: string
   onDelete: (rows: Row<TData>[]) => void
   disabled?: boolean
   isOnUsers?: boolean
@@ -67,7 +66,6 @@ interface DataTableProps<TData, TValue> {
 export default function DataTable<TData, TValue>({
   columns,
   data,
-  filterKey,
   onDelete,
   disabled,
   isOnUsers,
@@ -75,33 +73,27 @@ export default function DataTable<TData, TValue>({
   isOnPayments,
   placeholder,
 }: DataTableProps<TData, TValue>) {
-  // init router
   const router = useRouter()
-
-  // confirmation state
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure?",
     "You are about to perform a bulk delete.",
   )
-
-  // init sorting state
   const [sorting, setSorting] = React.useState<SortingState>([])
-
-  // column filters state
+  const [rowSelection, setRowSelection] = React.useState({})
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   )
-
-  // select state
-  const [rowSelection, setRowSelection] = React.useState({})
-
-  // init visibility state
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
+  const [filterValue, setFilterValue] = React.useState<string>("")
+  const filteredData = React.useMemo(
+    () => data.filter((item) => deepSearch(item, filterValue)),
+    [data, filterValue],
+  )
 
   // init table
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
@@ -130,17 +122,25 @@ export default function DataTable<TData, TValue>({
           <div className="ml-1 flex py-4 items-center gap-5">
             {/* search */}
             <FloatingLabelInput
-              id={`${filterKey}`}
+              // id={`${filterKey}`}
+              // type="text"
+              // label={`Filter ${filterKey}...`}
+              // placeholder={placeholder}
+              // disabled={disabled}
+              // value={
+              //   (table.getColumn(filterKey)?.getFilterValue() as string) ?? ""
+              // }
+              // onChange={(event) =>
+              //   table.getColumn(filterKey)?.setFilterValue(event.target.value)
+              // }
+              // className="w-auto shadow-sm"
+              id="filter-input"
               type="text"
-              label={`Filter ${filterKey}...`}
+              label="Search..."
               placeholder={placeholder}
               disabled={disabled}
-              value={
-                (table.getColumn(filterKey)?.getFilterValue() as string) ?? ""
-              }
-              onChange={(event) =>
-                table.getColumn(filterKey)?.setFilterValue(event.target.value)
-              }
+              value={filterValue}
+              onChange={(e) => setFilterValue(e.target.value)}
               className="w-auto shadow-sm"
             />
           </div>

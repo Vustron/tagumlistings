@@ -1,7 +1,7 @@
 "use client"
 
 // actions
-import { deleteProperties } from "@/app/(admin)/_actions/property/bulk-delete"
+import { deletePayments } from "@/app/(admin)/_actions/payment/bulk-delete"
 
 // hooks
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -12,25 +12,25 @@ import { clientErrorHandler, sanitizer } from "@/lib/utils"
 import DOMPurify from "dompurify"
 
 // validation
-import { bulkDeletePropertiesSchema } from "@/lib/validation"
+import { bulkDeletePaymentsSchema } from "@/lib/validation"
 
 // types
-import type { Properties } from "@/app/(admin)/_actions/property/get-all"
-import type { BulkDeletePropertiesValues } from "@/lib/validation"
+import type { Payments } from "@/app/(admin)/_components/data/payments"
+import type { BulkDeletePaymentsValues } from "@/lib/validation"
 import type { QueryFilters } from "@tanstack/react-query"
 
 const purify = DOMPurify
 
-export const useDeleteProperties = () => {
+export const useDeletePayments = () => {
   const router = useRouter()
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationKey: ["bulk-delete-properties"],
-    mutationFn: async (ids: BulkDeletePropertiesValues) => {
-      const sanitizedData = sanitizer<BulkDeletePropertiesValues>(
+    mutationKey: ["bulk-delete-payments"],
+    mutationFn: async (ids: BulkDeletePaymentsValues) => {
+      const sanitizedData = sanitizer<BulkDeletePaymentsValues>(
         ids,
-        bulkDeletePropertiesSchema,
+        bulkDeletePaymentsSchema,
         purify,
       )
 
@@ -42,23 +42,23 @@ export const useDeleteProperties = () => {
         ids: filteredIds,
       }
 
-      return await deleteProperties(bodyData)
+      return await deletePayments(bodyData)
     },
     onSuccess: async (_, variables) => {
       const queryFilter: QueryFilters = {
-        queryKey: ["properties"],
+        queryKey: ["payments"],
       }
 
       await queryClient.cancelQueries(queryFilter)
-      queryClient.setQueryData<Properties>(["properties"], (oldData) => {
+      queryClient.setQueryData<Payments>(["payments"], (oldData) => {
         if (!oldData) return undefined
 
         const deletedIds = new Set(variables.ids)
 
         return {
           ...oldData,
-          properties: oldData.properties.filter(
-            (property) => !deletedIds.has(property.id),
+          payments: oldData.payments.filter(
+            (payment) => !deletedIds.has(payment.id),
           ),
         }
       })

@@ -39,11 +39,11 @@ export const useCreateProperty = () => {
       await queryClient.cancelQueries(queryFilter)
       queryClient.setQueryData<Properties>(["properties"], (oldData) => {
         if (!oldData) {
-          return { appointments: [newProperty] }
+          return { properties: [newProperty] }
         }
         return {
           ...oldData,
-          appointments: [...oldData.appointments, newProperty],
+          properties: [...oldData.properties, newProperty],
         }
       })
     },

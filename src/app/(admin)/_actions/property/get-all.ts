@@ -10,7 +10,7 @@ import { queryOptions } from "@tanstack/react-query"
 import type { Property } from "@/app/(admin)/_components/data/properties"
 
 export interface Properties {
-  appointments: Property[]
+  properties: Property[]
 }
 
 export async function getProperties(): Promise<Properties> {

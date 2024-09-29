@@ -126,3 +126,35 @@ export const updateAppointmentSchema = z.object({
 
 /* UpdateAppointmentValues Type */
 export type UpdateAppointmentValues = z.infer<typeof updateAppointmentSchema>
+
+// addAppointmentSchema
+export const addPaymentSchema = z.object({
+  property: requiredString.optional(),
+  user: requiredString.optional(),
+  appointment: requiredString.optional(),
+  amount: requiredString,
+  paid_date: requiredString,
+})
+
+/* AddAppointmentValues Type */
+export type AddPaymentValues = z.infer<typeof addPaymentSchema>
+
+// updatePaymentSchema
+export const updatePaymentSchema = z.object({
+  id: requiredString.optional(),
+  property: requiredString.optional(),
+  user: requiredString.optional(),
+  appointment: requiredString.optional(),
+  amount: requiredString.optional(),
+  paid_date: requiredString.optional(),
+})
+
+/* UpdatePaymentValues Type */
+export type UpdatePaymentValues = z.infer<typeof updatePaymentSchema>
+
+// bulkDeletePaymentsSchema
+export const bulkDeletePaymentsSchema = z.object({
+  ids: z.array(requiredString.or(z.undefined())),
+})
+/* BulkDeleteAccountValues Type */
+export type BulkDeletePaymentsValues = z.infer<typeof bulkDeletePaymentsSchema>
