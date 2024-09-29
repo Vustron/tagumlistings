@@ -3,34 +3,47 @@
 // components
 import {
   Card,
+  CardTitle,
+  CardHeader,
   CardContent,
   CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card"
 import {
-  ChartContainer,
   ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
+  ChartContainer,
+  ChartLegendContent,
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { Monitor } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
+// utils
+import { getMonthName } from "@/lib/utils"
+
 // types
+import type { Appointment } from "@/app/(admin)/_components/appointments/new"
 import type { ChartConfig } from "@/components/ui/chart"
 
-const AppointmentsChart = () => {
-  // chart data
-  const chartData = [
-    { month: "January", appointments: 186 },
-    { month: "February", appointments: 305 },
-    { month: "March", appointments: 237 },
-    { month: "April", appointments: 73 },
-    { month: "May", appointments: 209 },
-    { month: "June", appointments: 214 },
-  ]
+interface AppointmentsChartProps {
+  appointments: Appointment[]
+}
+
+const AppointmentsChart = ({ appointments }: AppointmentsChartProps) => {
+  const appointmentsByMonth = appointments.reduce(
+    (acc, appointment) => {
+      const month = getMonthName(new Date(appointment.date))
+      acc[month] = (acc[month] || 0) + 1
+      return acc
+    },
+    {} as Record<string, number>,
+  )
+
+  // Convert the grouped data into chart data format
+  const chartData = Object.keys(appointmentsByMonth).map((month) => ({
+    month,
+    appointments: appointmentsByMonth[month],
+  }))
 
   // init chart config
   const chartConfig = {

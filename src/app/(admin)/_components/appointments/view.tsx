@@ -196,10 +196,7 @@ const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                     {view === "grid" && (
                       <div className="mt-2 text-sm text-gray-500">
                         <Calendar className="inline-block size-4 mr-1" />
-                        {format(
-                          new Date(appointment.date),
-                          "MMM d, yyyy HH:mm",
-                        )}
+                        {format(new Date(appointment.date), "MMM d, yyyy")}
                       </div>
                     )}
                   </div>

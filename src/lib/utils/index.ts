@@ -7,12 +7,40 @@ import { ZodError } from "zod"
 import { clsx } from "clsx"
 
 // types
+import type { Appointment } from "@/app/(admin)/_components/appointments/new"
 import type { ErrorResponseData, UniqueId } from "@/lib/types"
 import type { SessionData } from "@/lib/config/session"
 import type { NextRequest } from "next/server"
 import type { ClassValue } from "clsx"
 import type DOMPurify from "dompurify"
 import type { z } from "zod"
+
+export const filterAppointmentsForLastHour = (
+  appointments: Appointment[],
+): Appointment[] => {
+  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000)
+  return appointments.filter(
+    (appointment) => new Date(appointment.date) > oneHourAgo,
+  )
+}
+
+export const getMonthName = (date: Date) => {
+  return date.toLocaleString("default", { month: "long" })
+}
+
+export const filterAppointmentsForCurrentMonth = (appointments: any[]) => {
+  const now = new Date()
+  const currentMonth = now.getMonth()
+  const currentYear = now.getFullYear()
+
+  return appointments.filter((appointment) => {
+    const appointmentDate = new Date(appointment.date)
+    return (
+      appointmentDate.getMonth() === currentMonth &&
+      appointmentDate.getFullYear() === currentYear
+    )
+  })
+}
 
 export const deepSearch = (obj: any, searchTerm: string): boolean => {
   if (!obj || typeof obj !== "object") return false
