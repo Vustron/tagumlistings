@@ -17,29 +17,34 @@ import Image from "next/image"
 import Link from "next/link"
 
 // hooks
+import { useSession } from "@/components/providers/session"
 import { useTransform, useScroll } from "framer-motion"
+import { useRouter } from "next-nprogress-bar"
 import { usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
 
 interface NavLink {
   href: string
   label: string
+  requiresAuth: boolean
 }
 
 const navLinks: NavLink[] = [
-  { href: "/properties", label: "Properties" },
-  { href: "/search", label: "Search" },
-  { href: "/contact", label: "Contact" },
-  { href: "/payments", label: "Payments" },
-  { href: "/appointments", label: "Appointments" },
-  { href: "/reserved", label: "Reserved" },
-  { href: "/account", label: "Account" },
+  { href: "/properties", label: "Properties", requiresAuth: false },
+  { href: "/search", label: "Search", requiresAuth: false },
+  { href: "/contact", label: "Contact", requiresAuth: true },
+  { href: "/payments", label: "Payments", requiresAuth: true },
+  { href: "/appointments", label: "Appointments", requiresAuth: true },
+  { href: "/reserved", label: "Reserved", requiresAuth: true },
+  { href: "/account", label: "Account", requiresAuth: true },
 ]
 
 const ClientHeader = () => {
   const [isOpen, setIsOpen] = useState(false)
   const { scrollY } = useScroll()
   const pathName = usePathname()
+  const session = useSession()
+  const router = useRouter()
 
   const navX = useTransform(scrollY, [0, 50], [0, 42])
   const logoScale = useTransform(scrollY, [0, 50], [1, 0.8])
@@ -51,6 +56,10 @@ const ClientHeader = () => {
     window.addEventListener("resize", handleResize)
     return () => window.removeEventListener("resize", handleResize)
   }, [])
+
+  const filteredNavLinks = navLinks.filter(
+    (link) => !link.requiresAuth || session?.loggedIn,
+  )
 
   return (
     <>
@@ -88,7 +97,13 @@ const ClientHeader = () => {
           </div>
           <div className="hidden md:flex items-center space-x-2">
             <ThemeToggle />
-            {/* <UserButton isOnClient /> */}
+            {!session?.loggedIn ? (
+              <Button variant="outline" onClick={() => router.push("/login")}>
+                Login
+              </Button>
+            ) : (
+              <UserButton isOnClient />
+            )}
           </div>
 
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -171,7 +186,7 @@ const ClientHeader = () => {
           style={{ x: navX }}
           className="relative flex gap-4 px-6 py-4 text-zinc-500 dark:text-zinc-400"
         >
-          {navLinks.map((link) => (
+          {filteredNavLinks.map((link) => (
             <motion.li
               key={link.href}
               whileHover={{ scale: 1.05 }}

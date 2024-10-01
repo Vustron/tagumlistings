@@ -27,4 +27,5 @@ export async function loginAccount(credentials: LoginValues) {
   }
 
   await setSession(userData)
+  return data
 }

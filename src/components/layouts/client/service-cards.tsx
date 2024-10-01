@@ -2,11 +2,33 @@
 
 // components
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { PaletteIcon, PresentationIcon, StoreIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 // utils
-import { serviceCardsData } from "@/lib/types"
 import { motion } from "framer-motion"
+
+// types
+import type { ServiceCardsData } from "@/lib/types"
+
+export const serviceCardsData: ServiceCardsData[] = [
+  {
+    title: "Build your portfolio",
+    description: "The simplest way to keep your portfolio always up-to-date.",
+    Icon: PaletteIcon,
+  },
+  {
+    title: "Get freelance work",
+    description: "New design projects delivered to your inbox each morning.",
+    Icon: PresentationIcon,
+  },
+  {
+    title: "Sell your goods",
+    description:
+      "Get your goods in front of millions of potential customers with ease.",
+    Icon: StoreIcon,
+  },
+]
 
 interface ServiceCardProps {
   title: string

@@ -22,10 +22,14 @@ export const useLoginAccount = () => {
     mutationKey: ["login-account"],
     mutationFn: async (values: LoginValues) => {
       const sanitizedData = sanitizer<LoginValues>(values, loginSchema, purify)
-      await loginAccount(sanitizedData)
+      return await loginAccount(sanitizedData)
     },
-    onSuccess: () => {
-      router.push("/admin")
+    onSuccess: (data) => {
+      if (data.role === "admin") {
+        router.push("/admin")
+      } else {
+        router.push("/")
+      }
       router.refresh()
     },
     onError: (error) => clientErrorHandler(error),

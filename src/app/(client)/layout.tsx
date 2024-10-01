@@ -1,25 +1,39 @@
 // components
-import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
-// import SessionProvider from "@/components/providers/session"
 import ClientHeader from "@/components/layouts/client/header"
 import ClientFooter from "@/components/layouts/client/footer"
+import SessionProvider from "@/components/providers/session"
 
 // utils
-// import { dataSerializer } from "@/lib/utils"
+import { dataSerializer } from "@/lib/utils"
 
 // actions
-// import { getSession } from "@/app/(auth)/_actions/get-session"
+import { getSession } from "@/lib/actions/session/get"
 
-export default function ClientLayout({
+export default async function ClientLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // get session
+  const session = await getSession()
+
+  if (!session) {
+    return (
+      <>
+        <ClientHeader />
+        {children}
+        <ClientFooter />
+      </>
+    )
+  }
+
+  const userData = dataSerializer(session)
+
   return (
-    <HydrationBoundaryWrapper>
+    <SessionProvider value={userData}>
       <ClientHeader />
       {children}
       <ClientFooter />
-    </HydrationBoundaryWrapper>
+    </SessionProvider>
   )
 }

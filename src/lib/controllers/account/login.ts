@@ -1,11 +1,11 @@
 // utils
-import { checkRequiredFields, requestBodyHandler } from "@/lib/utils"
 import {
-  convertAndCheckRateLimit,
-  findAccountByParams,
   getAccountsFromDB,
   handleErrorResponse,
+  findAccountByParams,
+  convertAndCheckRateLimit,
 } from "@/lib/helpers"
+import { checkRequiredFields, requestBodyHandler } from "@/lib/utils"
 import { NextResponse } from "next/server"
 import bcrypt from "bcryptjs"
 
@@ -16,8 +16,8 @@ import { getSession } from "@/lib/actions/session/get"
 import redis from "@/lib/config/redis"
 
 // types
-import type { NextRequest } from "next/server"
 import type { LoginValues } from "@/lib/validation"
+import type { NextRequest } from "next/server"
 import type { UserData } from "@/lib/types"
 
 export async function loginAccountController(request: NextRequest) {

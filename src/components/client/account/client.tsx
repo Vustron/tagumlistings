@@ -1,28 +1,30 @@
 "use client"
 
 // components
-// import AccountForm from "@/app/(admin)/_components/account/form"
-import { Heading } from "@/components/ui/heading"
+import { ErrorFallback, LoadingFallback } from "@/components/shared/fallback"
+import AccountForm from "@/components/admin/account/form"
 import { Separator } from "@/components/ui/separator"
+import { Heading } from "@/components/ui/heading"
 
 // hooks
-// import { useRouter } from "next/navigation"
+import { useGetAccount } from "@/lib/hooks/auth/get"
+
+// utils
+import { ErrorBoundary } from "react-error-boundary"
+import { isValidSessionData } from "@/lib/utils"
+import { dataSerializer } from "@/lib/utils"
+import { Suspense } from "react"
 
 // types
-// import type { User } from "@/app/(admin)/_components/data/users"
-// import type { Row } from "@tanstack/react-table"
+import type { UserData } from "@/lib/types"
 
-const AccountClient = () => {
-  // init delete handler
-  // const handleDelete = async (rows: Row<User>[]) => {
-  // const ids = rows.map((r) => r.original.id)
-  // await toast.promise(deleteAccounts.mutateAsync({ ids }), {
-  //   loading: <span className="animate-pulse">Deleting users...</span>,
-  //   success: "Users deleted",
-  //   error: (error: unknown) => clientErrorHandler(error),
-  // })
-  // console.log(rows.map((r) => r.original.id))
-  // }
+const AccountClient = ({ id }: { id?: string }) => {
+  const { data: user } = useGetAccount(id!)
+
+  const userData: UserData | undefined =
+    user && isValidSessionData(user)
+      ? dataSerializer<UserData>(user)
+      : undefined
 
   return (
     <div className="container p-5">
@@ -35,7 +37,11 @@ const AccountClient = () => {
       <Separator className="mt-2" />
 
       <div className="container flex flex-col justify-center items-center lg:w-[400px] sm:w-[300px] h-auto p-5 mt-5">
-        {/* <AccountForm data={[]} /> */}
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <Suspense fallback={<LoadingFallback />}>
+            <AccountForm id={id} data={userData!} />
+          </Suspense>
+        </ErrorBoundary>
       </div>
     </div>
   )

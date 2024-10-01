@@ -106,6 +106,10 @@ export const getPercentageChangeColor = (percentageChange: string) => {
 
 // Helper function to determine badge color based on role
 export const getRoleBadgeColor = (role: string) => {
+  if (typeof role !== "string") {
+    return "bg-gray-100 text-gray-800"
+  }
+
   switch (role.toLowerCase()) {
     case "client":
       return "bg-blue-100 text-blue-800 hover:text-white dark:hover:text-black"

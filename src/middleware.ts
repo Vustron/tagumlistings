@@ -1,9 +1,14 @@
 // utils
 import { NextResponse, userAgent } from "next/server"
+import { getIronSession } from "iron-session"
+import toast from "react-hot-toast"
 
 // types
-import type { NextRequest } from "next/server"
 import type { SessionData } from "@/lib/config/session"
+import type { NextRequest } from "next/server"
+
+// config
+import { sessionOptions } from "@/lib/config/session"
 
 /**
  * An array of routes that are protected
@@ -31,33 +36,39 @@ const protectedRoutes: string[] = [
 
 const authRoutes: string[] = ["/login", "/register"]
 
-/**
- * Prefix for API authentication routes
- * Routes with this prefix are used for API authentication
- * @type {string}
- */
-
-export default function middleware(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
   const isProtectedRoute = protectedRoutes.includes(path)
   const isAuthRoute = authRoutes.includes(path)
 
-  const authSession = request.cookies.get("client-auth-session")?.value
+  try {
+    const response = NextResponse.next()
+    const session = await getIronSession<SessionData>(
+      request,
+      response,
+      sessionOptions,
+    )
 
-  if (!authSession && isProtectedRoute) {
-    return NextResponse.redirect(new URL("/login", request.url))
-  }
-
-  if (authSession) {
-    const auth: SessionData = JSON.parse(JSON.stringify(authSession))
-
-    if (!authSession && isProtectedRoute && auth.id === undefined) {
+    if (!session.loggedIn && isProtectedRoute) {
       return NextResponse.redirect(new URL("/login", request.url))
     }
 
-    if (isAuthRoute && authSession) {
-      return NextResponse.redirect(new URL("/admin", request.url))
+    if (session.loggedIn) {
+      if (isAuthRoute) {
+        if (session.role === "admin") {
+          return NextResponse.redirect(new URL("/admin", request.url))
+        }
+        return NextResponse.redirect(new URL("/", request.url))
+      }
+
+      if (isProtectedRoute && session.role !== "admin") {
+        return NextResponse.redirect(new URL("/", request.url))
+      }
     }
+  } catch (error) {
+    console.error("Error processing session:", error)
+    toast.error("Error processing session")
+    return NextResponse.redirect(new URL("/login", request.url))
   }
 
   const { isBot, ua, browser, device, engine, os, cpu } = userAgent(request)

@@ -65,7 +65,11 @@ const UserButton = ({ isOnClient }: UserButtonProps) => {
       success: "Logged out",
       error: (error: unknown) => clientErrorHandler(error),
     })
-    router.push("/login")
+
+    if (!isOnClient) {
+      router.push("/login")
+    }
+    router.push("/")
   }
 
   return (

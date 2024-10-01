@@ -1,11 +1,13 @@
 // components
-// import ContentLayout from "@/app/(admin)/_components/content-layout"
+import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
 import AccountClient from "@/components/client/account/client"
 import BounceWrapper from "@/components/shared/bounce"
-// import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
+
+// actions
+import { getSession } from "@/lib/actions/session/get"
 
 // utils
-// import { accountItems } from "@/lib/misc/breadcrumb-lists"
+import { dataSerializer } from "@/lib/utils"
 
 // types
 import type { Metadata } from "next"
@@ -15,14 +17,18 @@ export const metadata: Metadata = {
   title: "Account",
 }
 
-export default function ClientAccountPage() {
-  return (
-    <BounceWrapper>
-      {/* breadcrumb */}
-      {/* <DynamicBreadcrumb items={accountItems} /> */}
+export default async function ClientAccountPage() {
+  // get session
+  const session = await getSession()
 
-      {/* client */}
-      <AccountClient />
-    </BounceWrapper>
+  // session serialize
+  const userData = dataSerializer(session)
+
+  return (
+    <HydrationBoundaryWrapper accountId={userData.id}>
+      <BounceWrapper>
+        <AccountClient id={userData.id} />
+      </BounceWrapper>
+    </HydrationBoundaryWrapper>
   )
 }
