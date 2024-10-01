@@ -2,11 +2,11 @@
 import SessionProvider from "@/components/providers/session"
 
 // utils
-import SidePanel from "@/app/(admin)/_components/shared/side-panel"
+import SidePanel from "@/components/layouts/admin/side-panel"
 import { dataSerializer } from "@/lib/utils"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/session/get"
+import { getSession } from "@/lib/actions/session/get"
 
 export default async function AdminLayout({
   children,

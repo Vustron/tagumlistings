@@ -1,6 +1,6 @@
 // components
+import SearchClient from "@/components/client/search/client"
 import { BlurFade } from "@/components/shared/blur-fade"
-import SearchClient from "@/app/(client)/_components/search/client"
 
 // types
 import type { Metadata } from "next"

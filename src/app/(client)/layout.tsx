@@ -1,8 +1,8 @@
 // components
-import ClientHeader from "@/app/(client)/_components/shared/header"
-import ClientFooter from "@/app/(client)/_components/shared/footer"
 import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
 // import SessionProvider from "@/components/providers/session"
+import ClientHeader from "@/components/layouts/client/header"
+import ClientFooter from "@/components/layouts/client/footer"
 
 // utils
 // import { dataSerializer } from "@/lib/utils"

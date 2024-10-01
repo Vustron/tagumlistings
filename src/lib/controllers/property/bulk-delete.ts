@@ -15,12 +15,12 @@ import { NextResponse } from "next/server"
 import { firestore, firebaseStorage } from "@/lib/config/firebase"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/session/get"
+import { getSession } from "@/lib/actions/session/get"
 
 // types
-import type { Property } from "@/app/(admin)/_components/data/properties"
 import type { DocumentData, QuerySnapshot } from "firebase/firestore"
 import type { NextRequest } from "next/server"
+import type { Property } from "@/lib/types"
 
 export async function deletePropertiesController(request: NextRequest) {
   try {

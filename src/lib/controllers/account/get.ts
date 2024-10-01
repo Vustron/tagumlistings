@@ -7,7 +7,7 @@ import {
 import { NextResponse } from "next/server"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/session/get"
+import { getSession } from "@/lib/actions/session/get"
 
 // types
 import type { NextRequest } from "next/server"

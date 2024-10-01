@@ -1,11 +1,11 @@
 // utils
 import {
   doc,
+  getDoc,
   addDoc,
+  updateDoc,
   collection,
   serverTimestamp,
-  updateDoc,
-  getDoc,
 } from "firebase/firestore"
 import { convertAndCheckRateLimit, handleErrorResponse } from "@/lib/helpers"
 import { checkRequiredFields, requestBodyHandler } from "@/lib/utils"
@@ -15,12 +15,12 @@ import { NextResponse } from "next/server"
 import { firestore } from "@/lib/config/firebase"
 
 // actions
-import * as getSession from "@/app/(auth)/_actions/session/get"
+import { getSession } from "@/lib/actions/session/get"
 
 // types
-import type { Appointment } from "@/app/(admin)/_components/appointments/new"
 import type { AddAppointmentValues } from "@/lib/validation"
 import type { NextRequest } from "next/server"
+import type { Appointment } from "@/lib/types"
 
 export async function createAppointmentController(request: NextRequest) {
   try {
@@ -30,7 +30,7 @@ export async function createAppointmentController(request: NextRequest) {
       return rateLimitCheck
     }
 
-    const session = await getSession.getSession()
+    const session = await getSession()
 
     if (!session) {
       return NextResponse.json({ error: "Missing session" }, { status: 400 })

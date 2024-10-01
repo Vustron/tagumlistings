@@ -1,18 +1,18 @@
 "use client"
 
 // components
-import PropertyCard from "@/app/(client)/_components/shared/property-card"
+import { PaginationWithLinks } from "@/components/ui/pagination-with-links"
+import PropertyCard from "@/components/layouts/client/property-card"
 
 // hooks
 import { useSearchParams } from "next/navigation"
 
 // utils
+import { properties } from "@/components/client/data/properties"
 import { motion } from "framer-motion"
-import { properties } from "@/app/(client)/_components/data/properties"
-import { PaginationWithLinks } from "@/components/ui/pagination-with-links"
 
 // types
-import type { PropertyCardProps } from "@/app/(client)/_components/data/properties"
+import type { PropertyCardProps } from "@/components/client/data/properties"
 
 export default function Properties() {
   const searchParams = useSearchParams()

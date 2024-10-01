@@ -1,12 +1,12 @@
 // components
 import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
-import ContentLayout from "@/app/(admin)/_components/shared/content-layout"
+import ContentLayout from "@/components/layouts/admin/content-layout"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
-import AccountClient from "@/app/(admin)/_components/account/client"
+import AccountClient from "@/components/admin/account/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/session/get"
+import { getSession } from "@/lib/actions/session/get"
 
 // utils
 import { accountItems } from "@/lib/misc/breadcrumb-lists"

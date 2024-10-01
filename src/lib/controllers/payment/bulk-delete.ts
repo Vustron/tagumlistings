@@ -14,12 +14,12 @@ import { NextResponse } from "next/server"
 import { firestore } from "@/lib/config/firebase"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/session/get"
+import { getSession } from "@/lib/actions/session/get"
 
 // types
-import type { Payment } from "@/app/(admin)/_components/data/payments"
 import type { DocumentData, QuerySnapshot } from "firebase/firestore"
 import type { NextRequest } from "next/server"
+import type { Payment } from "@/lib/types"
 
 export async function deletePaymentsController(request: NextRequest) {
   try {

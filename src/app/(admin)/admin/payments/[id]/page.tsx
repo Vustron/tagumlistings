@@ -1,12 +1,12 @@
 // components
 import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
-import ContentLayout from "@/app/(admin)/_components/shared/content-layout"
+import ContentLayout from "@/components/layouts/admin/content-layout"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
-import PaymentClient from "@/app/(admin)/_components/payment/client"
+import PaymentClient from "@/components/admin/payment/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/session/get"
+import { getSession } from "@/lib/actions/session/get"
 
 // utils
 import { paymentItems } from "@/lib/misc/breadcrumb-lists"

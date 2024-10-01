@@ -1,8 +1,8 @@
 // components
+import ServiceCards from "@/components/layouts/client/service-cards"
 import { BlurFade } from "@/components/shared/blur-fade"
+import Hero from "@/components/layouts/client/hero"
 import Lights from "@/components/shared/lights"
-import Hero from "@/app/(client)/_components/shared/hero"
-import ServiceCards from "@/app/(client)/_components/shared/service-cards"
 
 export default function HomePage() {
   return (

@@ -2,10 +2,10 @@
 import {
   doc,
   addDoc,
+  getDoc,
+  updateDoc,
   collection,
   serverTimestamp,
-  updateDoc,
-  getDoc,
 } from "firebase/firestore"
 import { convertAndCheckRateLimit, handleErrorResponse } from "@/lib/helpers"
 import { checkRequiredFields, requestBodyHandler } from "@/lib/utils"
@@ -15,12 +15,13 @@ import { NextResponse } from "next/server"
 import { firestore } from "@/lib/config/firebase"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/session/get"
+import { getSession } from "@/lib/actions/session/get"
 
 // types
-import type { Property } from "@/app/(admin)/_components/data/properties"
+
 import type { AddPropertyValues } from "@/lib/validation"
 import type { NextRequest } from "next/server"
+import type { Property } from "@/lib/types"
 
 export async function createPropertyController(request: NextRequest) {
   try {

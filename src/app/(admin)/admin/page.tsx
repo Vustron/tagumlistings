@@ -1,12 +1,12 @@
 // components
 import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
-import AdminDashboardClient from "@/app/(admin)/_components/dashboard/client"
-import ContentLayout from "@/app/(admin)/_components/shared/content-layout"
+import AdminDashboardClient from "@/components/admin/dashboard/client"
+import ContentLayout from "@/components/layouts/admin/content-layout"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/session/get"
+import { getSession } from "@/lib/actions/session/get"
 
 // utils
 import { dashboardItems } from "@/lib/misc/breadcrumb-lists"

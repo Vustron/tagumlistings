@@ -1,7 +1,7 @@
 "use client"
 
 // actions
-import { imageKitAuth } from "@/app/(client)/_actions/imagekit-auth"
+import { imageKitAuth } from "@/lib/actions/imagekit/auth"
 
 // utils
 import { ImageKitProvider } from "imagekitio-next"

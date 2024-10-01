@@ -1,7 +1,7 @@
 // components
-import AddPropertyClient from "@/app/(admin)/_components/new-property/client"
-import BounceWrapper from "@/components/shared/bounce"
+import AddPropertyClient from "@/components/admin/new-property/client"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
+import BounceWrapper from "@/components/shared/bounce"
 
 // utils
 import { addPaymentItems } from "@/lib/misc/breadcrumb-lists"

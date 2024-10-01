@@ -1,18 +1,21 @@
 // types
 import type {
-  AddPropertyValues,
   LoginValues,
   RegisterValues,
+  AddPaymentValues,
+  AddPropertyValues,
   UpdateAccountValues,
+  UpdatePaymentValues,
   UpdatePropertyValues,
   AddAppointmentValues,
-  AddPaymentValues,
-  UpdatePaymentValues,
 } from "@/lib/validation"
-import type { AppointmentDate } from "@/app/(admin)/_components/appointments/date"
-import type { Appointment } from "@/app/(admin)/_components/appointments/new"
-import type { Property } from "@/app/(admin)/_components/data/properties"
-import type { FieldConfig, UserData } from "@/lib/types"
+import type {
+  FieldConfig,
+  UserData,
+  Property,
+  Appointment,
+  AppointmentDate,
+} from "@/lib/types"
 
 // utils
 import { format } from "date-fns"

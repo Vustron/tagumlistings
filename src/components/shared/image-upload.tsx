@@ -19,7 +19,7 @@ import toast from "react-hot-toast"
 import Image from "next/image"
 
 // hooks
-import useMounted from "@/lib/hooks/use-mounted"
+import useMounted from "@/lib/hooks/utils/use-mounted"
 import { useState, useCallback } from "react"
 
 interface ImageUploadProps {

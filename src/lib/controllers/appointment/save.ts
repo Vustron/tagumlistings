@@ -1,14 +1,14 @@
 // utils
 import {
   doc,
-  addDoc,
-  collection,
-  serverTimestamp,
-  updateDoc,
-  getDoc,
   query,
   where,
+  addDoc,
+  getDoc,
   getDocs,
+  updateDoc,
+  collection,
+  serverTimestamp,
 } from "firebase/firestore"
 import { convertAndCheckRateLimit, handleErrorResponse } from "@/lib/helpers"
 import { checkRequiredFields, requestBodyHandler } from "@/lib/utils"
@@ -18,11 +18,11 @@ import { NextResponse } from "next/server"
 import { firestore } from "@/lib/config/firebase"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/session/get"
+import { getSession } from "@/lib/actions/session/get"
 
 // types
-import type { AppointmentDate } from "@/app/(admin)/_components/appointments/date"
 import type { AddAppointmentDateValues } from "@/lib/validation"
+import type { AppointmentDate } from "@/lib/types"
 import type { NextRequest } from "next/server"
 
 export async function saveAppointmentDateController(request: NextRequest) {

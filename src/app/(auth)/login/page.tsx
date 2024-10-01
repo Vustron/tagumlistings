@@ -1,6 +1,6 @@
 // components
-import LoginForm from "@/app/(auth)/_components/login/form"
 import BounceWrapper from "@/components/shared/bounce"
+import LoginForm from "@/components/auth/login/form"
 
 // assets
 import bgAuth from "@/app/assets/images/bg_auth.jpg"
@@ -25,8 +25,6 @@ export default function LoginPage() {
           <div className="w-full space-y-10 overflow-y-auto p-10 md:w-1/2">
             <h1 className="text-center text-3xl font-bold">Welcome back</h1>
             <div className="space-y-5">
-              {/* <GoogleSignInButton /> */}
-
               {/* login form */}
               <LoginForm />
 

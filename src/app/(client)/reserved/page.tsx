@@ -1,9 +1,9 @@
 // components
-import ReservedPropertiesClient from "@/app/(client)/_components/reserved/client"
+import ReservedPropertiesClient from "@/components/client/reserved/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // utils
-import { properties } from "@/app/(admin)/_components/data/properties"
+import { properties } from "@/components/client/data/properties"
 
 // types
 import type { Metadata } from "next"

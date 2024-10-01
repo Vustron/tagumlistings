@@ -1,12 +1,12 @@
 // components
 import {
-  ClipboardPen,
-  HandCoins,
-  LandPlot,
-  LayoutGrid,
-  MessageSquareText,
-  Settings,
   Users,
+  LandPlot,
+  Settings,
+  HandCoins,
+  LayoutGrid,
+  ClipboardPen,
+  MessageSquareText,
 } from "lucide-react"
 
 // types

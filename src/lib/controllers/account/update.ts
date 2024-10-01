@@ -5,7 +5,7 @@ import { NextResponse } from "next/server"
 import bcrypt from "bcryptjs"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/session/get"
+import { getSession } from "@/lib/actions/session/get"
 
 // configs
 import redis from "@/lib/config/redis"

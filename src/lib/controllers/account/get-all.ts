@@ -3,7 +3,7 @@ import { handleErrorResponse } from "@/lib/helpers"
 import { NextResponse } from "next/server"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/session/get"
+import { getSession } from "@/lib/actions/session/get"
 
 // configs
 import redis from "@/lib/config/redis"

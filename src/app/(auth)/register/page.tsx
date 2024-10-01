@@ -1,5 +1,5 @@
 // components
-import RegisterForm from "@/app/(auth)/_components/register/form"
+import RegisterForm from "@/components/auth/register/form"
 import BounceWrapper from "@/components/shared/bounce"
 
 // assets

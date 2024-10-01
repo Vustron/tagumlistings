@@ -1,14 +1,14 @@
 "use server"
 
 // actions
-import { preFetchAppointmentDates } from "@/app/(admin)/_actions/appointment/get-dates"
-import { preFetchAppointments } from "@/app/(admin)/_actions/appointment/get-all"
-import { preFetchProperties } from "@/app/(admin)/_actions/property/get-all"
-import { preFetchAppointment } from "@/app/(admin)/_actions/appointment/get"
-import { preFetchPayments } from "@/app/(admin)/_actions/payment/get-all"
-import { preFetchAccounts } from "@/app/(auth)/_actions/auth/get-all"
-import { preFetchPayment } from "@/app/(admin)/_actions/payment/get"
-import { preFetchAccount } from "@/app/(auth)/_actions/auth/get"
+import { preFetchAppointmentDates } from "@/lib/actions/appointment/get-dates"
+import { preFetchAppointments } from "@/lib/actions/appointment/get-all"
+import { preFetchProperties } from "@/lib/actions/property/get-all"
+import { preFetchAppointment } from "@/lib/actions/appointment/get"
+import { preFetchPayments } from "@/lib/actions/payment/get-all"
+import { preFetchAccounts } from "@/lib/actions/auth/get-all"
+import { preFetchPayment } from "@/lib/actions/payment/get"
+import { preFetchAccount } from "@/lib/actions/auth/get"
 
 // utils
 import {

@@ -22,14 +22,14 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react"
-import CreateUserModal from "@/app/(admin)/_components/users/create-user"
+import CreateUserModal from "@/components/admin/users/create-user"
 import { FloatingLabelInput } from "@/components/ui/floating-label-input"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 
 // hooks
 import { useReactTable } from "@tanstack/react-table"
-import { useConfirm } from "@/lib/hooks/use-confirm"
+import { useConfirm } from "@/lib/hooks/utils/use-confirm"
 import { useRouter } from "next-nprogress-bar"
 
 // utils

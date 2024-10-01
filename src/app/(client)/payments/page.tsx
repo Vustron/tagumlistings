@@ -1,5 +1,5 @@
 // components
-import PaymentsClient from "@/app/(client)/_components/payments/client"
+import PaymentsClient from "@/components/client/payments/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // types
@@ -14,7 +14,7 @@ export default function ClientPaymentsPage() {
   return (
     <div className="container p-5">
       <BounceWrapper>
-        <PaymentsClient data={[]} />
+        <PaymentsClient />
       </BounceWrapper>
     </div>
   )

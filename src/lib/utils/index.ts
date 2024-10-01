@@ -1,16 +1,16 @@
 // utils
+import { format, isValid, parseISO } from "date-fns"
 import { NextResponse } from "next/server"
 import { twMerge } from "tailwind-merge"
 import toast from "react-hot-toast"
-import { format, isValid, parseISO } from "date-fns"
 import { ZodError } from "zod"
 import { clsx } from "clsx"
 
 // types
-import type { Appointment } from "@/app/(admin)/_components/appointments/new"
 import type { ErrorResponseData, UniqueId } from "@/lib/types"
 import type { SessionData } from "@/lib/config/session"
 import type { NextRequest } from "next/server"
+import type { Appointment } from "@/lib/types"
 import type { ClassValue } from "clsx"
 import type DOMPurify from "dompurify"
 import type { z } from "zod"

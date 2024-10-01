@@ -1,6 +1,6 @@
 // components
-import ContentLayout from "@/app/(admin)/_components/shared/content-layout"
-import MessagesClient from "@/app/(admin)/_components/messages/client"
+import ContentLayout from "@/components/layouts/admin/content-layout"
+import MessagesClient from "@/components/admin/messages/client"
 import BounceWrapper from "@/components/shared/bounce"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 

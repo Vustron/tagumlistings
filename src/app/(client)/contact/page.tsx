@@ -1,5 +1,5 @@
 // components
-import MessagesClient from "@/app/(admin)/_components/messages/client"
+import MessagesClient from "@/components/admin/messages/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // types

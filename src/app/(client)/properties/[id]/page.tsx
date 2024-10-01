@@ -1,27 +1,28 @@
 "use client"
 
 // components
-import ImageCarousel from "@/app/(client)/_components/property-id/image-carousel"
+import ImageCarousel from "@/components/client/property-id/image-carousel"
 
 // hooks
 import { useParams } from "next/navigation"
 import { useState, useEffect } from "react"
 
 // utils
-import { properties } from "@/app/(admin)/_components/data/properties"
+import { properties } from "@/components/client/data/properties"
 
 // types
+import type { Property } from "@/lib/types"
 
 export default async function PropertyIdPage() {
   const params = useParams()
   const id = params?.id as string
-  const [property, setProperty] = useState<(typeof properties)[0] | null>(null)
+  const [property, setProperty] = useState<Property | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchProperty = () => {
       const foundProperty = properties.find((p) => p.id === id)
-      setProperty(foundProperty ?? null)
+      setProperty(foundProperty || null)
       setLoading(false)
     }
 

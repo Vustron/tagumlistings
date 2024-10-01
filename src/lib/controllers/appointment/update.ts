@@ -8,11 +8,12 @@ import { NextResponse } from "next/server"
 import { firestore } from "@/lib/config/firebase"
 
 // actions
-import { getSession } from "@/app/(auth)/_actions/session/get"
+import { getSession } from "@/lib/actions/session/get"
 
 // types
-import type { Appointment } from "@/app/(admin)/_components/appointments/new"
+
 import type { UpdateAppointmentValues } from "@/lib/validation"
+import type { Appointment } from "@/lib/types"
 import type { NextRequest } from "next/server"
 
 export async function updateAppointmentController(request: NextRequest) {
