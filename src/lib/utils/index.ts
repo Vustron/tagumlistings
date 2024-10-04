@@ -152,14 +152,16 @@ export function buildQueryString(
 }
 
 // client error handler
-export function clientErrorHandler(error: unknown, isToast?: "isToast") {
-  // init error handler
+export function clientErrorHandler(
+  error: unknown,
+  isToast?: "isToast",
+): string {
   const { message }: ErrorResponseData = ErrorHandler.handleError(error)
 
   if (isToast) {
     toast.error(message)
   }
-  // return error message as string
+
   return message
 }
 

@@ -29,13 +29,11 @@ const LoginForm = () => {
 
   // submit handler
   const submitHandler = async (values: LoginValues) => {
-    console.log(values)
     await toast.promise(loginMutation.mutateAsync(values), {
       loading: <span className="animate-pulse">Logging in...</span>,
       success: "User logged in",
       error: (error: unknown) => clientErrorHandler(error),
     })
-
     form.reset()
   }
 

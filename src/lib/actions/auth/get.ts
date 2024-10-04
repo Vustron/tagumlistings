@@ -1,5 +1,3 @@
-"use server"
-
 // config
 import { httpRequest } from "@/lib/config/http"
 

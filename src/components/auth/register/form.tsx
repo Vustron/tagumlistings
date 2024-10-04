@@ -44,12 +44,12 @@ const RegisterForm = ({ onSuccess, onError, status }: RegisterFormProps) => {
       error: (error: unknown) => clientErrorHandler(error),
     })
 
-    form.reset()
     if (registerMutation.isSuccess) {
       onSuccess?.()
     } else {
       onError?.()
     }
+    form.reset()
   }
 
   return (

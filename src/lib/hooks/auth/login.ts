@@ -1,3 +1,5 @@
+"use client"
+
 // hooks
 import { useMutation } from "@tanstack/react-query"
 import { useRouter } from "next-nprogress-bar"

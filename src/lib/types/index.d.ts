@@ -29,6 +29,7 @@ export type RequestConfig<T> = {
 export interface ErrorResponseData {
   message: string
   statusCode?: number
+  digest?: string
 }
 
 /* CompatibleRequest Type */
@@ -225,4 +226,10 @@ export interface Filter {
   types: PropertyType[]
   minPrice: number
   maxPrice: number
+}
+
+/* Filter Type */
+export interface ErrorDetail {
+  message: string
+  digest?: string
 }

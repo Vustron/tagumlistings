@@ -1,3 +1,5 @@
+"use client"
+
 // hooks
 import { useSuspenseQuery } from "@tanstack/react-query"
 
