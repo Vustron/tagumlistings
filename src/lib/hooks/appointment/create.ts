@@ -11,7 +11,6 @@ import { addAppointmentSchema } from "@/lib/validation"
 import DOMPurify from "dompurify"
 
 // types
-
 import type { AddAppointmentValues } from "@/lib/validation"
 import type { QueryFilters } from "@tanstack/react-query"
 import type { Appointments } from "@/lib/types"

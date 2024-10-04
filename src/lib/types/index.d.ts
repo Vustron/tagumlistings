@@ -64,6 +64,7 @@ interface FieldConfig<TFieldValues> {
     | "date"
     | "color"
     | "currency"
+    | "phone"
   label: string
   placeholder?: string
   className?: string
@@ -202,7 +203,7 @@ export interface AppointmentDates {
   dates: AppointmentDate[]
 }
 
-/* AppointmentDates Type */
+/* ImageKitAuthProps Type */
 interface ImageKitAuthProps {
   signature: string
   expire: string

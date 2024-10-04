@@ -19,7 +19,7 @@ export async function getProperty(id: string): Promise<Property> {
   return response
 }
 
-export async function preFetchProperties(id: string) {
+export async function preFetchProperty(id: string) {
   return queryOptions<Property, Error>({
     enabled: !!id,
     queryKey: ["property", id],

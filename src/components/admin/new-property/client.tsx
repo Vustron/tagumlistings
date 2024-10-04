@@ -5,9 +5,6 @@ import NewPropertyForm from "@/components/admin/new-property/form"
 import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
 
-// hooks
-// import { useRouter } from "next/navigation"
-
 const AddPropertyClient = () => {
   return (
     <>

@@ -6,15 +6,16 @@ import { preFetchAppointments } from "@/lib/actions/appointment/get-all"
 import { preFetchProperties } from "@/lib/actions/property/get-all"
 import { preFetchAppointment } from "@/lib/actions/appointment/get"
 import { preFetchPayments } from "@/lib/actions/payment/get-all"
+import { preFetchProperty } from "@/lib/actions/property/get"
 import { preFetchAccounts } from "@/lib/actions/auth/get-all"
 import { preFetchPayment } from "@/lib/actions/payment/get"
 import { preFetchAccount } from "@/lib/actions/auth/get"
 
 // utils
 import {
-  HydrationBoundary,
-  QueryClient,
   dehydrate,
+  QueryClient,
+  HydrationBoundary,
 } from "@tanstack/react-query"
 
 const HydrationBoundaryWrapper = ({
@@ -22,11 +23,13 @@ const HydrationBoundaryWrapper = ({
   accountId,
   appointmentId,
   paymentId,
+  propertyId,
 }: {
   children: React.ReactNode
   accountId?: string
   appointmentId?: string
   paymentId?: string
+  propertyId?: string
 }) => {
   const queryClient = new QueryClient()
 
@@ -43,6 +46,11 @@ const HydrationBoundaryWrapper = ({
   void queryClient.prefetchQuery({
     queryKey: ["properties"],
     queryFn: async () => preFetchProperties(),
+  })
+
+  void queryClient.prefetchQuery({
+    queryKey: ["property", propertyId!],
+    queryFn: async () => preFetchProperty(propertyId!),
   })
 
   void queryClient.prefetchQuery({

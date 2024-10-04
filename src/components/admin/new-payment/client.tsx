@@ -1,7 +1,7 @@
 "use client"
 
 // components
-import { ErrorFallback, LoadingFallback } from "@/components/shared/fallback"
+import FallbackBoundary from "@/components/shared/fallback-boundary"
 import NewPaymentForm from "@/components/admin/new-payment/form"
 import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
@@ -10,10 +10,6 @@ import { Heading } from "@/components/ui/heading"
 import { useGetAppointments } from "@/lib/hooks/appointment/get-all"
 import { useGetProperties } from "@/lib/hooks/property/get-all"
 import { useGetAccounts } from "@/lib/hooks/auth/get-all"
-
-// utils
-import { ErrorBoundary } from "react-error-boundary"
-import { Suspense } from "react"
 
 const AddPaymentClient = () => {
   const { data: accountsData } = useGetAccounts()
@@ -32,15 +28,13 @@ const AddPaymentClient = () => {
       <Separator className="mt-2" />
 
       <div className="container flex flex-col justify-center items-center lg:w-[400px] sm:w-[300px] h-auto p-5 mt-5">
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <Suspense fallback={<LoadingFallback />}>
-            <NewPaymentForm
-              accounts={accounts}
-              appointments={appointments}
-              properties={properties}
-            />
-          </Suspense>
-        </ErrorBoundary>
+        <FallbackBoundary>
+          <NewPaymentForm
+            accounts={accounts}
+            appointments={appointments}
+            properties={properties}
+          />
+        </FallbackBoundary>
       </div>
     </>
   )

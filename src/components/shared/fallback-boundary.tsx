@@ -1,9 +1,11 @@
-"use client"
-
 // components
 import { Loader2, ServerCrash } from "lucide-react"
 
-export const LoadingFallback = () => {
+// utils
+import { ErrorBoundary } from "react-error-boundary"
+import { Suspense } from "react"
+
+const LoadingFallback = () => {
   return (
     <div className="flex flex-col items-center justify-center h-[500px]">
       <Loader2 className="size-20 animate-spin" />
@@ -11,7 +13,7 @@ export const LoadingFallback = () => {
   )
 }
 
-export const ErrorFallback = ({ error }: { error: Error }) => {
+const ErrorFallback = ({ error }: { error: Error }) => {
   return (
     <div className="flex flex-col items-center justify-center">
       <ServerCrash className="size-7 text-zinc-500 my-4" />
@@ -22,3 +24,13 @@ export const ErrorFallback = ({ error }: { error: Error }) => {
     </div>
   )
 }
+
+const FallbackBoundary = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <Suspense fallback={<LoadingFallback />}>{children}</Suspense>
+    </ErrorBoundary>
+  )
+}
+
+export default FallbackBoundary

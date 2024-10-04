@@ -1,7 +1,7 @@
 // components
 import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
-import ContentLayout from "@/components/layouts/admin/content-layout"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
+import ContentLayout from "@/components/layouts/admin/content-layout"
 import PropertyClient from "@/components/admin/property/client"
 import BounceWrapper from "@/components/shared/bounce"
 
@@ -30,7 +30,7 @@ export default async function PropertyIdPage({
   const userData = dataSerializer(session)
 
   return (
-    <HydrationBoundaryWrapper accountId={userData.id}>
+    <HydrationBoundaryWrapper accountId={userData.id} propertyId={params.id}>
       <ContentLayout title="Property">
         <BounceWrapper>
           <DynamicBreadcrumb items={propertyItems} />

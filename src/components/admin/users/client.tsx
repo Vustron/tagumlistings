@@ -1,7 +1,7 @@
 "use client"
 
 // components
-import { ErrorFallback, LoadingFallback } from "@/components/shared/fallback"
+import FallbackBoundary from "@/components/shared/fallback-boundary"
 import { columns } from "@/components/admin/users/columns"
 import { Separator } from "@/components/ui/separator"
 import DataTable from "@/components/ui/data-table"
@@ -14,11 +14,8 @@ import { useGetAccounts } from "@/lib/hooks/auth/get-all"
 import { useRef } from "react"
 
 // utils
-// utils
-import { ErrorBoundary } from "react-error-boundary"
 import { clientErrorHandler } from "@/lib/utils"
 import toast from "react-hot-toast"
-import { Suspense } from "react"
 
 // types
 import type { Row } from "@tanstack/react-table"
@@ -57,17 +54,15 @@ const UsersClient = () => {
       <Separator className="mt-2" />
 
       <div ref={topRef}>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <Suspense fallback={<LoadingFallback />}>
-            <DataTable
-              placeholder="Search.."
-              columns={columns}
-              isOnUsers
-              data={accountsData}
-              onDelete={handleDelete}
-            />
-          </Suspense>
-        </ErrorBoundary>
+        <FallbackBoundary>
+          <DataTable
+            placeholder="Search.."
+            columns={columns}
+            isOnUsers
+            data={accountsData}
+            onDelete={handleDelete}
+          />
+        </FallbackBoundary>
       </div>
       <div ref={bottomRef} />
     </>

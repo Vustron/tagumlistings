@@ -14,8 +14,8 @@ import {
   MapPinHouse,
   CircleDollarSign,
 } from "lucide-react"
-import { ErrorFallback, LoadingFallback } from "@/components/shared/fallback"
 import AppointmentsChart from "@/components/admin/appointments/chart"
+import FallbackBoundary from "@/components/shared/fallback-boundary"
 import AppointmentsList from "@/components/admin/appointments/list"
 import DashboardCard from "@/components/admin/dashboard/card"
 
@@ -28,8 +28,6 @@ import {
   filterAppointmentsForLastHour,
   filterAppointmentsForCurrentMonth,
 } from "@/lib/utils"
-import { ErrorBoundary } from "react-error-boundary"
-import { Suspense } from "react"
 
 // utils
 import type { Property } from "@/lib/types"
@@ -136,33 +134,31 @@ const AdminDashboardClient = () => {
 
   return (
     <div className="p-5">
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <Suspense fallback={<LoadingFallback />}>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <DashboardCard items={dashboardItems} />
+      <FallbackBoundary>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <DashboardCard items={dashboardItems} />
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7 mt-4">
+          <div className="col-span-4">
+            <AppointmentsChart appointments={appointments} />
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7 mt-4">
-            <div className="col-span-4">
-              <AppointmentsChart appointments={appointments} />
-            </div>
-
-            <Card className="col-span-4 md:col-span-3">
-              <CardHeader>
-                <CardTitle className="text-green-600">
-                  Recent Appointments
-                </CardTitle>
-                <CardDescription>
-                  There are {appointmentsCount} appointments for this month.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <AppointmentsList appointments={currentMonthAppointments} />
-              </CardContent>
-            </Card>
-          </div>
-        </Suspense>
-      </ErrorBoundary>
+          <Card className="col-span-4 md:col-span-3">
+            <CardHeader>
+              <CardTitle className="text-green-600">
+                Recent Appointments
+              </CardTitle>
+              <CardDescription>
+                There are {appointmentsCount} appointments for this month.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AppointmentsList appointments={currentMonthAppointments} />
+            </CardContent>
+          </Card>
+        </div>
+      </FallbackBoundary>
     </div>
   )
 }

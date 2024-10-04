@@ -7,15 +7,11 @@ import {
   DialogHeader,
   DialogContent,
 } from "@/components/ui/dialog"
-import { ErrorFallback, LoadingFallback } from "@/components/shared/fallback"
 import NewAppointmentForm from "@/components/admin/appointments/form"
+import FallbackBoundary from "@/components/shared/fallback-boundary"
 
 // hooks
 import { useGetAccounts } from "@/lib/hooks/auth/get-all"
-
-// utils
-import { ErrorBoundary } from "react-error-boundary"
-import { Suspense } from "react"
 
 // types
 import type { AppointmentDate } from "@/lib/types"
@@ -41,14 +37,12 @@ const NewAppointment = ({
           <DialogTitle>Add New Appointment</DialogTitle>
         </DialogHeader>
 
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <Suspense fallback={<LoadingFallback />}>
-            <NewAppointmentForm
-              accounts={accountsData}
-              appointmentDates={appointmentDates}
-            />
-          </Suspense>
-        </ErrorBoundary>
+        <FallbackBoundary>
+          <NewAppointmentForm
+            accounts={accountsData}
+            appointmentDates={appointmentDates}
+          />
+        </FallbackBoundary>
       </DialogContent>
     </Dialog>
   )

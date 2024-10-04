@@ -37,7 +37,7 @@ interface Props {
   titleClassName?: string
 }
 
-const SubmitButton = ({
+const DynamicButton = ({
   children,
   asChild,
   size,
@@ -95,4 +95,4 @@ const SubmitButton = ({
   )
 }
 
-export default SubmitButton
+export default DynamicButton

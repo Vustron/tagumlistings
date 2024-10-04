@@ -36,10 +36,9 @@ export const registerFields: FieldConfig<RegisterValues>[] = [
   },
   {
     name: "contact_number",
-    type: "text",
+    type: "phone",
     label: "Phone Number",
     placeholder: "0987423213",
-    isPhone: true,
   },
   {
     name: "email",
@@ -71,10 +70,9 @@ export const updateAccountFields: FieldConfig<UpdateAccountValues>[] = [
   },
   {
     name: "contact_number",
-    type: "text",
+    type: "phone",
     label: "Phone Number",
     placeholder: "0987423213",
-    isPhone: true,
   },
   {
     name: "email",
