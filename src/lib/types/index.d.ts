@@ -163,9 +163,17 @@ export interface Property {
   updated_at?: string
 }
 
+export interface PaginationMetadata {
+  total: number
+  page: number
+  limit: number
+  totalPages: number
+}
+
 /* Properties Type */
 export interface Properties {
   properties: Property[]
+  pagination?: PaginationMetadata
 }
 
 /* User Type */
@@ -223,9 +231,9 @@ export type PropertyType = "House" | "Apartment" | "Land" | "Commercial"
 
 /* Filter Type */
 export interface Filter {
-  types: PropertyType[]
-  minPrice: number
-  maxPrice: number
+  category?: string
+  location?: string
+  status?: string
 }
 
 /* Filter Type */

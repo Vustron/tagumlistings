@@ -11,7 +11,7 @@ export interface RequestConfig<RequestType = unknown, ResponseType = unknown> {
   url?: string
   isCustomUrl?: boolean
   method: HttpMethod
-  params?: Record<string, string | number | boolean>
+  params?: Record<string, string | number | boolean | undefined>
   headers?: HeadersInit
   body?: RequestType
   transformResponse?: (data: unknown) => ResponseType

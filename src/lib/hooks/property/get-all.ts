@@ -9,9 +9,13 @@ import { getProperties } from "@/lib/actions/property/get-all"
 // types
 import type { Properties } from "@/lib/types"
 
-export const useGetProperties = () => {
+export const useGetProperties = (
+  page?: number,
+  limit?: number,
+  query?: string,
+) => {
   return useSuspenseQuery<Properties, Error>({
-    queryKey: ["properties"],
-    queryFn: () => getProperties(),
+    queryKey: ["properties", page, limit, query],
+    queryFn: () => getProperties(page, limit, query),
   })
 }

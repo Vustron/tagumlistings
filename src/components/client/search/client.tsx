@@ -4,51 +4,97 @@
 import { PaginationWithLinks } from "@/components/ui/pagination-with-links"
 import SearchBar, { fadeInUp } from "@/components/client/search/searchbar"
 import PropertyCard from "@/components/layouts/client/property-card"
+import FallbackBoundary from "@/components/shared/fallback-boundary"
+
+// hooks
+import { useGetProperties } from "@/lib/hooks/property/get-all"
+import { useSearchParams } from "next/navigation"
+import { useRouter } from "next-nprogress-bar"
+import { useState, useEffect } from "react"
 
 // utils
 import { motion, AnimatePresence } from "framer-motion"
 
-// hooks
-import { useState, useMemo, useEffect } from "react"
-import { useSearchParams } from "next/navigation"
-
 // types
-import { properties } from "@/components/client/data/properties"
-import type { Filter, PropertyType } from "@/lib/types"
+import type { Filter, Property } from "@/lib/types"
 
 const SearchClient = () => {
+  const router = useRouter()
   const searchParams = useSearchParams()
-  const searchQuery = searchParams.get("query") || ""
-  const currentPage = Number.parseInt(searchParams.get("page") || "1")
-  const itemsPerPage = 6
+  const currentPage = Number(searchParams.get("page")) || 1
+  const itemsPerPage = 9
+  const query = searchParams.get("query") || ""
 
-  const [filters, setFilters] = useState<Filter>({
-    types: [],
-    minPrice: 0,
-    maxPrice: 1000000,
-  })
+  // Initialize filters from URL params
+  const initialFilters: Partial<Filter> = {
+    category: searchParams.get("category") || "",
+    location: searchParams.get("location") || "",
+    status: searchParams.get("status") || "",
+  }
 
-  const filteredProperties = useMemo(
-    () =>
-      properties.filter(
-        (property) =>
-          property.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
-          (filters.types.length === 0 ||
-            filters.types.includes(property.type as PropertyType)) &&
-          property.price >= filters.minPrice &&
-          property.price <= filters.maxPrice,
-      ),
-    [searchQuery, filters],
-  )
+  const [filters, setFilters] = useState<Partial<Filter>>(initialFilters)
 
-  const currentProperties = useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage
-    return filteredProperties.slice(start, start + itemsPerPage)
-  }, [filteredProperties, currentPage])
+  // Fetch properties based on query
+  const { data, isLoading } = useGetProperties(currentPage, itemsPerPage, query)
+  const totalCount = data?.pagination?.total || 0
+  const totalPages = Math.ceil(totalCount / itemsPerPage)
+
+  // Filter properties based on filters
+  const filteredProperties =
+    data?.properties.filter((property: Property) => {
+      const matchesLocation = filters.location
+        ? (property.location ?? "").includes(filters.location)
+        : true
+      const matchesStatus = filters.status
+        ? property.status === filters.status
+        : true
+
+      return matchesLocation && matchesStatus
+    }) || []
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }, [currentPage])
+    const params = new URLSearchParams()
+
+    params.set("page", currentPage.toString())
+    if (query) params.set("query", query)
+
+    // Only add filter params if they have values
+    if (filters.category) params.set("category", filters.category)
+    if (filters.location) params.set("location", filters.location)
+    if (filters.status) params.set("status", filters.status)
+
+    // If there are no filters, just keep the page and query parameters
+    const queryString = params.toString()
+    router.push(queryString ? `?${queryString}` : "")
+  }, [filters, currentPage, query, router])
+
+  const handleFilterChange = (filterType: keyof Filter, value: any) => {
+    setFilters((prev) => ({
+      ...prev,
+      [filterType]: value,
+    }))
+  }
+
+  const clearFilters = () => {
+    setFilters({
+      category: "",
+      location: "",
+      status: "",
+    })
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>Loading properties...</p>
+      </div>
+    )
+  }
+
+  const paginatedProperties = filteredProperties.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  )
 
   return (
     <motion.div
@@ -67,9 +113,11 @@ const SearchClient = () => {
       </motion.h1>
 
       <SearchBar
-        initialQuery={searchQuery}
-        filters={filters}
+        initialQuery={query}
+        filters={filters as Filter}
         setFilters={setFilters}
+        onFilterChange={handleFilterChange}
+        onClearFilters={clearFilters}
       />
 
       <motion.div
@@ -78,44 +126,36 @@ const SearchClient = () => {
         variants={fadeInUp}
         className="w-full"
       >
-        <motion.h2
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-2xl font-semibold mb-6"
-        >
-          {searchQuery
-            ? `Search Results for: "${searchQuery}"`
-            : "Featured Properties"}
-        </motion.h2>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <AnimatePresence mode="wait">
-            {currentProperties.length > 0 ? (
-              currentProperties.map((property, index) => (
+          <FallbackBoundary>
+            <AnimatePresence>
+              {paginatedProperties.length > 0 ? (
+                paginatedProperties.map((property: Property, index: number) => (
+                  <motion.div
+                    key={property.id}
+                    variants={fadeInUp}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                    className="mb-5"
+                  >
+                    <PropertyCard {...property} />
+                  </motion.div>
+                ))
+              ) : (
                 <motion.div
-                  key={property.id}
                   variants={fadeInUp}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className="mb-5"
+                  className="col-span-full text-center text-gray-500 py-12"
                 >
-                  <PropertyCard {...property} />
+                  No properties found. Try adjusting your filters.
                 </motion.div>
-              ))
-            ) : (
-              <motion.div
-                variants={fadeInUp}
-                className="col-span-full text-center text-gray-500 py-12"
-              >
-                No properties found. Try adjusting your filters.
-              </motion.div>
-            )}
-          </AnimatePresence>
+              )}
+            </AnimatePresence>
+          </FallbackBoundary>
         </div>
 
-        {filteredProperties.length > itemsPerPage && (
+        {totalPages > 1 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -123,7 +163,7 @@ const SearchClient = () => {
             className="mt-12 mb-8"
           >
             <PaginationWithLinks
-              totalCount={filteredProperties.length}
+              totalCount={totalCount}
               pageSize={itemsPerPage}
               page={currentPage}
             />

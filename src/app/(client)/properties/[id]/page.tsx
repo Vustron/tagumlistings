@@ -2,34 +2,35 @@
 
 // components
 import ImageCarousel from "@/components/client/property-id/image-carousel"
+import FallbackBoundary from "@/components/shared/fallback-boundary"
+import { Badge } from "@/components/ui/badge"
 
 // hooks
+import { useGetProperty } from "@/lib/hooks/property/get"
 import { useParams } from "next/navigation"
 import { useState, useEffect } from "react"
 
 // utils
-import { properties } from "@/components/client/data/properties"
+import { placeholderImage, getRoleBadgeColor } from "@/lib/utils"
 
 // types
 import type { Property } from "@/lib/types"
 
-export default async function PropertyIdPage() {
+export default function PropertyIdPage() {
   const params = useParams()
   const id = params?.id as string
   const [property, setProperty] = useState<Property | null>(null)
   const [loading, setLoading] = useState(true)
+  const { data, isLoading } = useGetProperty(id)
 
   useEffect(() => {
-    const fetchProperty = () => {
-      const foundProperty = properties.find((p) => p.id === id)
-      setProperty(foundProperty || null)
+    if (data) {
+      setProperty(data)
       setLoading(false)
     }
+  }, [data])
 
-    fetchProperty()
-  }, [id])
-
-  if (loading) {
+  if (isLoading || loading) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="h-8 bg-gray-200 w-3/4 mb-4 animate-pulse" />
@@ -50,31 +51,33 @@ export default async function PropertyIdPage() {
       </div>
     )
   }
+
+  const images = property.propertyPics?.length
+    ? property.propertyPics
+    : [{ url: placeholderImage("No Images Available") }]
+
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-4">{property.category}</h1>
-      <ImageCarousel images={property.propertyPics!} />
-      <div className="mt-4 space-y-2">
-        <p className="text-xl">
-          <strong>Location:</strong> {property.location}
-        </p>
-        <p className="text-xl">
-          <strong>Status:</strong> {property.status}
-        </p>
-        <p className="text-xl">
-          <strong>ID:</strong> {property.id}
-        </p>
-        {property.created_at && (
-          <p className="text-sm text-gray-500">
-            Created: {new Date(property.created_at).toLocaleDateString()}
+    <FallbackBoundary>
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <ImageCarousel images={images} />
+        <div className="mt-4 space-y-2">
+          <p className="text-xl">
+            <strong>Category:</strong>{" "}
+            {property.category?.toLocaleUpperCase() || "Property"}
           </p>
-        )}
-        {property.updated_at && (
-          <p className="text-sm text-gray-500">
-            Last updated: {new Date(property.updated_at).toLocaleDateString()}
+          <p className="text-xl">
+            <strong>Location:</strong> {property.location || "Unknown"}
           </p>
-        )}
+          <p className="text-xl">
+            <strong className="mr-2">Status:</strong>
+            <Badge
+              className={`${getRoleBadgeColor(property.status || "Unavailable")} font-medium`}
+            >
+              {property.status || "Unavailable"}
+            </Badge>
+          </p>
+        </div>
       </div>
-    </div>
+    </FallbackBoundary>
   )
 }

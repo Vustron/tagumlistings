@@ -1,7 +1,7 @@
 // utils
-import { fileURLToPath } from "node:url"
 import withBundleAnalyzer from "@next/bundle-analyzer"
-import createJiti from "jiti"
+import { fileURLToPath } from "node:url"
+import { createJiti } from "jiti"
 
 // configure the bundle analyzer
 const withBundleAnalyzerConfig = withBundleAnalyzer({
@@ -157,6 +157,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "firebasestorage.googleapis.com",
+      },
+      {
+        protocol: "https",
+        hostname: "placehold.co",
       },
     ],
   },

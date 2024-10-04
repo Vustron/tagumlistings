@@ -2,31 +2,38 @@
 
 // components
 import { PaginationWithLinks } from "@/components/ui/pagination-with-links"
+import FallbackBoundary from "@/components/shared/fallback-boundary"
 import PropertyCard from "@/components/layouts/client/property-card"
 
 // hooks
+import { useGetProperties } from "@/lib/hooks/property/get-all"
 import { useSearchParams } from "next/navigation"
 
 // utils
-import { properties } from "@/components/client/data/properties"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 
 // types
-import type { PropertyCardProps } from "@/components/client/data/properties"
+import type { Property } from "@/lib/types"
 
 export default function Properties() {
   const searchParams = useSearchParams()
+  const currentPage = Number(searchParams.get("page")) || 1
+  const itemsPerPage = 9
 
-  const currentPage = Number.parseInt(searchParams.get("page") || "1")
-  const itemsPerPage = 8
+  // Fetch properties with pagination
+  const { data, isLoading } = useGetProperties(currentPage, itemsPerPage)
+  const totalCount = data?.pagination?.total || 0
+  const currentProperties = data?.properties || []
 
-  const indexOfLastProperty = currentPage * itemsPerPage
-  const indexOfFirstProperty = indexOfLastProperty - itemsPerPage
-  const currentProperties = properties.slice(
-    indexOfFirstProperty,
-    indexOfLastProperty,
-  )
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>Loading properties...</p>
+      </div>
+    )
+  }
 
+  // Animation variants...
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -60,30 +67,52 @@ export default function Properties() {
         >
           Properties
         </motion.h2>
-        <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {currentProperties.map((property: PropertyCardProps) => (
-            <motion.div key={property.id} variants={itemVariants}>
-              <PropertyCard {...property} />
+        <FallbackBoundary>
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <AnimatePresence>
+              {currentProperties.length > 0 ? (
+                currentProperties.map((property: Property, index: number) => (
+                  <motion.div
+                    key={property.id}
+                    variants={itemVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                  >
+                    <PropertyCard {...property} />
+                  </motion.div>
+                ))
+              ) : (
+                <motion.div
+                  variants={itemVariants}
+                  className="col-span-full text-center text-gray-500 py-12"
+                >
+                  No properties found.
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+          {totalCount > itemsPerPage && (
+            <motion.div
+              className="mt-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              <PaginationWithLinks
+                totalCount={totalCount}
+                pageSize={itemsPerPage}
+                page={currentPage}
+              />
             </motion.div>
-          ))}
-        </motion.div>
-        <motion.div
-          className="mt-5"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          <PaginationWithLinks
-            totalCount={properties.length}
-            pageSize={itemsPerPage}
-            page={currentPage}
-          />
-        </motion.div>
+          )}
+        </FallbackBoundary>
       </main>
     </div>
   )

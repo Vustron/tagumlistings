@@ -6,16 +6,30 @@ import { Button } from "@/components/ui/button"
 
 // hooks
 import { useRouter } from "next-nprogress-bar"
+import { useState } from "react"
 
 // utils
+import { placeholderImage } from "@/lib/utils"
 import { motion } from "framer-motion"
 import Image from "next/image"
 
 // types
-import type { PropertyCardProps } from "@/components/client/data/properties"
+import type { Property } from "@/lib/types"
 
-const PropertyCard = ({ id, image, title, price }: PropertyCardProps) => {
+const PropertyCard = ({
+  id,
+  propertyPics,
+  category,
+  location,
+  status,
+}: Property) => {
   const router = useRouter()
+  const [isImageLoaded, setIsImageLoaded] = useState(false)
+
+  const imageUrl =
+    propertyPics && propertyPics.length > 0
+      ? propertyPics[0]?.url
+      : placeholderImage(category || "Property")
 
   const handleViewProperty = () => {
     router.push(`/properties/${id}`)
@@ -37,13 +51,21 @@ const PropertyCard = ({ id, image, title, price }: PropertyCardProps) => {
           }}
           transition={{ duration: 0.3 }}
         >
+          {!isImageLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+              <span>Loading...</span>
+            </div>
+          )}
           <Image
-            src={image}
-            alt={title}
+            src={imageUrl || placeholderImage(category || "Property")}
+            alt={category || "Property Image"}
             width={500}
             height={500}
-            className="object-cover w-full h-full"
+            className={`object-cover size-full ${isImageLoaded ? "opacity-100" : "opacity-0"}`}
             loading="lazy"
+            placeholder="blur"
+            blurDataURL={placeholderImage(category || "Property")}
+            onLoad={() => setIsImageLoaded(true)}
           />
         </motion.div>
 
@@ -58,7 +80,7 @@ const PropertyCard = ({ id, image, title, price }: PropertyCardProps) => {
           <Button
             className="-mt-20 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
             onClick={handleViewProperty}
-            aria-label={`View property ${title}`}
+            aria-label={`View property in ${location}`}
           >
             View Property
           </Button>
@@ -66,10 +88,15 @@ const PropertyCard = ({ id, image, title, price }: PropertyCardProps) => {
 
         <CardContent className="p-4 text-center">
           <h3 className="font-bold text-black dark:text-white text-lg mb-2">
-            {title}
+            {category?.toLocaleUpperCase() || "No Category"}
           </h3>
-          <p className="text-green-500 text-xl font-bold">
-            ${price.toLocaleString()}
+          <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
+            {location || "Location not available"}
+          </p>
+          <p
+            className={`text-lg font-bold ${status === "sold" ? "text-red-500" : "text-green-500"}`}
+          >
+            {status === "sold" ? "Sold" : "Available"}
           </p>
         </CardContent>
       </Card>

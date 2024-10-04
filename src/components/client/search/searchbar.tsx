@@ -13,7 +13,7 @@ import { useRouter } from "next-nprogress-bar"
 import { useState, useCallback } from "react"
 
 // types
-import type { Filter, PropertyType } from "@/lib/types"
+import type { Filter, Property } from "@/lib/types"
 import type { Variants } from "framer-motion"
 
 export const fadeInUp: Variants = {
@@ -32,10 +32,14 @@ const SearchBar = ({
   initialQuery,
   filters,
   setFilters,
+  onFilterChange,
+  onClearFilters,
 }: {
   initialQuery: string
   filters: Filter
   setFilters: React.Dispatch<React.SetStateAction<Filter>>
+  onFilterChange: (filterType: keyof Filter, value: any) => void
+  onClearFilters: () => void
 }) => {
   const [query, setQuery] = useState(initialQuery)
   const router = useRouter()
@@ -44,6 +48,8 @@ const SearchBar = ({
     e.preventDefault()
     if (query.trim()) {
       router.push(`/search?query=${encodeURIComponent(query)}`)
+    } else {
+      router.push("/search")
     }
   }
 
@@ -54,16 +60,25 @@ const SearchBar = ({
   }
 
   const toggleFilter = useCallback(
-    (type: PropertyType) => {
-      setFilters((prev) => ({
-        ...prev,
-        types: prev.types.includes(type)
-          ? prev.types.filter((t) => t !== type)
-          : [...prev.types, type],
-      }))
+    (category: Property) => {
+      setFilters((prev) => {
+        const newCategory =
+          prev.category === category ? "" : (category as string)
+        onFilterChange("category", newCategory)
+        return {
+          ...prev,
+          category: newCategory,
+        }
+      })
     },
-    [setFilters],
+    [setFilters, onFilterChange],
   )
+
+  const handleClearFilters = () => {
+    onClearFilters()
+    router.push("/search")
+    router.refresh()
+  }
 
   return (
     <motion.div
@@ -113,36 +128,41 @@ const SearchBar = ({
       </form>
 
       <div className="flex flex-wrap gap-2 mb-4">
-        {(["House", "Apartment", "Land", "Commercial"] as PropertyType[]).map(
-          (type) => (
-            <motion.div
-              key={type}
-              variants={buttonVariants}
-              whileHover="hover"
-              whileTap="tap"
+        {["House", "Apartment", "Land", "Commercial"].map((category) => (
+          <motion.div
+            key={category}
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
+          >
+            <Button
+              onClick={() => toggleFilter(category as Property)}
+              className={`px-3 py-1 rounded-lg text-sm ${
+                filters.category === category
+                  ? "bg-green-500 text-white dark:hover:bg-green-400"
+                  : "bg-gray-200 text-black dark:text-black hover:bg-gray-300 hover:dark:text-black"
+              }`}
             >
-              <Button
-                onClick={() => toggleFilter(type)}
-                className={`px-3 py-1 rounded-lg text-sm ${
-                  filters.types.includes(type)
-                    ? "bg-green-500 text-white dark:hover:bg-green-400"
-                    : "bg-gray-200 text-black dark:text-black hover:bg-gray-300 hover:dark:text-black"
-                }`}
-              >
-                {type === "House" && <Home size={14} className="mr-1" />}
-                {type === "Apartment" && (
-                  <Building size={14} className="mr-1" />
-                )}
-                {type === "Land" && <MapPin size={14} className="mr-1" />}
-                {type === "Commercial" && (
-                  <Briefcase size={14} className="mr-1" />
-                )}
-                {type}
-              </Button>
-            </motion.div>
-          ),
-        )}
+              {category === "House" && <Home size={14} className="mr-1" />}
+              {category === "Apartment" && (
+                <Building size={14} className="mr-1" />
+              )}
+              {category === "Land" && <MapPin size={14} className="mr-1" />}
+              {category === "Commercial" && (
+                <Briefcase size={14} className="mr-1" />
+              )}
+              {category}
+            </Button>
+          </motion.div>
+        ))}
       </div>
+
+      <Button
+        onClick={handleClearFilters}
+        className="bg-red-500 hover:bg-red-600 text-white"
+      >
+        Clear Filters
+      </Button>
     </motion.div>
   )
 }
