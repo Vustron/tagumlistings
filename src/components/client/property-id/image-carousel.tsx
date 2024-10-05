@@ -1,3 +1,5 @@
+"use client"
+
 // components
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -17,6 +19,7 @@ interface CarouselProps {
 const ImageCarousel = ({ images }: CarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [direction, setDirection] = useState(0)
+  const [isImageLoaded, setIsImageLoaded] = useState(false)
 
   const validImages = useMemo(
     () => images?.filter((img): img is { url: string } => !!img.url) ?? [],
@@ -26,6 +29,7 @@ const ImageCarousel = ({ images }: CarouselProps) => {
   const handleNext = useCallback(() => {
     setDirection(1)
     setCurrentIndex((prevIndex) => (prevIndex + 1) % validImages.length)
+    setIsImageLoaded(false)
   }, [validImages.length])
 
   const handlePrevious = useCallback(() => {
@@ -33,6 +37,7 @@ const ImageCarousel = ({ images }: CarouselProps) => {
     setCurrentIndex(
       (prevIndex) => (prevIndex - 1 + validImages.length) % validImages.length,
     )
+    setIsImageLoaded(false)
   }, [validImages.length])
 
   useEffect(() => {
@@ -105,6 +110,11 @@ const ImageCarousel = ({ images }: CarouselProps) => {
             }}
             className="absolute inset-0"
           >
+            {!isImageLoaded && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+                <span>Loading...</span>
+              </div>
+            )}
             <Image
               src={validImages[currentIndex]!.url}
               alt={`Property image ${currentIndex + 1}`}
@@ -113,6 +123,8 @@ const ImageCarousel = ({ images }: CarouselProps) => {
               quality={100}
               sizes="100vw"
               priority={currentIndex === 0}
+              onLoad={() => setIsImageLoaded(true)}
+              className={`object-cover ${isImageLoaded ? "opacity-100" : "opacity-0"}`}
             />
           </motion.div>
         </AnimatePresence>
@@ -176,6 +188,7 @@ const ImageCarousel = ({ images }: CarouselProps) => {
               onClick={() => {
                 setDirection(index > currentIndex ? 1 : -1)
                 setCurrentIndex(index)
+                setIsImageLoaded(false)
               }}
               aria-label={`Go to image ${index + 1}`}
             >
@@ -187,6 +200,7 @@ const ImageCarousel = ({ images }: CarouselProps) => {
                 quality={100}
                 loading={index === currentIndex ? "eager" : "lazy"}
                 className="object-cover transition-all duration-200 hover:opacity-80"
+                onLoad={() => setIsImageLoaded(true)}
               />
             </Button>
           </motion.div>

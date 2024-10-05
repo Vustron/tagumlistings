@@ -13,11 +13,7 @@ import { Heading } from "@/components/ui/heading"
 import type { Row } from "@tanstack/react-table"
 import type { Property } from "@/lib/types"
 
-interface PropertiesClientProps {
-  data: Property[]
-}
-
-const ReservedPropertiesClient = ({ data }: PropertiesClientProps) => {
+const ReservedPropertiesClient = () => {
   // init delete handler
   const handleDelete = async (rows: Row<Property>[]) => {
     // const ids = rows.map((r) => r.original.id)
@@ -33,7 +29,7 @@ const ReservedPropertiesClient = ({ data }: PropertiesClientProps) => {
     <>
       <div className="flex items-start justify-between">
         <Heading
-          title={`Reserved Properties (${data.length})`}
+          title={"Reserved Properties (0)"}
           description="Manage reserved properties"
         />
       </div>
@@ -42,7 +38,7 @@ const ReservedPropertiesClient = ({ data }: PropertiesClientProps) => {
         placeholder="Search..."
         columns={columns}
         isOnProperties
-        data={data || []}
+        data={[]}
         onDelete={handleDelete}
       />
     </>

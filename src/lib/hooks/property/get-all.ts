@@ -15,7 +15,7 @@ export const useGetProperties = (
   query?: string,
 ) => {
   return useSuspenseQuery<Properties, Error>({
-    queryKey: ["properties", page, limit, query],
+    queryKey: ["properties"],
     queryFn: () => getProperties(page, limit, query),
   })
 }

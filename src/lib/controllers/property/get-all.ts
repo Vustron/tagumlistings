@@ -1,16 +1,9 @@
-// utils
 import { getDocs, collection, query, where, orderBy } from "firebase/firestore"
 import { convertTimestampToDateString } from "@/lib/utils"
 import { handleErrorResponse } from "@/lib/helpers"
 import { NextResponse } from "next/server"
-
-// configs
 import { firestore } from "@/lib/config/firebase"
-
-// actions
 import { getSession } from "@/lib/actions/session/get"
-
-// types
 import type { NextRequest } from "next/server"
 
 export async function getPropertiesController(request: NextRequest) {
@@ -24,8 +17,8 @@ export async function getPropertiesController(request: NextRequest) {
     const { searchParams } = new URL(request.url)
 
     // Extract query parameters
-    const page = Number(searchParams.get("page")) || 1
-    const limit = Number(searchParams.get("limit")) || 9
+    const page = searchParams.get("page")
+    const limit = searchParams.get("limit")
     const locationQuery = searchParams.get("query")
 
     const propertiesCollection = collection(firestore, "properties")
@@ -42,13 +35,34 @@ export async function getPropertiesController(request: NextRequest) {
       )
     }
 
-    // Fetch all properties to get total count
+    // Fetch all properties
     const propertiesSnapshot = await getDocs(propertiesQuery)
     const totalCount = propertiesSnapshot.docs.length
 
+    // If no pagination or query parameters, return all properties
+    if (!page && !limit && !locationQuery) {
+      const properties = propertiesSnapshot.docs.map((doc) => {
+        const data = doc.data() as { [key: string]: any }
+        return {
+          id: doc.id,
+          ...(typeof data === "object" && data !== null ? data : {}),
+          created_at: data.created_at
+            ? convertTimestampToDateString(data.created_at)
+            : null,
+          updated_at: data.updated_at
+            ? convertTimestampToDateString(data.updated_at)
+            : null,
+        }
+      })
+
+      return NextResponse.json({ properties }, { status: 200 })
+    }
+
     // Calculate pagination
-    const startIndex = (page - 1) * limit
-    const endIndex = startIndex + limit
+    const pageNumber = Number(page) || 1
+    const limitNumber = Number(limit) || 9
+    const startIndex = (pageNumber - 1) * limitNumber
+    const endIndex = startIndex + limitNumber
 
     // Map and paginate properties
     const properties = propertiesSnapshot.docs
@@ -73,9 +87,9 @@ export async function getPropertiesController(request: NextRequest) {
         properties,
         pagination: {
           total: totalCount,
-          page,
-          limit,
-          totalPages: Math.ceil(totalCount / limit),
+          page: pageNumber,
+          limit: limitNumber,
+          totalPages: Math.ceil(totalCount / limitNumber),
         },
       },
       { status: 200 },

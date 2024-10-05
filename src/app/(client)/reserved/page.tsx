@@ -3,7 +3,6 @@ import ReservedPropertiesClient from "@/components/client/reserved/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // utils
-import { properties } from "@/components/client/data/properties"
 
 // types
 import type { Metadata } from "next"
@@ -18,7 +17,7 @@ export default function ReservedPropertiesPage() {
     <div className="container p-5">
       <BounceWrapper>
         {/* client */}
-        <ReservedPropertiesClient data={properties} />
+        <ReservedPropertiesClient />
       </BounceWrapper>
     </div>
   )
