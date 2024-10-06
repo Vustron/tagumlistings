@@ -20,7 +20,7 @@ const AppointmentClient = ({ id }: { id: string }) => {
   const appointmentDates = appointmentsDatesData?.dates ?? []
 
   return (
-    <>
+    <FallbackBoundary>
       <div className="flex items-start justify-between">
         <Heading
           title="Appointment"
@@ -30,15 +30,13 @@ const AppointmentClient = ({ id }: { id: string }) => {
       <Separator className="mt-2" />
 
       <div className="container flex flex-col justify-center items-center lg:w-[400px] sm:w-[300px] h-auto p-5 mt-5">
-        <FallbackBoundary>
-          <UpdateAppointmentForm
-            accounts={accounts}
-            appointment={appointmentData}
-            appointmentDates={appointmentDates}
-          />
-        </FallbackBoundary>
+        <UpdateAppointmentForm
+          accounts={accounts}
+          appointment={appointmentData}
+          appointmentDates={appointmentDates}
+        />
       </div>
-    </>
+    </FallbackBoundary>
   )
 }
 

@@ -13,18 +13,16 @@ const PropertyClient = ({ id }: { id?: string }) => {
   const { data } = useGetProperty(id!)
 
   return (
-    <>
+    <FallbackBoundary>
       <div className="flex items-start justify-between">
         <Heading title="Property" description="Manage property information" />
       </div>
       <Separator className="mt-2" />
 
       <div className="container flex flex-col justify-center items-center lg:w-[400px] sm:w-[300px] h-auto p-5 mt-5">
-        <FallbackBoundary>
-          <UpdatePropertyForm data={data} />
-        </FallbackBoundary>
+        <UpdatePropertyForm data={data} />
       </div>
-    </>
+    </FallbackBoundary>
   )
 }
 

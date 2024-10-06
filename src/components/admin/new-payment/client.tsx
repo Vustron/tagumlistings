@@ -21,22 +21,20 @@ const AddPaymentClient = () => {
   const properties = propertiesData?.properties ?? []
 
   return (
-    <>
+    <FallbackBoundary>
       <div className="flex items-start justify-between">
         <Heading title="Add Payment" description="Add new payment" />
       </div>
       <Separator className="mt-2" />
 
       <div className="container flex flex-col justify-center items-center lg:w-[400px] sm:w-[300px] h-auto p-5 mt-5">
-        <FallbackBoundary>
-          <NewPaymentForm
-            accounts={accounts}
-            appointments={appointments}
-            properties={properties}
-          />
-        </FallbackBoundary>
+        <NewPaymentForm
+          accounts={accounts}
+          appointments={appointments}
+          properties={properties}
+        />
       </div>
-    </>
+    </FallbackBoundary>
   )
 }
 

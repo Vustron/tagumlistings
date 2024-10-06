@@ -1,7 +1,7 @@
 // components
 import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
-import ContentLayout from "@/components/layouts/admin/content-layout"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
+import ContentLayout from "@/components/layouts/admin/content-layout"
 import AccountClient from "@/components/admin/account/client"
 import BounceWrapper from "@/components/shared/bounce"
 

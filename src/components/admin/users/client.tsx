@@ -47,25 +47,23 @@ const UsersClient = () => {
   const accountsData = data?.accounts ?? []
 
   return (
-    <>
+    <FallbackBoundary>
       <div className="flex items-start justify-between">
         <Heading title={`Users (${accountCount})`} description="Manage users" />
       </div>
       <Separator className="mt-2" />
 
       <div ref={topRef}>
-        <FallbackBoundary>
-          <DataTable
-            placeholder="Search.."
-            columns={columns}
-            isOnUsers
-            data={accountsData}
-            onDelete={handleDelete}
-          />
-        </FallbackBoundary>
+        <DataTable
+          placeholder="Search.."
+          columns={columns}
+          isOnUsers
+          data={accountsData}
+          onDelete={handleDelete}
+        />
       </div>
       <div ref={bottomRef} />
-    </>
+    </FallbackBoundary>
   )
 }
 

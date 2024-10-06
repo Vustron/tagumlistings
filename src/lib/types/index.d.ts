@@ -241,3 +241,22 @@ export interface ErrorDetail {
   message: string
   digest?: string
 }
+
+/* QueryKeys Type */
+export type QueryKeys = {
+  account: (id: string) => ["account", string]
+  accounts: () => ["accounts"]
+  properties: () => ["properties"]
+  property: (id: string) => ["property", string]
+  appointments: () => ["appointments"]
+  appointmentDates: () => ["appointment-dates"]
+  appointment: (id: string) => ["appointment", string]
+  payments: () => ["payments"]
+  payment: (id: string) => ["payment", string]
+}
+
+/* RouteConfig Type */
+export type RouteConfig = {
+  pathname: string
+  prefetchFns: Array<() => Promise<unknown>>
+}

@@ -22,9 +22,9 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react"
-import CreateUserModal from "@/components/admin/users/create-user"
 import { FloatingLabelInput } from "@/components/ui/floating-label-input"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import CreateUserModal from "@/components/admin/users/create-user"
 import { Button } from "@/components/ui/button"
 
 // hooks
@@ -95,6 +95,12 @@ export default function DataTable<TData, TValue>({
   const table = useReactTable({
     data: filteredData,
     columns,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     onRowSelectionChange: setRowSelection,
@@ -103,12 +109,6 @@ export default function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
   })
 
   return (
@@ -299,7 +299,7 @@ export default function DataTable<TData, TValue>({
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            <ChevronLeft className="size-6 " />
+            <ChevronLeft className="size-6" />
           </Button>
 
           <Button

@@ -46,7 +46,7 @@ const PaymentsClient = () => {
   const payments = paymentsData?.payments ?? []
 
   return (
-    <>
+    <FallbackBoundary>
       <div className="flex items-start justify-between">
         <Heading
           title={`Payments (${paymentsCount})`}
@@ -55,18 +55,16 @@ const PaymentsClient = () => {
       </div>
       <Separator className="mt-2" />
       <div ref={topRef}>
-        <FallbackBoundary>
-          <DataTable
-            placeholder="Search.."
-            columns={columns}
-            data={payments || []}
-            isOnPayments
-            onDelete={handleDelete}
-          />
-        </FallbackBoundary>
+        <DataTable
+          placeholder="Search.."
+          columns={columns}
+          data={payments || []}
+          isOnPayments
+          onDelete={handleDelete}
+        />
       </div>
       <div ref={bottomRef} />
-    </>
+    </FallbackBoundary>
   )
 }
 

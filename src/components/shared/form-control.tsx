@@ -124,6 +124,7 @@ const FormControlRenderer = <TFieldValues extends FieldValues>({
       )
 
     case "text":
+    case "color":
     case "password":
     case "email":
     case "number":

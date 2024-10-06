@@ -42,12 +42,13 @@ export const filterAppointmentsForCurrentMonth = (appointments: any[]) => {
   })
 }
 
+// deep search table
 export const deepSearch = (obj: any, searchTerm: string): boolean => {
   if (!obj || typeof obj !== "object") return false
 
   return Object.values(obj).some((value) => {
     if (typeof value === "object") {
-      return deepSearch(value, searchTerm) // Recursively search nested objects
+      return deepSearch(value, searchTerm)
     }
     if (typeof value === "string" || typeof value === "number") {
       return value.toString().toLowerCase().includes(searchTerm.toLowerCase())
@@ -56,6 +57,7 @@ export const deepSearch = (obj: any, searchTerm: string): boolean => {
   })
 }
 
+// convert timestamp to date string
 export function convertTimestampToDateString(timestamp: {
   seconds: number
   nanoseconds: number
@@ -66,6 +68,7 @@ export function convertTimestampToDateString(timestamp: {
   return format(date, "yyyy-MM-dd'T'HH:mm:ssXXX")
 }
 
+// is valid session data
 export const isValidSessionData = (user: any): user is SessionData => {
   return (
     typeof user.id === "string" &&
@@ -77,6 +80,7 @@ export const isValidSessionData = (user: any): user is SessionData => {
   )
 }
 
+// get initials
 export const getInitials = (name: string) => {
   if (!name) return ""
   const [firstName, lastName] = name.split(" ")
@@ -85,7 +89,7 @@ export const getInitials = (name: string) => {
   return `${firstLetter}${lastLetter}`.toUpperCase()
 }
 
-// Helper function to format date
+// helper function to format date
 export const formatDate = (date: Date | string): string => {
   if (typeof date === "string") {
     const parsedDate = parseISO(date)
@@ -104,7 +108,7 @@ export const getPercentageChangeColor = (percentageChange: string) => {
     : "text-red-600 dark:text-red-400"
 }
 
-// Helper function to determine badge color based on role
+// helper function to determine badge color based on role
 export const getRoleBadgeColor = (role: string) => {
   if (typeof role !== "string") {
     return "bg-gray-100 text-gray-800"
@@ -126,7 +130,7 @@ export const getRoleBadgeColor = (role: string) => {
   }
 }
 
-// Unique Id generator
+// unique Id generator
 export function createUniqueId(
   length: number = 21,
   alphabet: string = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_",
@@ -138,7 +142,7 @@ export function createUniqueId(
   return result
 }
 
-// Construct query string utility
+// construct query string utility
 export function buildQueryString(
   params?: Record<string, string | number | boolean | undefined>,
 ): string {

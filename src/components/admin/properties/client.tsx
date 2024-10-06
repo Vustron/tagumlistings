@@ -46,7 +46,7 @@ const PropertiesClient = () => {
   const propertiesData = data?.properties ?? []
 
   return (
-    <>
+    <FallbackBoundary>
       <div className="flex items-start justify-between">
         <Heading
           title={`Properties (${propertyCount})`}
@@ -56,18 +56,16 @@ const PropertiesClient = () => {
       <Separator className="mt-2" />
 
       <div ref={topRef}>
-        <FallbackBoundary>
-          <DataTable
-            placeholder="Search.."
-            columns={columns}
-            isOnProperties
-            data={propertiesData}
-            onDelete={handleDelete}
-          />
-        </FallbackBoundary>
+        <DataTable
+          placeholder="Search.."
+          columns={columns}
+          isOnProperties
+          data={propertiesData}
+          onDelete={handleDelete}
+        />
       </div>
       <div ref={bottomRef} />
-    </>
+    </FallbackBoundary>
   )
 }
 

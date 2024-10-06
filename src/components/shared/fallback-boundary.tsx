@@ -1,11 +1,13 @@
 // components
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Loader2, ServerCrash } from "lucide-react"
 
 // utils
+import { QueryErrorResetBoundary } from "@tanstack/react-query"
 import { ErrorBoundary } from "react-error-boundary"
 import { Suspense } from "react"
 
-const LoadingFallback = () => {
+export const LoadingFallback = () => {
   return (
     <div className="flex flex-col items-center justify-center h-[500px]">
       <Loader2 className="size-20 animate-spin" />
@@ -13,23 +15,58 @@ const LoadingFallback = () => {
   )
 }
 
-const ErrorFallback = ({ error }: { error: Error }) => {
+export const ErrorFallback = ({
+  error,
+  resetErrorBoundary,
+}: {
+  error: Error
+  resetErrorBoundary: () => void
+}) => {
   return (
     <div className="flex flex-col items-center justify-center">
-      <ServerCrash className="size-7 text-zinc-500 my-4" />
-      <p className="text-xs text-zinc-500 dark:text-zinc-400">
-        Something went wrong:{"\n"}
-        <span className="text-red-600">{error.message}</span>
-      </p>
+      <Alert variant="destructive">
+        <ServerCrash className="size-7 text-zinc-500 my-4" />
+        <AlertTitle>Something went wrong!</AlertTitle>
+        <AlertDescription>
+          <span className="text-red-600">{error.message}</span>
+          <button
+            type="button"
+            onClick={resetErrorBoundary}
+            className="ml-2 underline hover:no-underline"
+          >
+            Try again
+          </button>
+        </AlertDescription>
+      </Alert>
     </div>
   )
 }
 
-const FallbackBoundary = ({ children }: { children: React.ReactNode }) => {
+const FallbackBoundary = ({
+  children,
+  accountId,
+  appointmentId,
+  paymentId,
+  propertyId,
+}: {
+  children: React.ReactNode
+  accountId?: string
+  appointmentId?: string
+  paymentId?: string
+  propertyId?: string
+}) => {
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <Suspense fallback={<LoadingFallback />}>{children}</Suspense>
-    </ErrorBoundary>
+    <QueryErrorResetBoundary>
+      {({ reset }) => (
+        <ErrorBoundary
+          onReset={reset}
+          FallbackComponent={ErrorFallback}
+          resetKeys={[accountId, appointmentId, paymentId, propertyId]}
+        >
+          <Suspense fallback={<LoadingFallback />}>{children}</Suspense>
+        </ErrorBoundary>
+      )}
+    </QueryErrorResetBoundary>
   )
 }
 

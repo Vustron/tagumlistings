@@ -112,14 +112,14 @@ const ImageCarousel = ({ images }: CarouselProps) => {
           >
             {!isImageLoaded && (
               <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-                <span>Loading...</span>
+                Loading...
               </div>
             )}
             <Image
               src={validImages[currentIndex]!.url}
               alt={`Property image ${currentIndex + 1}`}
-              layout="fill"
-              objectFit="cover"
+              fill
+              style={{ objectFit: "cover" }}
               quality={100}
               sizes="100vw"
               priority={currentIndex === 0}
@@ -200,6 +200,7 @@ const ImageCarousel = ({ images }: CarouselProps) => {
                 quality={100}
                 loading={index === currentIndex ? "eager" : "lazy"}
                 className="object-cover transition-all duration-200 hover:opacity-80"
+                style={{ width: "auto", height: "auto" }}
                 onLoad={() => setIsImageLoaded(true)}
               />
             </Button>

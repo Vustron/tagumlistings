@@ -97,37 +97,37 @@ const SearchClient = () => {
   )
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="flex flex-col items-center justify-center w-full max-w-6xl mx-auto px-4"
-    >
-      <motion.h1
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="text-4xl font-bold mb-8 mt-8 text-center"
-      >
-        Find Your Dream Property
-      </motion.h1>
-
-      <SearchBar
-        initialQuery={query}
-        filters={filters as Filter}
-        setFilters={setFilters}
-        onFilterChange={handleFilterChange}
-        onClearFilters={clearFilters}
-      />
-
+    <FallbackBoundary>
       <motion.div
-        initial="initial"
-        animate="animate"
-        variants={fadeInUp}
-        className="w-full"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col items-center justify-center w-full max-w-6xl mx-auto px-4"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <FallbackBoundary>
+        <motion.h1
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="text-4xl font-bold mb-8 mt-8 text-center"
+        >
+          Find Your Dream Property
+        </motion.h1>
+
+        <SearchBar
+          initialQuery={query}
+          filters={filters as Filter}
+          setFilters={setFilters}
+          onFilterChange={handleFilterChange}
+          onClearFilters={clearFilters}
+        />
+
+        <motion.div
+          initial="initial"
+          animate="animate"
+          variants={fadeInUp}
+          className="w-full"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence>
               {paginatedProperties.length > 0 ? (
                 paginatedProperties.map((property: Property, index: number) => (
@@ -152,25 +152,25 @@ const SearchClient = () => {
                 </motion.div>
               )}
             </AnimatePresence>
-          </FallbackBoundary>
-        </div>
+          </div>
 
-        {totalPages > 1 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="mt-12 mb-8"
-          >
-            <PaginationWithLinks
-              totalCount={totalCount}
-              pageSize={itemsPerPage}
-              page={currentPage}
-            />
-          </motion.div>
-        )}
+          {totalPages > 1 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="mt-12 mb-8"
+            >
+              <PaginationWithLinks
+                totalCount={totalCount}
+                pageSize={itemsPerPage}
+                page={currentPage}
+              />
+            </motion.div>
+          )}
+        </motion.div>
       </motion.div>
-    </motion.div>
+    </FallbackBoundary>
   )
 }
 

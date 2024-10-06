@@ -5,10 +5,23 @@ import { NextResponse } from "next/server"
 import { getClientIp } from "request-ip"
 import { routes } from "@/lib/routes"
 
+// actions
+import { preFetchAppointmentDates } from "@/lib/actions/appointment/get-dates"
+import { preFetchAppointments } from "@/lib/actions/appointment/get-all"
+import { preFetchProperties } from "@/lib/actions/property/get-all"
+import { preFetchAppointment } from "@/lib/actions/appointment/get"
+import { preFetchPayments } from "@/lib/actions/payment/get-all"
+import { preFetchProperty } from "@/lib/actions/property/get"
+import { preFetchAccounts } from "@/lib/actions/auth/get-all"
+import { preFetchPayment } from "@/lib/actions/payment/get"
+import { preFetchAccount } from "@/lib/actions/auth/get"
+
 // types
 import type {
   CompatibleRequest,
   ErrorResponseData,
+  QueryKeys,
+  RouteConfig,
   UserData,
 } from "@/lib/types"
 import type { NextRequest } from "next/server"
@@ -109,4 +122,166 @@ export async function findAccountByParams<T extends keyof UserData>(
   // Return the existing user data
   const existingAccount = accounts[accountIndex]
   return { account: existingAccount }
+}
+
+// query keys
+const queryKeys: QueryKeys = {
+  account: (id) => ["account", id],
+  accounts: () => ["accounts"],
+  properties: () => ["properties"],
+  property: (id) => ["property", id],
+  appointments: () => ["appointments"],
+  appointmentDates: () => ["appointment-dates"],
+  appointment: (id) => ["appointment", id],
+  payments: () => ["payments"],
+  payment: (id) => ["payment", id],
+}
+
+// determine the pathname for query key
+export const determinePrefetchQueryKey = (
+  fetchFn: () => Promise<unknown>,
+  {
+    accountId,
+    appointmentId,
+    paymentId,
+    propertyId,
+  }: {
+    accountId?: string
+    appointmentId?: string
+    paymentId?: string
+    propertyId?: string
+  },
+): unknown[] => {
+  const fnString = fetchFn.toString()
+
+  const matches = fnString.match(/preFetch(\w+)/)
+  if (!matches) return ["unknown"]
+
+  const functionName = matches[1]!.toLowerCase()
+
+  switch (functionName) {
+    case "account":
+      return accountId ? queryKeys.account(accountId) : ["unknown"]
+
+    case "accounts":
+      return queryKeys.accounts()
+
+    case "property":
+      return propertyId ? queryKeys.property(propertyId) : ["unknown"]
+
+    case "properties":
+      return queryKeys.properties()
+
+    case "appointment":
+      return appointmentId ? queryKeys.appointment(appointmentId) : ["unknown"]
+
+    case "appointments":
+      return queryKeys.appointments()
+
+    case "appointmentdates":
+      return queryKeys.appointmentDates()
+
+    case "payment":
+      return paymentId ? queryKeys.payment(paymentId) : ["unknown"]
+
+    case "payments":
+      return queryKeys.payments()
+
+    default:
+      return ["unknown"]
+  }
+}
+
+// hydration route configs
+export const createRouteConfigs = (props: {
+  accountId?: string
+  appointmentId?: string
+  paymentId?: string
+  propertyId?: string
+}): RouteConfig[] => {
+  const { accountId, appointmentId, paymentId, propertyId } = props
+
+  return [
+    {
+      pathname: "/admin",
+      prefetchFns: [() => preFetchProperties(), () => preFetchAppointments()],
+    },
+    {
+      pathname: "/admin/account",
+      prefetchFns: [() => preFetchAccounts()],
+    },
+    {
+      pathname: "/admin/users",
+      prefetchFns: [() => preFetchAccounts()],
+    },
+    {
+      pathname: `/admin/users/${accountId}`,
+      prefetchFns: accountId ? [() => preFetchAccount(accountId)] : [],
+    },
+    {
+      pathname: "/admin/appointments",
+      prefetchFns: [
+        () => preFetchAppointments(),
+        () => preFetchAppointmentDates(),
+        () => preFetchAccounts(),
+      ],
+    },
+    {
+      pathname: `/admin/appointments/${appointmentId}`,
+      prefetchFns: appointmentId
+        ? [
+            () => preFetchAppointment(appointmentId),
+            () => preFetchAppointmentDates(),
+            () => preFetchAccounts(),
+          ]
+        : [],
+    },
+    {
+      pathname: "/admin/payments",
+      prefetchFns: [() => preFetchPayments(), () => preFetchAccounts()],
+    },
+    {
+      pathname: `/admin/payments/${paymentId}`,
+      prefetchFns: paymentId
+        ? [
+            () => preFetchPayment(paymentId),
+            () => preFetchAccounts(),
+            () => preFetchProperties(),
+            () => preFetchAppointments(),
+          ]
+        : [],
+    },
+    {
+      pathname: "/admin/payments/new",
+      prefetchFns: [
+        () => preFetchAccounts(),
+        () => preFetchProperties(),
+        () => preFetchAppointments(),
+      ],
+    },
+    {
+      pathname: "/admin/properties",
+      prefetchFns: [() => preFetchProperties()],
+    },
+    {
+      pathname: `/admin/properties/${propertyId}`,
+      prefetchFns: propertyId ? [() => preFetchProperty(propertyId)] : [],
+    },
+    {
+      pathname: "/admin/properties/new",
+      prefetchFns: [],
+    },
+    {
+      pathname: "/properties",
+      prefetchFns: [() => preFetchProperties()],
+    },
+    {
+      pathname: `/properties/${propertyId}`,
+      prefetchFns: propertyId ? [() => preFetchProperty(propertyId)] : [],
+    },
+    {
+      pathname: "/search",
+      prefetchFns: [() => preFetchProperties()],
+    },
+  ]
 }

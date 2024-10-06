@@ -2,13 +2,16 @@
 
 // utils
 import {
+  isServer,
   QueryClient,
   QueryClientProvider,
   defaultShouldDehydrateQuery,
-  isServer,
 } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
-import React, { useState, useEffect } from "react"
+import React from "react"
+
+// hooks
+import { useState, useEffect } from "react"
 
 // init query dev tools
 const ReactQueryDevtoolsProduction = React.lazy(() =>

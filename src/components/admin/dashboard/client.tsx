@@ -133,8 +133,8 @@ const AdminDashboardClient = () => {
   ]
 
   return (
-    <div className="p-5">
-      <FallbackBoundary>
+    <FallbackBoundary>
+      <div className="p-5">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <DashboardCard items={dashboardItems} />
         </div>
@@ -158,8 +158,8 @@ const AdminDashboardClient = () => {
             </CardContent>
           </Card>
         </div>
-      </FallbackBoundary>
-    </div>
+      </div>
+    </FallbackBoundary>
   )
 }
 

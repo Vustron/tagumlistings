@@ -47,7 +47,6 @@ const UpdatePaymentForm = ({
 
   // submit handler
   const submitHandler = async (values: UpdatePaymentValues) => {
-    console.log(values)
     await toast.promise(updatePayment.mutateAsync(values), {
       loading: <span className="animate-pulse">Updating payment...</span>,
       success: "Payment updated",

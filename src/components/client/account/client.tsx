@@ -25,21 +25,21 @@ const AccountClient = ({ id }: { id?: string }) => {
       : undefined
 
   return (
-    <div className="container p-5">
-      <div className="flex items-start justify-between">
-        <Heading
-          title="Current Account"
-          description="Manage your account information"
-        />
-      </div>
-      <Separator className="mt-2" />
+    <FallbackBoundary>
+      <div className="container p-5">
+        <div className="flex items-start justify-between">
+          <Heading
+            title="Current Account"
+            description="Manage your account information"
+          />
+        </div>
+        <Separator className="mt-2" />
 
-      <div className="container flex flex-col justify-center items-center lg:w-[400px] sm:w-[300px] h-auto p-5 mt-5">
-        <FallbackBoundary>
+        <div className="container flex flex-col justify-center items-center lg:w-[400px] sm:w-[300px] h-auto p-5 mt-5">
           <AccountForm id={id} data={userData!} />
-        </FallbackBoundary>
+        </div>
       </div>
-    </div>
+    </FallbackBoundary>
   )
 }
 
