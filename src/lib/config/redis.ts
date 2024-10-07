@@ -5,8 +5,6 @@ import { Redis } from "ioredis"
 // configs
 // import { env } from "@/lib/config/env.mjs"
 
-// TODO(Vustron): nagbug and env sa url so e direct sa nato nig butang dri
-
 const url =
   "rediss://default:AdkuAAIjcDFhMTE3MTFhZWI0NDk0OWEwODRlNzE4YTQ1NTNiOWUxOHAxMA@feasible-marmoset-55598.upstash.io:6379"
 

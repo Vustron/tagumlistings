@@ -7,7 +7,7 @@ import { getSession } from "@/lib/actions/session/get"
 import redis from "@/lib/config/redis"
 
 // utils
-import { getAccountsFromDB } from "@/lib/helpers"
+import { getAccountsFromDB } from "@/server/helpers"
 import { NextResponse } from "next/server"
 
 // types

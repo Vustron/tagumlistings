@@ -6,7 +6,7 @@ import {
   QueryClient,
   HydrationBoundary,
 } from "@tanstack/react-query"
-import { createRouteConfigs, determinePrefetchQueryKey } from "@/lib/helpers"
+import { createRouteConfigs, determinePrefetchQueryKey } from "@/server/helpers"
 import { headers } from "next/headers"
 
 // types
