@@ -1,1 +1,27 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run bun fmt
 bun fmt
+
+# Get the current version from package.json
+current_version=$(node -p "require('./package.json').version")
+
+# Split the version into major, minor, and patch
+IFS='.' read -r major minor patch <<< "$current_version"
+
+# Increment the patch version
+new_patch=$((patch + 1))
+new_version="$major.$minor.$new_patch"
+
+# Update package.json with the new version
+if [ "$(uname)" = "Darwin" ]; then
+    # macOS
+    sed -i '' "s/\"version\": \"$current_version\"/\"version\": \"$new_version\"/" package.json
+else
+    # Linux
+    sed -i "s/\"version\": \"$current_version\"/\"version\": \"$new_version\"/" package.json
+fi
+
+# Stage the updated package.json
+git add package.json

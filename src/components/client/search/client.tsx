@@ -34,41 +34,69 @@ const SearchClient = () => {
 
   const [filters, setFilters] = useState<Partial<Filter>>(initialFilters)
 
-  // Fetch properties based on query
-  const { data, isLoading } = useGetProperties(currentPage, itemsPerPage, query)
-  const totalCount = data?.pagination?.total || 0
+  // Determine if we should use pagination
+  const shouldPaginate =
+    query || Object.values(filters).some((value) => value !== "")
+
+  // Fetch properties based on whether we need pagination
+  const { data, isLoading } = shouldPaginate
+    ? useGetProperties({
+        page: currentPage,
+        limit: itemsPerPage,
+        query,
+      })
+    : useGetProperties()
+
+  const properties = data?.properties || []
+  const totalCount = data?.pagination?.total || properties.length
   const totalPages = Math.ceil(totalCount / itemsPerPage)
 
-  // Filter properties based on filters
-  const filteredProperties =
-    data?.properties.filter((property: Property) => {
-      const matchesLocation = filters.location
-        ? (property.location ?? "").includes(filters.location)
-        : true
-      const matchesStatus = filters.status
-        ? property.status === filters.status
-        : true
+  // Filter properties based on client-side filters
+  const filteredProperties = properties.filter((property: Property) => {
+    if (!property) return false
 
-      return matchesLocation && matchesStatus
-    }) || []
+    const matchesCategory = filters.category
+      ? property.category === filters.category
+      : true
+    const matchesLocation = filters.location
+      ? (property.location ?? "")
+          .toLowerCase()
+          .includes(filters.location.toLowerCase())
+      : true
+    const matchesStatus = filters.status
+      ? property.status === filters.status
+      : true
 
+    return matchesCategory && matchesLocation && matchesStatus
+  })
+
+  // Update URL params when filters or page changes
   useEffect(() => {
     const params = new URLSearchParams()
 
-    params.set("page", currentPage.toString())
-    if (query) params.set("query", query)
+    if (currentPage > 1) {
+      params.set("page", currentPage.toString())
+    }
 
-    // Only add filter params if they have values
-    if (filters.category) params.set("category", filters.category)
-    if (filters.location) params.set("location", filters.location)
-    if (filters.status) params.set("status", filters.status)
+    if (query) {
+      params.set("query", query)
+    }
 
-    // If there are no filters, just keep the page and query parameters
+    // Add filter params if they have values
+    for (const [key, value] of Object.entries(filters)) {
+      if (value) {
+        params.set(key, value)
+      }
+    }
+
+    // Update URL without reloading the page
     const queryString = params.toString()
-    router.push(queryString ? `?${queryString}` : "")
+    router.push(queryString ? `/search?${queryString}` : "/search", {
+      scroll: false,
+    })
   }, [filters, currentPage, query, router])
 
-  const handleFilterChange = (filterType: keyof Filter, value: any) => {
+  const handleFilterChange = (filterType: keyof Filter, value: string) => {
     setFilters((prev) => ({
       ...prev,
       [filterType]: value,
@@ -81,6 +109,7 @@ const SearchClient = () => {
       location: "",
       status: "",
     })
+    router.push("/search")
   }
 
   if (isLoading) {
@@ -91,10 +120,12 @@ const SearchClient = () => {
     )
   }
 
-  const paginatedProperties = filteredProperties.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  )
+  const displayProperties = shouldPaginate
+    ? filteredProperties
+    : filteredProperties.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage,
+      )
 
   return (
     <FallbackBoundary>
@@ -129,8 +160,8 @@ const SearchClient = () => {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence>
-              {paginatedProperties.length > 0 ? (
-                paginatedProperties.map((property: Property, index: number) => (
+              {displayProperties.length > 0 ? (
+                displayProperties.map((property: Property, index: number) => (
                   <motion.div
                     key={property.id}
                     variants={fadeInUp}

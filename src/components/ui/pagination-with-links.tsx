@@ -2,23 +2,29 @@
 
 import {
   Pagination,
-  PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
+  PaginationContent,
+  PaginationEllipsis,
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import {
   Select,
-  SelectContent,
   SelectItem,
-  SelectTrigger,
   SelectValue,
+  SelectTrigger,
+  SelectContent,
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { type ReactNode, useCallback } from "react"
+
+// hooks
+import { usePathname, useSearchParams } from "next/navigation"
+import { useRouter } from "next-nprogress-bar"
+import { useCallback } from "react"
+
+// types
+import type { ReactNode } from "react"
 
 export interface PaginationWithLinksProps {
   pageSizeSelectOptions?: {

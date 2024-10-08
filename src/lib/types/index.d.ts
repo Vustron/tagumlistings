@@ -73,6 +73,7 @@ interface FieldConfig<TFieldValues> {
   options?: SelectOption[]
   isPhone?: boolean
   multiple?: boolean
+  isOnClient?: boolean
 }
 
 /* Mutation Type */

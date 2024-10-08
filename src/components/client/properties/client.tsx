@@ -20,10 +20,17 @@ const PropertiesClient = () => {
   const currentPage = Number(searchParams.get("page")) || 1
   const itemsPerPage = 9
 
-  // Fetch properties with pagination
-  const { data, isLoading } = useGetProperties(currentPage, itemsPerPage)
-  const totalCount = data?.pagination?.total || 0
-  const currentProperties = data?.properties || []
+  // Fetch all properties
+  const { data, isLoading } = useGetProperties()
+
+  const allProperties = data?.properties || []
+  const totalCount = allProperties.length
+  const totalPages = Math.ceil(totalCount / itemsPerPage)
+
+  // Client-side pagination
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentProperties = allProperties.slice(startIndex, endIndex)
 
   if (isLoading) {
     return (
@@ -33,7 +40,7 @@ const PropertiesClient = () => {
     )
   }
 
-  // Animation variants...
+  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -97,7 +104,7 @@ const PropertiesClient = () => {
           )}
         </AnimatePresence>
       </motion.div>
-      {totalCount > itemsPerPage && (
+      {totalPages > 1 && (
         <motion.div
           className="mt-8"
           initial={{ opacity: 0 }}

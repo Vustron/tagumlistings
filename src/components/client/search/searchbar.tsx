@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 
 // hooks
-import { useRouter } from "next-nprogress-bar"
+import { useRouter } from "next/navigation"
 import { useState, useCallback } from "react"
 
 // types
@@ -46,11 +46,11 @@ const SearchBar = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    const params = new URLSearchParams()
     if (query.trim()) {
-      router.push(`/search?query=${encodeURIComponent(query)}`)
-    } else {
-      router.push("/search")
+      params.set("query", query)
     }
+    router.push(`/search?${params.toString()}`)
   }
 
   const clearQuery = () => {

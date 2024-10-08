@@ -55,7 +55,9 @@ export const registerFields: FieldConfig<RegisterValues>[] = [
 ]
 
 // update account form fields
-export const updateAccountFields: FieldConfig<UpdateAccountValues>[] = [
+export const updateAccountFields = (
+  isOnClient?: boolean,
+): FieldConfig<UpdateAccountValues>[] => [
   {
     name: "name",
     type: "text",
@@ -84,6 +86,7 @@ export const updateAccountFields: FieldConfig<UpdateAccountValues>[] = [
     name: "role",
     type: "switch",
     label: "Role",
+    isOnClient,
   },
   {
     name: "password",

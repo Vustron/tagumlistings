@@ -21,9 +21,10 @@ import type { UserData } from "@/lib/types"
 interface AccountFormProps {
   id?: string | undefined
   data: UserData
+  isOnClient?: boolean
 }
 
-const AccountForm = ({ id, data }: AccountFormProps) => {
+const AccountForm = ({ id, data, isOnClient }: AccountFormProps) => {
   const updateAccountMutation = useUpdateAccount(id)
 
   const form = useForm<UpdateAccountValues>({
@@ -55,7 +56,7 @@ const AccountForm = ({ id, data }: AccountFormProps) => {
       <DynamicForm<UpdateAccountValues>
         form={form}
         onSubmit={onSubmit}
-        fields={updateAccountFields}
+        fields={updateAccountFields(isOnClient)}
         submitButtonTitle="Update"
         submitButtonClassname="bg-green-500 rounded-3xl"
         submitButtonTitleClassname="text-md font-medium"

@@ -16,14 +16,14 @@ import { Switch } from "@/components/ui/switch"
 import { cn } from "@/lib/utils"
 
 // types
-import type { FieldValues } from "react-hook-form"
-import type { FieldConfig } from "@/lib/types"
+import type { FieldValues, UseFormReturn } from "react-hook-form"
+import type { FieldConfig, Mutation } from "@/lib/types"
 
 interface FormControlRendererProps<TFieldValues extends FieldValues> {
   field: FieldConfig<TFieldValues>
   formField: any
-  form: any
-  mutation: any
+  form: UseFormReturn<TFieldValues>
+  mutation?: Mutation
   disabled: boolean
 }
 
@@ -78,6 +78,7 @@ const FormControlRenderer = <TFieldValues extends FieldValues>({
       )
 
     case "switch":
+      if (field.isOnClient) return null
       return (
         <div className="flex items-center space-x-2">
           <Switch
