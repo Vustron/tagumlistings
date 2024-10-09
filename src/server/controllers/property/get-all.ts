@@ -1,9 +1,16 @@
-import { getDocs, collection, query, where, orderBy } from "firebase/firestore"
+// utils
 import { convertTimestampToDateString } from "@/lib/utils"
+import { getDocs, collection } from "firebase/firestore"
 import { handleErrorResponse } from "@/server/helpers"
 import { NextResponse } from "next/server"
+
+// configs
 import { firestore } from "@/lib/config/firebase"
+
+// actions
 import { getSession } from "@/lib/actions/session/get"
+
+// types
 import type { NextRequest } from "next/server"
 
 export async function getPropertiesController(request: NextRequest) {
@@ -19,29 +26,30 @@ export async function getPropertiesController(request: NextRequest) {
     // Extract query parameters
     const page = searchParams.get("page")
     const limit = searchParams.get("limit")
-    const locationQuery = searchParams.get("query")
+    const locationQuery = searchParams.get("query")?.toLowerCase()
 
     const propertiesCollection = collection(firestore, "properties")
 
-    let propertiesQuery: any = propertiesCollection
+    // Fetch all properties first
+    const propertiesSnapshot = await getDocs(propertiesCollection)
 
-    // Handle filtering and ordering based on provided query parameters
+    // Filter properties based on the query
+    let filteredDocs = propertiesSnapshot.docs
     if (locationQuery) {
-      propertiesQuery = query(
-        propertiesCollection,
-        where("location", ">=", locationQuery),
-        where("location", "<=", `${locationQuery}\uf8ff`),
-        orderBy("location"),
-      )
+      filteredDocs = propertiesSnapshot.docs.filter((doc) => {
+        const data = doc.data()
+        const location = data.location?.toLowerCase() || ""
+
+        // Check if the location contains the query string
+        return location.includes(locationQuery)
+      })
     }
 
-    // Fetch all properties
-    const propertiesSnapshot = await getDocs(propertiesQuery)
-    const totalCount = propertiesSnapshot.docs.length
+    const totalCount = filteredDocs.length
 
-    // If no pagination or query parameters, return all properties
-    if (!page && !limit && !locationQuery) {
-      const properties = propertiesSnapshot.docs.map((doc) => {
+    // If no pagination parameters, return all filtered properties
+    if (!page && !limit) {
+      const properties = filteredDocs.map((doc) => {
         const data = doc.data() as { [key: string]: any }
         return {
           id: doc.id,
@@ -65,7 +73,7 @@ export async function getPropertiesController(request: NextRequest) {
     const endIndex = startIndex + limitNumber
 
     // Map and paginate properties
-    const properties = propertiesSnapshot.docs
+    const properties = filteredDocs
       .map((doc) => {
         const data = doc.data() as { [key: string]: any }
         return {

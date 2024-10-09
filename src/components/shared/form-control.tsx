@@ -129,6 +129,7 @@ const FormControlRenderer = <TFieldValues extends FieldValues>({
     case "password":
     case "email":
     case "number":
+    case "date":
       return (
         <FloatingLabelInput
           {...formField}

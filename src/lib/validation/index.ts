@@ -50,6 +50,9 @@ export const addPropertySchema = z.object({
   propertyPics: z
     .array(z.object({ url: z.string().url("Invalid URL") }))
     .optional(),
+  no_of_bedrooms: requiredString,
+  no_of_bathrooms: requiredString,
+  square_meter: requiredString,
 })
 
 /* AddPropertyValues Type */
@@ -71,6 +74,9 @@ export const updatePropertySchema = z.object({
   propertyPics: z
     .array(z.object({ url: z.string().url("Invalid URL") }))
     .optional(),
+  no_of_bedrooms: requiredString.optional(),
+  no_of_bathrooms: requiredString.optional(),
+  square_meter: requiredString.optional(),
 })
 
 /* UpdatePropertyValues Type */

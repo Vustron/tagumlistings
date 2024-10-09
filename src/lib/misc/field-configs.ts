@@ -4,18 +4,18 @@ import type {
   RegisterValues,
   AddPaymentValues,
   AddPropertyValues,
+  NewPasswordValues,
   UpdateAccountValues,
   UpdatePaymentValues,
+  ResetPasswordValues,
   UpdatePropertyValues,
   AddAppointmentValues,
-  ResetPasswordValues,
-  NewPasswordValues,
 } from "@/lib/validation"
 import type {
-  FieldConfig,
   UserData,
   Property,
   Appointment,
+  FieldConfig,
   AppointmentDate,
 } from "@/lib/types"
 
@@ -158,6 +158,24 @@ export const addPropertyFields: FieldConfig<AddPropertyValues>[] = [
       { value: "reserved", label: "Reserved" },
     ],
   },
+  {
+    name: "no_of_bedrooms",
+    type: "number",
+    label: "Number of Bedrooms",
+    placeholder: "1",
+  },
+  {
+    name: "no_of_bathrooms",
+    type: "number",
+    label: "Number of Bathrooms",
+    placeholder: "1",
+  },
+  {
+    name: "square_meter",
+    type: "number",
+    label: "Square Meter",
+    placeholder: "1",
+  },
 ]
 
 // update property form fields
@@ -197,6 +215,24 @@ export const updatePropertyFields: FieldConfig<UpdatePropertyValues>[] = [
       { value: "sold", label: "Sold" },
       { value: "reserved", label: "Reserved" },
     ],
+  },
+  {
+    name: "no_of_bedrooms",
+    type: "number",
+    label: "Number of Bedrooms",
+    placeholder: "1",
+  },
+  {
+    name: "no_of_bathrooms",
+    type: "number",
+    label: "Number of Bathrooms",
+    placeholder: "1",
+  },
+  {
+    name: "square_meter",
+    type: "number",
+    label: "Square Meter",
+    placeholder: "1",
   },
 ]
 

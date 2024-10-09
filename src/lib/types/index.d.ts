@@ -162,6 +162,9 @@ export interface Property {
   user_id?: string
   appointment_id?: string | null
   propertyPics?: { url: string }[]
+  no_of_bedrooms?: string
+  no_of_bathrooms?: string
+  square_meter?: string
   created_at?: string
   updated_at?: string
 }
