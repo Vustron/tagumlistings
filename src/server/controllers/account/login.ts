@@ -63,7 +63,7 @@ export async function loginAccountController(request: NextRequest) {
     if (!account || !isPasswordValid) {
       return NextResponse.json(
         { error: "Invalid email or password" },
-        { status: 401 },
+        { status: 400 },
       )
     }
 
