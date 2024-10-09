@@ -99,6 +99,8 @@ interface DynamicFormProps<TFieldValues extends FieldValues> {
     urlEndpoint: string
     authenticationEndpoint: string
   }
+  isSignIn?: boolean
+  isSignUp?: boolean
 }
 
 /* Unique Id Type */
@@ -260,4 +262,22 @@ export type QueryKeys = {
 export type RouteConfig = {
   pathname: string
   prefetchFns: Array<() => Promise<unknown>>
+}
+
+/* Request Password API Type */
+export interface RequestResetPassword {
+  token: string | null
+  password: string
+}
+
+/* Reset Data Type */
+export interface ResetPasswordData {
+  resetPasswordToken?: string
+  email?: string
+}
+
+/* Request Password API Type */
+export interface RequestResetPassword {
+  token: string | null
+  password: string
 }

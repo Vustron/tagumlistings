@@ -1,6 +1,6 @@
 // utils
-import { createEnv } from "@t3-oss/env-nextjs"
 import { vercel } from "@t3-oss/env-nextjs/presets"
+import { createEnv } from "@t3-oss/env-nextjs"
 import { z } from "zod"
 
 export const env = createEnv({
@@ -15,6 +15,8 @@ export const env = createEnv({
     PRIVATE_KEY: z.string(),
     SECRET_KEY: z.string(),
     REDIS_URL: z.string().url(),
+    EMAIL: z.string().email(),
+    PASS: z.string(),
   },
   // client env
   client: {
@@ -36,6 +38,8 @@ export const env = createEnv({
     PRIVATE_KEY: process.env.PRIVATE_KEY,
     SECRET_KEY: process.env.SECRET_KEY,
     REDIS_URL: process.env.REDIS_URL,
+    EMAIL: process.env.EMAIL,
+    PASS: process.env.PASS,
     // client
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME:

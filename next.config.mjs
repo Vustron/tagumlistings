@@ -1,16 +1,10 @@
 // utils
 import withBundleAnalyzer from "@next/bundle-analyzer"
-import { fileURLToPath } from "node:url"
-import { createJiti } from "jiti"
 
 // configure the bundle analyzer
 const withBundleAnalyzerConfig = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 })
-
-// configure jiti
-const jiti = createJiti(fileURLToPath(import.meta.url))
-jiti("./src/lib/config/env.mjs")
 
 // configure content security policy
 const ContentSecurityPolicy = `

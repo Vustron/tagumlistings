@@ -158,3 +158,18 @@ export const bulkDeletePaymentsSchema = z.object({
 })
 /* BulkDeleteAccountValues Type */
 export type BulkDeletePaymentsValues = z.infer<typeof bulkDeletePaymentsSchema>
+
+// newPasswordSchema
+export const newPasswordSchema = z.object({
+  token: requiredString.nullable(),
+  password: requiredString,
+})
+/* NewPasswordValues Type */
+export type NewPasswordValues = z.infer<typeof newPasswordSchema>
+
+// resetPasswordEmailSchema
+export const resetPasswordEmailSchema = z.object({
+  email: requiredString.email({ message: "Invalid email address" }),
+})
+/* ResetPasswordValues Type */
+export type ResetPasswordValues = z.infer<typeof resetPasswordEmailSchema>

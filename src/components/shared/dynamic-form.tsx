@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils"
 // types
 import type { DynamicFormProps } from "@/lib/types"
 import type { FieldValues } from "react-hook-form"
+import Link from "next/link"
 
 const DynamicForm = <TFieldValues extends FieldValues>({
   form,
@@ -26,6 +27,7 @@ const DynamicForm = <TFieldValues extends FieldValues>({
   disabled,
   submitButtonClassname,
   submitButtonTitleClassname,
+  isSignIn,
 }: DynamicFormProps<TFieldValues>) => {
   return (
     <Form {...form}>
@@ -54,6 +56,17 @@ const DynamicForm = <TFieldValues extends FieldValues>({
             )}
           />
         ))}
+
+        {/* forgot password */}
+        {isSignIn && (
+          <DynamicButton variant="link" size="sm" asChild buttonClassName="">
+            <Link href="/forgot-password">
+              <span className="text-sm text-muted-foreground">
+                Forgot password?
+              </span>
+            </Link>
+          </DynamicButton>
+        )}
 
         <DynamicButton
           type="submit"

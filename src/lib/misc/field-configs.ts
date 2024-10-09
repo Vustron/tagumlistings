@@ -8,6 +8,8 @@ import type {
   UpdatePaymentValues,
   UpdatePropertyValues,
   AddAppointmentValues,
+  ResetPasswordValues,
+  NewPasswordValues,
 } from "@/lib/validation"
 import type {
   FieldConfig,
@@ -389,5 +391,25 @@ export const updatePaymentFields = (
     type: "date",
     label: "Payment Date",
     placeholder: "Select payment date",
+  },
+]
+
+// new password form fields
+export const forgotPasswordFields: FieldConfig<ResetPasswordValues>[] = [
+  {
+    name: "email",
+    type: "email",
+    label: "Your verified email",
+    placeholder: "jhon@email.com",
+  },
+]
+
+// new password form fields
+export const newPasswordFields: FieldConfig<NewPasswordValues>[] = [
+  {
+    name: "password",
+    type: "password",
+    label: "Enter your new password",
+    placeholder: "******",
   },
 ]

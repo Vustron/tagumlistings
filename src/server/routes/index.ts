@@ -3,6 +3,7 @@ import { imagekitAuthController } from "@/server/controllers/imagekit/auth"
 
 // account controllers
 import { deleteAccountsController } from "@/server/controllers/account/bulk-delete"
+import { resetPasswordControl } from "@/server/controllers/account/reset-password"
 import { registerAccountController } from "@/server/controllers/account/register"
 import { updateAccountController } from "@/server/controllers/account/update"
 import { deleteAccountController } from "@/server/controllers/account/delete"
@@ -98,6 +99,10 @@ export const routes: Record<HttpMethod, Route[]> = {
     {
       path: "/api/v1/payment/bulk-delete",
       handler: deletePaymentsController,
+    },
+    {
+      path: "/api/v1/auth/reset-account-password",
+      handler: resetPasswordControl,
     },
   ],
   PATCH: [

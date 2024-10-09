@@ -46,6 +46,7 @@ const LoginForm = () => {
       submitButtonClassname="bg-green-500 rounded-3xl"
       submitButtonTitleClassname="text-md font-medium"
       mutation={loginMutation}
+      isSignIn
     />
   )
 }
