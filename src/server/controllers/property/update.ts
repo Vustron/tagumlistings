@@ -32,7 +32,16 @@ export async function updatePropertyController(request: NextRequest) {
     const updatePropertyBody =
       await requestBodyHandler<UpdatePropertyValues>(request)
 
-    const { id, category, location, status, propertyPics } = updatePropertyBody
+    const {
+      id,
+      category,
+      location,
+      status,
+      propertyPics,
+      no_of_bedrooms,
+      no_of_bathrooms,
+      square_meter,
+    } = updatePropertyBody
 
     const requiredFields: (keyof typeof updatePropertyBody)[] = [
       "id",
@@ -40,6 +49,9 @@ export async function updatePropertyController(request: NextRequest) {
       "location",
       "status",
       "propertyPics",
+      "no_of_bedrooms",
+      "no_of_bathrooms",
+      "square_meter",
     ]
 
     const errorResponse = checkRequiredFields(
@@ -55,6 +67,9 @@ export async function updatePropertyController(request: NextRequest) {
       location,
       status,
       propertyPics,
+      no_of_bedrooms,
+      no_of_bathrooms,
+      square_meter,
       updatedAt: serverTimestamp(),
     })
 

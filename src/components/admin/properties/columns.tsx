@@ -35,10 +35,12 @@ export const columns: ColumnDef<Property>[] = [
   {
     accessorKey: "category",
     header: "Category",
+    cell: ({ row }) => row.getValue("category") || "N/A", // Fallback in case the category is undefined
   },
   {
     accessorKey: "location",
     header: "Location",
+    cell: ({ row }) => row.getValue("location") || "N/A", // Fallback for missing location
   },
   {
     accessorKey: "status",
@@ -47,10 +49,31 @@ export const columns: ColumnDef<Property>[] = [
       const status = row.getValue("status") as string
       return (
         <Badge className={`${getRoleBadgeColor(status)} font-medium`}>
-          {status}
+          {status || "Unknown"} {/* Fallback for undefined status */}
         </Badge>
       )
     },
+  },
+  {
+    accessorKey: "no_of_bedrooms",
+    header: "Bedrooms",
+    cell: ({ row }) => row.getValue("no_of_bedrooms") || "N/A",
+  },
+  {
+    accessorKey: "no_of_bathrooms",
+    header: "Bathrooms",
+    cell: ({ row }) => row.getValue("no_of_bathrooms") || "N/A",
+  },
+  {
+    accessorKey: "square_meter",
+    header: "Area (sqm)",
+    cell: ({ row }) => row.getValue("square_meter") || "N/A",
+  },
+  {
+    accessorKey: "created_at",
+    header: "Created At",
+    cell: ({ row }) =>
+      new Date(row.getValue("created_at") || "").toLocaleDateString() || "N/A",
   },
   {
     id: "actions",

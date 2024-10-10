@@ -4,10 +4,13 @@
 import { PaginationWithLinks } from "@/components/ui/pagination-with-links"
 import FallbackBoundary from "@/components/shared/fallback-boundary"
 import PropertyCard from "@/components/layouts/client/property-card"
+import { Button } from "@/components/ui/button"
+import { Loader2, FilterX } from "lucide-react"
 
 // hooks
 import { useGetProperties } from "@/lib/hooks/property/get-all"
 import { useSearchParams } from "next/navigation"
+import { useState, useMemo } from "react"
 
 // utils
 import { motion, AnimatePresence } from "framer-motion"
@@ -19,26 +22,28 @@ const PropertiesClient = () => {
   const searchParams = useSearchParams()
   const currentPage = Number(searchParams.get("page")) || 1
   const itemsPerPage = 9
+  const [showSoldProperties, setShowSoldProperties] = useState(false)
 
   // Fetch all properties
   const { data, isLoading } = useGetProperties()
 
-  const allProperties = data?.properties || []
-  const totalCount = allProperties.length
+  // Filter and memoize properties
+  const filteredProperties = useMemo(() => {
+    if (!data?.properties) return []
+    return data.properties.filter((property: Property) =>
+      showSoldProperties ? true : property.status?.toLowerCase() !== "sold",
+    )
+  }, [data?.properties, showSoldProperties])
+
+  const totalCount = filteredProperties.length
   const totalPages = Math.ceil(totalCount / itemsPerPage)
 
   // Client-side pagination
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const currentProperties = allProperties.slice(startIndex, endIndex)
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p>Loading properties...</p>
-      </div>
-    )
-  }
+  const currentProperties = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage
+    const endIndex = startIndex + itemsPerPage
+    return filteredProperties.slice(startIndex, endIndex)
+  }, [currentPage, filteredProperties])
 
   // Animation variants
   const containerVariants = {
@@ -63,61 +68,106 @@ const PropertiesClient = () => {
     },
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
+        <Loader2 className="size-8 animate-spin text-gray-500" />
+        <p className="text-gray-500">Loading properties...</p>
+      </div>
+    )
+  }
+
   return (
     <FallbackBoundary>
-      <motion.h2
-        className="text-3xl font-bold mb-6"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        Properties
-      </motion.h2>
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <motion.h2
+            className="text-3xl font-bold"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            Properties
+            <span className="ml-2 text-sm font-normal text-gray-500">
+              ({totalCount} {totalCount === 1 ? "property" : "properties"})
+            </span>
+          </motion.h2>
 
-      <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <AnimatePresence>
-          {currentProperties.length > 0 ? (
-            currentProperties.map((property: Property, index: number) => (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Button
+              onClick={() => setShowSoldProperties(!showSoldProperties)}
+              variant={showSoldProperties ? "default" : "outline"}
+              className="flex items-center gap-2 bg-green-500 hover:bg-green-400 dark:bg-black dark:hover:bg-green-400"
+            >
+              <FilterX className="size-4" />
+              {showSoldProperties ? "Show All" : "Hide Sold Properties"}
+            </Button>
+          </motion.div>
+        </div>
+
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <AnimatePresence mode="wait">
+            {currentProperties.length > 0 ? (
+              currentProperties.map((property: Property, index: number) => (
+                <motion.div
+                  key={property.id}
+                  variants={itemVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                  layout
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                >
+                  <PropertyCard {...property} />
+                </motion.div>
+              ))
+            ) : (
               <motion.div
-                key={property.id}
                 variants={itemVariants}
+                className="col-span-full flex flex-col items-center justify-center py-12 space-y-4 text-gray-500"
                 initial="hidden"
                 animate="visible"
-                exit="hidden"
-                transition={{ duration: 0.3, delay: index * 0.1 }}
               >
-                <PropertyCard {...property} />
+                <FilterX className="size-12 mb-2" />
+                <p className="text-lg font-medium">No properties found</p>
+                {!showSoldProperties && (
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowSoldProperties(true)}
+                    className="mt-2"
+                  >
+                    Show All Properties
+                  </Button>
+                )}
               </motion.div>
-            ))
-          ) : (
-            <motion.div
-              variants={itemVariants}
-              className="col-span-full text-center text-gray-500 py-12"
-            >
-              No properties found.
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-      {totalPages > 1 && (
-        <motion.div
-          className="mt-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          <PaginationWithLinks
-            totalCount={totalCount}
-            pageSize={itemsPerPage}
-            page={currentPage}
-          />
+            )}
+          </AnimatePresence>
         </motion.div>
-      )}
+
+        {totalPages > 1 && (
+          <motion.div
+            className="mt-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            <PaginationWithLinks
+              totalCount={totalCount}
+              pageSize={itemsPerPage}
+              page={currentPage}
+            />
+          </motion.div>
+        )}
+      </div>
     </FallbackBoundary>
   )
 }

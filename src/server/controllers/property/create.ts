@@ -40,13 +40,24 @@ export async function createPropertyController(request: NextRequest) {
     const createPropertyBody =
       await requestBodyHandler<AddPropertyValues>(request)
 
-    const { category, location, status, propertyPics } = createPropertyBody
+    const {
+      category,
+      location,
+      status,
+      propertyPics,
+      no_of_bedrooms,
+      no_of_bathrooms,
+      square_meter,
+    } = createPropertyBody
 
     const requiredFields: (keyof typeof createPropertyBody)[] = [
       "category",
       "location",
       "status",
       "propertyPics",
+      "no_of_bedrooms",
+      "no_of_bathrooms",
+      "square_meter",
     ]
 
     const errorResponse = checkRequiredFields(
@@ -63,6 +74,9 @@ export async function createPropertyController(request: NextRequest) {
       user_id: null,
       appointment_id: null,
       propertyPics,
+      no_of_bedrooms,
+      no_of_bathrooms,
+      square_meter,
       created_at: serverTimestamp(),
     }
 
