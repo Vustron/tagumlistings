@@ -1,11 +1,11 @@
 // components
-import ImagekitProvider from "@/components/providers/imagekit"
 import ProgressBarProvider from "@/components/providers/progress-bar"
-import QueryProvider from "@/components/providers/query"
-import ThemeProvider from "@/components/providers/themes"
-import ToastProvider from "@/components/providers/toast"
-import { TooltipProvider } from "@/components/ui/tooltip"
 import WrapBalancer from "@/components/providers/wrap-balancer"
+import ImagekitProvider from "@/components/providers/imagekit"
+import { TooltipProvider } from "@/components/ui/tooltip"
+import ThemeProvider from "@/components/providers/themes"
+import QueryProvider from "@/components/providers/query"
+import ToastProvider from "@/components/providers/toast"
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
