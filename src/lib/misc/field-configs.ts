@@ -240,6 +240,7 @@ export const updatePropertyFields: FieldConfig<UpdatePropertyValues>[] = [
 export const addAppointmentFields = (
   accounts: UserData[],
   appointmentDates: AppointmentDate[],
+  appointments: Appointment[],
 ): FieldConfig<AddAppointmentValues>[] => [
   {
     name: "user",
@@ -247,7 +248,14 @@ export const addAppointmentFields = (
     label: "Select a Client",
     placeholder: "Select a client",
     options: accounts
-      .filter((account) => account.id !== undefined)
+      .filter((account) => {
+        // Check if the user already has an appointment
+        const hasAppointment = appointments.some(
+          (appointment) => appointment.user === account.name,
+        )
+        // Only include users who do not have an appointment
+        return account.id !== undefined && !hasAppointment
+      })
       .map((account) => ({
         value: account.name,
         label: account.name,
@@ -294,7 +302,7 @@ export const updateAppointmentFields = (
     options: accounts
       .filter((account) => account.id !== undefined)
       .map((account) => ({
-        value: account.name,
+        value: account.name || "",
         label: account.name,
       })),
   },

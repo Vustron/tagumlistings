@@ -1,11 +1,10 @@
 "use client"
 
 // components
-import SetAppointmentDatesDialog from "@/components/admin/appointments/date"
+import CreateAppointmentDialog from "@/components/admin/appointments/create"
 import CalendarControls from "@/components/admin/appointments/controls"
 import AppointmentsView from "@/components/admin/appointments/view"
 import EventItem from "@/components/admin/appointments/event-item"
-import NewAppointment from "@/components/admin/appointments/new"
 import MonthView from "@/components/admin/appointments/month"
 import WeekView from "@/components/admin/appointments/week"
 import DayView from "@/components/admin/appointments/day"
@@ -37,8 +36,7 @@ const AppointmentCalendar = ({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [view, setView] = useState<CalendarView>("month")
   const [searchQuery, setSearchQuery] = useState("")
-  const [isNewEventDialogOpen, setIsNewEventDialogOpen] = useState(false)
-  const [isSetAppointmentDatesDialogOpen, setIsSetAppointmentDatesDialogOpen] =
+  const [createAppointmentDialogOpen, setIsCreateAppointmentDialogOpen] =
     useState(false)
   const [currentDate, setCurrentDate] = useState(new Date())
   const [events, setEvents] = useState(
@@ -89,7 +87,7 @@ const AppointmentCalendar = ({
 
   const setAppointmentDates = (dates: Date[]) => {
     setAvailableDates(dates)
-    setIsSetAppointmentDatesDialogOpen(false)
+    setIsCreateAppointmentDialogOpen(false)
   }
 
   const upcomingEvents = useMemo(() => {
@@ -111,10 +109,7 @@ const AppointmentCalendar = ({
             setView={setView}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
-            setIsNewEventDialogOpen={setIsNewEventDialogOpen}
-            setIsSetAppointmentDatesDialogOpen={
-              setIsSetAppointmentDatesDialogOpen
-            }
+            setIsCreateAppointmentDialogOpen={setIsCreateAppointmentDialogOpen}
           />
         </div>
       </div>
@@ -159,17 +154,12 @@ const AppointmentCalendar = ({
         </div>
       </div>
 
-      <NewAppointment
-        isOpen={isNewEventDialogOpen}
-        onOpenChange={setIsNewEventDialogOpen}
-        appointmentDates={appointmentDates}
-      />
-
-      <SetAppointmentDatesDialog
-        isOpen={isSetAppointmentDatesDialogOpen}
-        onOpenChange={setIsSetAppointmentDatesDialogOpen}
+      <CreateAppointmentDialog
+        isOpen={createAppointmentDialogOpen}
+        onOpenChange={setIsCreateAppointmentDialogOpen}
         setAvailableDates={setAppointmentDates}
         initialDates={availableDates}
+        appointments={events}
         appointmentDates={appointmentDates}
       />
     </Card>

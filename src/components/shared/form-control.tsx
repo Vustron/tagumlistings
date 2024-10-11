@@ -54,7 +54,7 @@ const FormControlRenderer = <TFieldValues extends FieldValues>({
           </SelectTrigger>
           <SelectContent>
             {field.options?.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
+              <SelectItem key={option.value} value={option.value!}>
                 {option.label}
               </SelectItem>
             ))}

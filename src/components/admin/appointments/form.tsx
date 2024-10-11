@@ -15,17 +15,19 @@ import { useCreateAppointment } from "@/lib/hooks/appointment/create"
 import { useForm } from "react-hook-form"
 
 // types
+import type { UserData, AppointmentDate, Appointment } from "@/lib/types"
 import type { AddAppointmentValues } from "@/lib/validation"
-import type { UserData, AppointmentDate } from "@/lib/types"
 
 interface NewAppointmentFormProps {
   accounts: UserData[]
   appointmentDates: AppointmentDate[]
+  appointments: Appointment[]
 }
 
 const NewAppointmentForm = ({
   accounts,
   appointmentDates,
+  appointments,
 }: NewAppointmentFormProps) => {
   const createAppointment = useCreateAppointment()
 
@@ -54,7 +56,7 @@ const NewAppointmentForm = ({
     <DynamicForm<AddAppointmentValues>
       form={form}
       onSubmit={submitHandler}
-      fields={addAppointmentFields(accounts, appointmentDates)}
+      fields={addAppointmentFields(accounts, appointmentDates, appointments)}
       submitButtonTitle="Add Appointment"
       submitButtonClassname="bg-green-500 rounded-3xl hover:dark:text-black"
       submitButtonTitleClassname="text-md font-medium"

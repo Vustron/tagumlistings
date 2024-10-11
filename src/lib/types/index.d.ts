@@ -47,7 +47,7 @@ export type SiteConfig = {
 
 /* SelectOption Type */
 interface SelectOption<T = string> {
-  value: T
+  value: T | undefined
   label: string
 }
 

@@ -3,19 +3,12 @@
 // components
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
   SelectItem,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
 } from "@/components/ui/select"
-import {
-  Menu,
-  ChevronLeft,
-  ChevronRight,
-  Search,
-  Plus,
-  CalendarIcon,
-} from "lucide-react"
+import { Menu, ChevronLeft, ChevronRight, Search, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -33,8 +26,7 @@ interface CalendarControlsProps {
   setView: (view: CalendarView) => void
   searchQuery: string
   setSearchQuery: (query: string) => void
-  setIsNewEventDialogOpen: (open: boolean) => void
-  setIsSetAppointmentDatesDialogOpen: (open: boolean) => void
+  setIsCreateAppointmentDialogOpen: (open: boolean) => void
 }
 
 const CalendarControls: React.FC<CalendarControlsProps> = ({
@@ -45,8 +37,7 @@ const CalendarControls: React.FC<CalendarControlsProps> = ({
   setView,
   searchQuery,
   setSearchQuery,
-  setIsNewEventDialogOpen,
-  setIsSetAppointmentDatesDialogOpen,
+  setIsCreateAppointmentDialogOpen,
 }) => {
   return (
     <div className="flex flex-col space-y-4 sm:space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0 md:space-x-4">
@@ -130,22 +121,10 @@ const CalendarControls: React.FC<CalendarControlsProps> = ({
             className="flex-grow sm:flex-grow-0"
           >
             <Button
-              onClick={() => setIsNewEventDialogOpen(true)}
+              onClick={() => setIsCreateAppointmentDialogOpen(true)}
               className="bg-green-500 hover:bg-green-600 text-white w-full sm:w-auto"
             >
-              <Plus className="mr-2 size-4" /> Add
-            </Button>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex-grow sm:flex-grow-0"
-          >
-            <Button
-              onClick={() => setIsSetAppointmentDatesDialogOpen(true)}
-              className="bg-green-500 hover:bg-green-600 text-white w-full sm:w-auto"
-            >
-              <CalendarIcon className="mr-2 size-4" /> Set
+              <Plus className="mr-2 size-4" /> Create Appointment
             </Button>
           </motion.div>
         </div>

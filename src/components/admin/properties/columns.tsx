@@ -49,7 +49,7 @@ export const columns: ColumnDef<Property>[] = [
       const status = row.getValue("status") as string
       return (
         <Badge className={`${getRoleBadgeColor(status)} font-medium`}>
-          {status || "Unknown"} {/* Fallback for undefined status */}
+          {status || "Unknown"}
         </Badge>
       )
     },
@@ -68,12 +68,6 @@ export const columns: ColumnDef<Property>[] = [
     accessorKey: "square_meter",
     header: "Area (sqm)",
     cell: ({ row }) => row.getValue("square_meter") || "N/A",
-  },
-  {
-    accessorKey: "created_at",
-    header: "Created At",
-    cell: ({ row }) =>
-      new Date(row.getValue("created_at") || "").toLocaleDateString() || "N/A",
   },
   {
     id: "actions",
