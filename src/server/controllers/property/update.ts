@@ -1,7 +1,11 @@
 // utils
 import { convertAndCheckRateLimit, handleErrorResponse } from "@/server/helpers"
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore"
-import { checkRequiredFields, requestBodyHandler } from "@/lib/utils"
+import {
+  checkRequiredFields,
+  convertTimestampToDateString,
+  requestBodyHandler,
+} from "@/lib/utils"
 import { NextResponse } from "next/server"
 
 // configs
@@ -75,8 +79,21 @@ export async function updatePropertyController(request: NextRequest) {
 
     const updatedPropertySnapshot = await getDoc(propertyRef)
     const updatedProperty = updatedPropertySnapshot.data() as Property
+    const property = {
+      ...updatedProperty,
+      created_at:
+        updatedProperty?.created_at &&
+        typeof updatedProperty.created_at === "object"
+          ? convertTimestampToDateString(updatedProperty.created_at)
+          : null,
+      updated_at:
+        updatedProperty?.updated_at &&
+        typeof updatedProperty.updated_at === "object"
+          ? convertTimestampToDateString(updatedProperty.updated_at)
+          : null,
+    }
 
-    return NextResponse.json(updatedProperty, { status: 200 })
+    return NextResponse.json(property, { status: 200 })
   } catch (error) {
     return await handleErrorResponse(error)
   }

@@ -3,6 +3,7 @@
 // hooks
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next-nprogress-bar"
+import { usePathname } from "next/navigation"
 
 // actions
 import { updateAccount } from "@/lib/actions/auth/update"
@@ -24,6 +25,7 @@ const purify = DOMPurify
 export const useUpdateAccount = (id?: string) => {
   const router = useRouter()
   const queryClient = useQueryClient()
+  const pathname = usePathname()
 
   return useMutation({
     mutationKey: ["update-account", id],
@@ -47,7 +49,11 @@ export const useUpdateAccount = (id?: string) => {
           queryKey: ["accounts"],
         }
         await queryClient.cancelQueries(accountsQueryFilter)
-        router.push("/admin/users")
+
+        if (pathname !== "/reserved") {
+          router.push("/admin/users")
+        }
+
         router.refresh()
       }
 

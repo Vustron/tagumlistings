@@ -1,6 +1,6 @@
 // utils
-import { NextResponse, userAgent } from "next/server"
 import { getIronSession } from "iron-session"
+import { NextResponse } from "next/server"
 import toast from "react-hot-toast"
 
 // types
@@ -38,8 +38,13 @@ const authRoutes: string[] = ["/login", "/register"]
 
 export default async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.includes(path)
+  const isProtectedRoute = protectedRoutes.some(
+    (route) =>
+      path === route ||
+      (route.endsWith("*") && path.startsWith(route.slice(0, -1))),
+  )
   const isAuthRoute = authRoutes.includes(path)
+  const isAdminRoute = path.startsWith("/admin")
 
   try {
     const response = NextResponse.next()
@@ -61,39 +66,16 @@ export default async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL("/", request.url))
       }
 
-      if (isProtectedRoute && session.role !== "admin") {
+      if (isAdminRoute && session.role !== "admin") {
         return NextResponse.redirect(new URL("/", request.url))
       }
     }
+
+    return response
   } catch (error) {
     console.error("Error processing session:", error)
     toast.error("Error processing session")
     return NextResponse.redirect(new URL("/login", request.url))
-  }
-
-  const { isBot, ua, browser, device, engine, os, cpu } = userAgent(request)
-
-  if (isBot) {
-    console.log("Bot detected:", {
-      userAgent: ua,
-      browserName: browser.name,
-      browserVersion: browser.version,
-      deviceModel: device.model,
-      deviceType: device.type,
-      deviceVendor: device.vendor,
-      engineName: engine.name,
-      engineVersion: engine.version,
-      osName: os.name,
-      osVersion: os.version,
-      cpuArchitecture: cpu.architecture,
-    })
-
-    return NextResponse.json(
-      { message: "Bot detected" },
-      {
-        status: 400,
-      },
-    )
   }
 }
 

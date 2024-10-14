@@ -1,8 +1,8 @@
 "use client"
 
 // components
+import { BathIcon, BedDouble, MapPinHouse, Square } from "lucide-react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { BathIcon, BedDouble, Square } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 // hooks
@@ -134,21 +134,31 @@ const PropertyCard = ({
               className={`px-3 py-1 rounded-full text-sm font-medium ${
                 status === "sold"
                   ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
-                  : "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                  : status === "reserved"
+                    ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+                    : "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
               }`}
             >
-              {status === "sold" ? "Sold" : "Available"}
+              {status === "sold"
+                ? "Sold"
+                : status === "reserved"
+                  ? "Reserved"
+                  : "Available"}
             </span>
           </div>
         </CardHeader>
 
         <CardContent className="p-4">
           <div className="space-y-4">
-            <p className="text-gray-600 dark:text-gray-400 flex items-center gap-1">
-              📍 {location || "Location not available"}
-            </p>
-
             <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
+              <div className="flex items-center gap-1">
+                <MapPinHouse className="size-4" />
+                <span>
+                  {location && location.length > 7
+                    ? `${location.substring(0, 7)}...`
+                    : location || "Location not available"}
+                </span>
+              </div>
               <div className="flex items-center gap-1">
                 <BedDouble className="size-4" />
                 <span>{no_of_bedrooms || "N/A"} beds</span>

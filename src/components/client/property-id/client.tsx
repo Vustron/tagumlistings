@@ -1,29 +1,51 @@
 "use client"
 
 // components
+import {
+  Bath,
+  Clock,
+  Square,
+  Calendar,
+  BedDouble,
+  MapPinHouse,
+} from "lucide-react"
 import PropertyMetric from "@/components/client/property-id/property-metric"
 import ImageCarousel from "@/components/client/property-id/image-carousel"
-import { Bath, BedDouble, Calendar, Clock, Square } from "lucide-react"
 import FallbackBoundary from "@/components/shared/fallback-boundary"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 
 // hooks
+import { useUpdateProperty } from "@/lib/hooks/property/update"
+import { useSession } from "@/components/providers/session"
+import { useUpdateAccount } from "@/lib/hooks/auth/update"
 import { useGetProperty } from "@/lib/hooks/property/get"
 import { useState, useEffect } from "react"
 
 // utils
-import { placeholderImage, getRoleBadgeColor } from "@/lib/utils"
+import {
+  placeholderImage,
+  getRoleBadgeColor,
+  clientErrorHandler,
+} from "@/lib/utils"
+import { motion } from "framer-motion"
+import toast from "react-hot-toast"
 
 // types
 import type { Property } from "@/lib/types"
-import { motion } from "framer-motion"
 
 const PropertyIdClient = ({ id }: { id: string }) => {
   const [property, setProperty] = useState<Property | null>(null)
   const [loading, setLoading] = useState(true)
+  const [reservationStatus, setReservationStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle")
   const { data, isLoading } = useGetProperty(id)
+  const session = useSession()
+  const updateAccount = useUpdateAccount(session?.id)
+  const updateProperty = useUpdateProperty(property?.id)
 
   useEffect(() => {
     if (data) {
@@ -82,6 +104,55 @@ const PropertyIdClient = ({ id }: { id: string }) => {
     ? property.propertyPics
     : [{ url: placeholderImage("No Images Available") }]
 
+  const handleReserve = async () => {
+    if (!session) {
+      toast.error("Please log in to reserve a property")
+      return
+    }
+
+    try {
+      const updatedReservedProperties = [
+        ...(session.reservedProperties || []),
+        { id: property?.id },
+      ].filter((prop) => prop.id) as { id: string }[]
+
+      await toast.promise(
+        Promise.all([
+          updateAccount.mutateAsync({
+            id: session.id,
+            name: session.name,
+            email: session.email,
+            contact_number: session.contact_number,
+            reservedProperties: updatedReservedProperties,
+          }),
+          updateProperty.mutateAsync({
+            id: property?.id,
+            category: property?.category,
+            location: property?.location,
+            status: "reserved",
+            propertyPics: property?.propertyPics,
+            no_of_bedrooms: property?.no_of_bedrooms,
+            no_of_bathrooms: property?.no_of_bathrooms,
+            square_meter: property?.square_meter,
+          }),
+        ]),
+        {
+          loading: <span className="animate-pulse">Reserving property...</span>,
+          success: "Property reserved successfully!",
+          error: (error: unknown) => clientErrorHandler(error),
+        },
+      )
+
+      setReservationStatus("success")
+    } catch (error) {
+      setReservationStatus("error")
+    }
+  }
+
+  const isPropertyReserved = session?.reservedProperties?.some(
+    (reservedProperty) => reservedProperty.id === property.id,
+  )
+
   return (
     <FallbackBoundary>
       <motion.div
@@ -95,7 +166,7 @@ const PropertyIdClient = ({ id }: { id: string }) => {
             animate={{ y: 0 }}
             className="text-3xl font-bold text-gray-900 dark:text-gray-100"
           >
-            {property.category?.toLocaleUpperCase() || "Property"} Details
+            Property Details
           </motion.h1>
           <div className="mt-2 flex items-center gap-2">
             <Badge
@@ -150,13 +221,11 @@ const PropertyIdClient = ({ id }: { id: string }) => {
                 </h2>
 
                 <div className="space-y-3">
-                  <div className="flex items-start gap-2 text-gray-600 dark:text-gray-300">
-                    <span className="mt-1">📍</span>
-                    <span className="font-medium">Location:</span>
-                    <span className="flex-1">
-                      {property.location || "Location not specified"}
-                    </span>
-                  </div>
+                  <PropertyMetric
+                    icon={MapPinHouse}
+                    label="Location"
+                    value={property.location}
+                  />
 
                   <PropertyMetric
                     icon={Calendar}
@@ -181,6 +250,25 @@ const PropertyIdClient = ({ id }: { id: string }) => {
                 </p>
               </div>
             )}
+
+            <div className="mt-6">
+              <Button
+                onClick={handleReserve}
+                disabled={
+                  property.status !== "available" ||
+                  updateAccount.isPending ||
+                  reservationStatus === "success" ||
+                  isPropertyReserved
+                }
+                className="dark:hover:bg-green-400 w-full bg-green-600 dark:bg-green-600 text-white"
+              >
+                {updateAccount.isPending
+                  ? "Processing..."
+                  : reservationStatus === "success" || isPropertyReserved
+                    ? "Property Reserved"
+                    : "Reserve Property"}
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </motion.div>

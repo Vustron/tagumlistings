@@ -24,6 +24,7 @@ export async function loginAccount(credentials: LoginValues) {
     email: data.email || "",
     role: data.role || "",
     loggedIn: true,
+    reservedProperties: data.reservedProperties || [],
   }
 
   await setSession(userData)

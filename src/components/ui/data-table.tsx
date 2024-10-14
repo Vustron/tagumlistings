@@ -55,11 +55,13 @@ import type {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  onDelete: (rows: Row<TData>[]) => void
+  onDelete?: (rows: Row<TData>[]) => void
   disabled?: boolean
   isOnUsers?: boolean
   isOnProperties?: boolean
   isOnPayments?: boolean
+  isOnClient?: boolean
+  noBulkDelete?: boolean
   placeholder: string
 }
 
@@ -71,6 +73,8 @@ export default function DataTable<TData, TValue>({
   isOnUsers,
   isOnProperties,
   isOnPayments,
+  noBulkDelete,
+  isOnClient,
   placeholder,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter()
@@ -122,18 +126,6 @@ export default function DataTable<TData, TValue>({
           <div className="ml-1 flex py-4 items-center gap-5">
             {/* search */}
             <FloatingLabelInput
-              // id={`${filterKey}`}
-              // type="text"
-              // label={`Filter ${filterKey}...`}
-              // placeholder={placeholder}
-              // disabled={disabled}
-              // value={
-              //   (table.getColumn(filterKey)?.getFilterValue() as string) ?? ""
-              // }
-              // onChange={(event) =>
-              //   table.getColumn(filterKey)?.setFilterValue(event.target.value)
-              // }
-              // className="w-auto shadow-sm"
               id="filter-input"
               type="text"
               label="Search..."
@@ -147,31 +139,32 @@ export default function DataTable<TData, TValue>({
 
           <div className="flex items-center gap-2">
             {/* delete */}
-            {table.getFilteredSelectedRowModel().rows.length > 0 && (
-              <Button
-                disabled={disabled}
-                size="sm"
-                variant="outline"
-                className=" text-xs font-normal shadow-sm"
-                onClick={async () => {
-                  const ok = await confirm()
+            {!noBulkDelete &&
+              table.getFilteredSelectedRowModel().rows.length > 0 && (
+                <Button
+                  disabled={disabled}
+                  size="sm"
+                  variant="outline"
+                  className=" text-xs font-normal shadow-sm"
+                  onClick={async () => {
+                    const ok = await confirm()
 
-                  if (ok) {
-                    onDelete(table.getFilteredSelectedRowModel().rows)
-                    table.resetRowSelection()
-                  }
-                }}
-              >
-                <Trash className="mr-2 size-4" />
-                Delete ({table.getFilteredSelectedRowModel().rows.length})
-              </Button>
-            )}
+                    if (ok) {
+                      onDelete?.(table.getFilteredSelectedRowModel().rows)
+                      table.resetRowSelection()
+                    }
+                  }}
+                >
+                  <Trash className="mr-2 size-4" />
+                  Delete ({table.getFilteredSelectedRowModel().rows.length})
+                </Button>
+              )}
 
             {/* create new user */}
-            {isOnUsers && <CreateUserModal />}
+            {isOnUsers && !isOnClient && <CreateUserModal />}
 
             {/* create new property */}
-            {isOnProperties && (
+            {isOnProperties && !isOnClient && (
               <Button
                 variant="outline"
                 size="sm"

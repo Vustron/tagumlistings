@@ -22,7 +22,7 @@ const PropertiesClient = () => {
   const searchParams = useSearchParams()
   const currentPage = Number(searchParams.get("page")) || 1
   const itemsPerPage = 9
-  const [showSoldProperties, setShowSoldProperties] = useState(false)
+  const [showAllProperties, setShowAllProperties] = useState(false)
 
   // Fetch all properties
   const { data, isLoading } = useGetProperties()
@@ -31,9 +31,12 @@ const PropertiesClient = () => {
   const filteredProperties = useMemo(() => {
     if (!data?.properties) return []
     return data.properties.filter((property: Property) =>
-      showSoldProperties ? true : property.status?.toLowerCase() !== "sold",
+      showAllProperties
+        ? true
+        : property.status?.toLowerCase() !== "sold" &&
+          property.status?.toLowerCase() !== "reserved",
     )
-  }, [data?.properties, showSoldProperties])
+  }, [data?.properties, showAllProperties])
 
   const totalCount = filteredProperties.length
   const totalPages = Math.ceil(totalCount / itemsPerPage)
@@ -99,12 +102,14 @@ const PropertiesClient = () => {
             transition={{ duration: 0.5 }}
           >
             <Button
-              onClick={() => setShowSoldProperties(!showSoldProperties)}
-              variant={showSoldProperties ? "default" : "outline"}
+              onClick={() => setShowAllProperties(!showAllProperties)}
+              variant={showAllProperties ? "default" : "outline"}
               className="flex items-center gap-2 bg-green-500 hover:bg-green-400 dark:bg-black dark:hover:bg-green-400"
             >
               <FilterX className="size-4" />
-              {showSoldProperties ? "Show All" : "Hide Sold Properties"}
+              {showAllProperties
+                ? "Hide Sold & Reserved"
+                : "Show All Properties"}
             </Button>
           </motion.div>
         </div>
@@ -139,10 +144,10 @@ const PropertiesClient = () => {
               >
                 <FilterX className="size-12 mb-2" />
                 <p className="text-lg font-medium">No properties found</p>
-                {!showSoldProperties && (
+                {!showAllProperties && (
                   <Button
                     variant="outline"
-                    onClick={() => setShowSoldProperties(true)}
+                    onClick={() => setShowAllProperties(true)}
                     className="mt-2"
                   >
                     Show All Properties

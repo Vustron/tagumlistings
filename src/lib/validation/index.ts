@@ -16,6 +16,21 @@ export const registerSchema = z.object({
 /* RegisterValues Type */
 export type RegisterValues = z.infer<typeof registerSchema>
 
+const propertySchema = z.object({
+  id: z.string().optional(),
+  category: z.string().optional(),
+  location: z.string().optional(),
+  status: z.string().optional(),
+  user_id: z.string().optional(),
+  appointment_id: z.string().nullable().optional(),
+  propertyPics: z.array(z.object({ url: z.string() })).optional(),
+  no_of_bedrooms: z.string().optional(),
+  no_of_bathrooms: z.string().optional(),
+  square_meter: z.string().optional(),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
+})
+
 // updateAccountSchema
 export const updateAccountSchema = z.object({
   id: requiredString.optional(),
@@ -28,6 +43,7 @@ export const updateAccountSchema = z.object({
   newpassword: requiredString
     .min(8, "Must be at least 8 characters")
     .optional(),
+  reservedProperties: z.array(propertySchema).optional(),
 })
 
 /* UpdateAccountValues Type */
@@ -179,3 +195,11 @@ export const resetPasswordEmailSchema = z.object({
 })
 /* ResetPasswordValues Type */
 export type ResetPasswordValues = z.infer<typeof resetPasswordEmailSchema>
+
+// reservePropertySchema
+export const reservePropertySchema = z.object({
+  propertyId: requiredString,
+})
+
+/* ReservePropertyValues Type */
+export type ReservePropertyValues = z.infer<typeof addPropertySchema>

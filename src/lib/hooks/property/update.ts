@@ -19,45 +19,74 @@ import type { Property, Properties } from "@/lib/types"
 
 const purify = DOMPurify
 
-export const useUpdateProperty = (id?: string) => {
+export const useUpdateProperty = (idOrIds?: string | string[]) => {
   const router = useRouter()
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationKey: ["update-property", id],
-    mutationFn: async (values: UpdatePropertyValues) => {
-      const sanitizedData = sanitizer<UpdatePropertyValues>(
-        values,
-        updatePropertySchema,
-        purify,
-      )
+    mutationKey: ["update-property", idOrIds],
+    mutationFn: async (
+      values: UpdatePropertyValues | UpdatePropertyValues[],
+    ) => {
+      const sanitizedData = sanitizer<
+        UpdatePropertyValues | UpdatePropertyValues[]
+      >(values, updatePropertySchema, purify)
       return await updateProperty(sanitizedData)
     },
     onSuccess: async (updatedProperty) => {
       const propertyQueryFilter: QueryFilters = {
-        queryKey: ["property", id],
+        queryKey: ["property", idOrIds],
       }
 
       const accountsQueryFilter: QueryFilters = {
         queryKey: ["properties"],
       }
+
       await queryClient.cancelQueries(accountsQueryFilter)
-
       await queryClient.cancelQueries(propertyQueryFilter)
-      queryClient.setQueryData<Property>(["property", id], (oldData) => ({
-        ...oldData,
-        ...updatedProperty,
-      }))
 
-      queryClient.setQueryData<Properties>(["properties"], (oldData) => {
-        if (!oldData) return { properties: [updatedProperty] }
-        return {
-          ...oldData,
-          properties: oldData.properties.map((property) =>
-            property.id === id ? updatedProperty : property,
-          ),
+      if (Array.isArray(updatedProperty)) {
+        for (const property of updatedProperty) {
+          queryClient.setQueryData<Property>(
+            ["property", property.id],
+            (oldData) => ({
+              ...oldData,
+              ...property,
+            }),
+          )
         }
-      })
+
+        queryClient.setQueryData<Properties>(["properties"], (oldData) => {
+          if (!oldData) return { properties: updatedProperty }
+          return {
+            ...oldData,
+            properties: oldData.properties.map(
+              (property) =>
+                updatedProperty.find((p) => p.id === property.id) || property,
+            ),
+          }
+        })
+      } else {
+        // Single update
+        queryClient.setQueryData<Property>(
+          ["property", idOrIds],
+          (oldData) => ({
+            ...oldData,
+            ...updatedProperty,
+          }),
+        )
+
+        queryClient.setQueryData<Properties>(["properties"], (oldData) => {
+          if (!oldData) return { properties: [updatedProperty] }
+          return {
+            ...oldData,
+            properties: oldData.properties.map((property) =>
+              property.id === idOrIds ? updatedProperty : property,
+            ),
+          }
+        })
+      }
+
       router.push("/admin/properties")
       router.refresh()
     },

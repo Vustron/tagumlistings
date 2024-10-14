@@ -116,6 +116,7 @@ export interface UserData {
   role: string
   password?: string
   loggedIn?: boolean
+  reservedProperties?: Property[]
   createdAt?: string
   updatedAt?: string
 }

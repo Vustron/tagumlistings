@@ -41,6 +41,7 @@ export async function updateAccountController(request: NextRequest) {
       password,
       newpassword,
       role,
+      reservedProperties,
     } = updateAccountBody
 
     const requiredFields: (keyof typeof updateAccountBody)[] = [
@@ -111,6 +112,8 @@ export async function updateAccountController(request: NextRequest) {
       email: email ?? existingAccount?.email!,
       password: hashedPassword,
       role: role ?? existingAccount?.role!,
+      reservedProperties:
+        reservedProperties ?? existingAccount?.reservedProperties!,
       updatedAt: new Date().toISOString(),
     }
 
@@ -124,6 +127,7 @@ export async function updateAccountController(request: NextRequest) {
       session.contact_number = updatedAccount.contact_number
       session.role = updatedAccount.role
       session.loggedIn = updatedAccount.loggedIn
+      session.reservedProperties = updatedAccount.reservedProperties
       await session.save()
     }
 

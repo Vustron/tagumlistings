@@ -4,6 +4,9 @@ import type { SessionOptions } from "iron-session"
 // configs
 import { env } from "@/lib/config/env.mjs"
 
+// types
+import type { Property } from "@/lib/types"
+
 export interface SessionData {
   id: string
   name: string
@@ -12,6 +15,7 @@ export interface SessionData {
   email: string
   role: string
   loggedIn?: boolean
+  reservedProperties?: Property[]
 }
 
 export const sessionOptions: SessionOptions = {
