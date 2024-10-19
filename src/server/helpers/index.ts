@@ -41,7 +41,6 @@ export async function handleRequest(
     try {
       return await route.handler(request)
     } catch (error) {
-      console.error(`Error in ${method} ${pathname}:`, error)
       return handleErrorResponse(error)
     }
   }
@@ -54,9 +53,6 @@ export async function handleErrorResponse(error: unknown) {
   // Handle the error using the ErrorHandler
   const { message, statusCode }: ErrorResponseData =
     ErrorHandler.handleError(error)
-
-  // Log the error message
-  console.log(message)
 
   // Return the error response
   return NextResponse.json({ error: message }, { status: statusCode })

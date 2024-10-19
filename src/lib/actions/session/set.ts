@@ -1,5 +1,3 @@
-"use server"
-
 // actions
 import { getSession } from "@/lib/actions/session/get"
 
@@ -22,7 +20,7 @@ export async function setSession(account: UserData) {
   session.contact_number = account.contact_number
   session.email = account.email
   session.role = account.role
-  session.loggedIn = account.loggedIn
+  session.loggedIn = true
 
   await session.save()
 
@@ -38,5 +36,5 @@ export async function setSession(account: UserData) {
   const loggedInKey = `loggedIn-${account.id}`
   await redis.set(loggedInKey, "true", "EX", 86400)
 
-  return NextResponse.json({ message: "Login Successful" }, { status: 200 })
+  return NextResponse.json(account, { status: 200 })
 }

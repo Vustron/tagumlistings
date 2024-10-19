@@ -10,7 +10,7 @@ import { NextResponse } from "next/server"
 import bcrypt from "bcryptjs"
 
 // actions
-import { getSession } from "@/lib/actions/session/get"
+import { setSession } from "@/lib/actions/session/set"
 
 // configs
 import redis from "@/lib/config/redis"
@@ -26,12 +26,6 @@ export async function loginAccountController(request: NextRequest) {
 
     if (rateLimitCheck instanceof NextResponse) {
       return rateLimitCheck
-    }
-
-    const session = await getSession()
-
-    if (!session) {
-      return NextResponse.json({ error: "Missing session" }, { status: 400 })
     }
 
     const loginAccountBody = await requestBodyHandler<LoginValues>(request)
@@ -77,14 +71,7 @@ export async function loginAccountController(request: NextRequest) {
       )
     }
 
-    if (!loggedIn) {
-      account.loggedIn = false
-      await redis.set(databaseKey, JSON.stringify(accounts))
-    }
-
-    return NextResponse.json(account, {
-      status: 200,
-    })
+    return await setSession(account)
   } catch (error) {
     return await handleErrorResponse(error)
   }
