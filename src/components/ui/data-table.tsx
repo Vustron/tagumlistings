@@ -22,15 +22,17 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react"
+import CreateAppointmentDialog from "@/components/admin/appointments/create"
 import { FloatingLabelInput } from "@/components/ui/floating-label-input"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import CreateUserModal from "@/components/admin/users/create-user"
 import { Button } from "@/components/ui/button"
 
 // hooks
-import { useReactTable } from "@tanstack/react-table"
 import { useConfirm } from "@/lib/hooks/utils/use-confirm"
+import { useReactTable } from "@tanstack/react-table"
 import { useRouter } from "next-nprogress-bar"
+import { useState } from "react"
 
 // utils
 import {
@@ -52,6 +54,8 @@ import type {
   ColumnFiltersState,
 } from "@tanstack/react-table"
 
+import type { Appointment, AppointmentDate } from "@/lib/types"
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -61,8 +65,11 @@ interface DataTableProps<TData, TValue> {
   isOnProperties?: boolean
   isOnPayments?: boolean
   isOnClient?: boolean
+  isOnClientAppointments?: boolean
   noBulkDelete?: boolean
   placeholder: string
+  appointment?: Appointment[]
+  appointmentDates?: AppointmentDate[]
 }
 
 export default function DataTable<TData, TValue>({
@@ -73,9 +80,12 @@ export default function DataTable<TData, TValue>({
   isOnUsers,
   isOnProperties,
   isOnPayments,
+  isOnClientAppointments,
   noBulkDelete,
   isOnClient,
   placeholder,
+  appointment,
+  appointmentDates,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter()
   const [ConfirmDialog, confirm] = useConfirm(
@@ -94,6 +104,14 @@ export default function DataTable<TData, TValue>({
     () => data.filter((item) => deepSearch(item, filterValue)),
     [data, filterValue],
   )
+  const [createAppointmentDialogOpen, setIsCreateAppointmentDialogOpen] =
+    useState(false)
+  const [availableDates, setAvailableDates] = useState<Date[]>([])
+
+  const setAppointmentDates = (dates: Date[]) => {
+    setAvailableDates(dates)
+    setIsCreateAppointmentDialogOpen(false)
+  }
 
   // init table
   const table = useReactTable({
@@ -162,6 +180,29 @@ export default function DataTable<TData, TValue>({
 
             {/* create new user */}
             {isOnUsers && !isOnClient && <CreateUserModal />}
+
+            {isOnClientAppointments && (
+              <>
+                <CreateAppointmentDialog
+                  isOpen={createAppointmentDialogOpen}
+                  onOpenChange={setIsCreateAppointmentDialogOpen}
+                  setAvailableDates={setAppointmentDates}
+                  initialDates={availableDates}
+                  appointments={appointment!}
+                  appointmentDates={appointmentDates!}
+                  isOnClient={isOnClientAppointments}
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="shadow-sm"
+                  onClick={() => setIsCreateAppointmentDialogOpen(true)}
+                >
+                  <PlusIcon className="mr-2 size-4" aria-hidden="true" />
+                  New Appointment
+                </Button>
+              </>
+            )}
 
             {/* create new property */}
             {isOnProperties && !isOnClient && (

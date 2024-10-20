@@ -45,7 +45,6 @@ const AppointmentCalendar = ({
       description: event.description || "",
     })),
   )
-
   const [availableDates, setAvailableDates] = useState<Date[]>([])
 
   useEffect(() => {

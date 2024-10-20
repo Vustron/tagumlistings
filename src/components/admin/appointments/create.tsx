@@ -19,6 +19,7 @@ import { useDeleteAppointmentDate } from "@/lib/hooks/appointment/delete-date"
 import { useSaveAppointment } from "@/lib/hooks/appointment/save-date"
 import { useCreateAppointment } from "@/lib/hooks/appointment/create"
 import { useState, useCallback, useMemo, useEffect } from "react"
+import { useSession } from "@/components/providers/session"
 import { useConfirm } from "@/lib/hooks/utils/use-confirm"
 import { useGetAccounts } from "@/lib/hooks/auth/get-all"
 import { useForm } from "react-hook-form"
@@ -43,6 +44,7 @@ interface SetAppointmentDatesDialogProps {
   initialDates?: Date[]
   appointmentDates: AppointmentDate[]
   appointments: Appointment[]
+  isOnClient?: boolean
 }
 
 const CreateAppointmentDialog = ({
@@ -51,26 +53,38 @@ const CreateAppointmentDialog = ({
   initialDates = [],
   appointmentDates,
   appointments,
+  isOnClient,
 }: SetAppointmentDatesDialogProps) => {
-  const [activeTab, setActiveTab] = useState("set-dates")
+  const [activeTab, setActiveTab] = useState(
+    isOnClient ? "new-appointment" : "set-dates",
+  )
   const [dates, setDates] = useState<string[]>(
     initialDates.map((date) => format(date, "yyyy-MM-dd'T'HH:mm")),
   )
+
+  const session = useSession()
 
   // Hooks
   const { data: accountsData } = useGetAccounts()
   const allAccounts = accountsData?.accounts ?? []
 
-  // Correctly filter out accounts that already have appointments
-  const availableAccounts = useMemo(() => {
-    // Get the IDs of users who already have appointments
-    const usersWithAppointments = appointments.map((apt) => apt.user)
+  // Check if the current user already has an appointment
+  const userHasAppointment = useMemo(() => {
+    return appointments.some((appointment) => appointment.user === session.name)
+  }, [appointments, session.name])
 
-    // Filter the accounts to only include those without appointments
+  // Filter available accounts based on isOnClient and existing appointments
+  const availableAccounts = useMemo(() => {
+    if (isOnClient) {
+      return userHasAppointment
+        ? []
+        : allAccounts.filter((account: UserData) => account.id === session.id)
+    }
+    const usersWithAppointments = appointments.map((apt) => apt.user)
     return allAccounts.filter(
       (account: UserData) => !usersWithAppointments.includes(account.id!),
     )
-  }, [allAccounts, appointments])
+  }, [allAccounts, appointments, isOnClient, session.id, userHasAppointment])
 
   // Check if there are any available dates for appointments
   const hasAvailableDates = useMemo(
@@ -93,7 +107,7 @@ const CreateAppointmentDialog = ({
   const form = useForm<AddAppointmentValues>({
     resolver: zodResolver(addAppointmentSchema),
     defaultValues: {
-      user: "",
+      user: isOnClient ? session.name : "",
       date: "",
       description: "",
       color: "",
@@ -102,14 +116,16 @@ const CreateAppointmentDialog = ({
 
   // Reset form when available accounts change
   useEffect(() => {
-    const currentUser = form.getValues("user")
-    if (
-      currentUser &&
-      !availableAccounts.find((acc) => acc.name === currentUser)
-    ) {
-      form.setValue("user", "")
+    if (!isOnClient) {
+      const currentUser = form.getValues("user")
+      if (
+        currentUser &&
+        !availableAccounts.find((acc) => acc.id === currentUser)
+      ) {
+        form.setValue("user", "")
+      }
     }
-  }, [availableAccounts, form])
+  }, [availableAccounts, form, isOnClient])
 
   // Date management handlers
   const handleDateChange = useCallback((index: number, value: string) => {
@@ -151,13 +167,20 @@ const CreateAppointmentDialog = ({
 
   // New appointment handler with improved validation
   const handleSubmitAppointment = async (values: AddAppointmentValues) => {
-    const isUserAvailable = availableAccounts.some(
-      (account) => account.name === values.user,
-    )
-    if (!isUserAvailable) {
-      toast.error("This user is not available for appointments")
-      form.reset()
+    if (isOnClient && userHasAppointment) {
+      toast.error("You already have an appointment scheduled")
       return
+    }
+
+    if (!isOnClient) {
+      const isUserAvailable = availableAccounts.some(
+        (account) => account.id === values.user,
+      )
+      if (!isUserAvailable) {
+        toast.error("This user is not available for appointments")
+        form.reset()
+        return
+      }
     }
 
     await toast.promise(createAppointmentMutation.mutateAsync(values), {
@@ -194,168 +217,196 @@ const CreateAppointmentDialog = ({
         <DialogContent className="max-w-md w-full sm:max-w-lg">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold">
-              Appointment Management
+              {isOnClient ? "Book Appointment" : "Appointment Management"}
             </DialogTitle>
           </DialogHeader>
 
-          <Tabs
-            value={activeTab}
-            onValueChange={setActiveTab}
-            className="w-full"
-          >
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger
-                value="set-dates"
-                className="flex items-center gap-2"
-              >
-                <Calendar size={16} />
-                Set Available Dates
-              </TabsTrigger>
-              <TabsTrigger
-                value="new-appointment"
-                className="flex items-center gap-2"
-                disabled={!hasAvailableDates || !hasAvailableAccounts}
-              >
-                {hasAvailableDates && hasAvailableAccounts ? (
-                  <>
-                    <Plus size={16} />
-                    <span>New Appointment</span>
-                  </>
-                ) : (
-                  <>
-                    {!hasAvailableDates && " (No Available Dates)"}
-                    {!hasAvailableAccounts && " (No Available Users)"}
-                  </>
-                )}
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="set-dates">
-              <ScrollArea className="max-h-[40vh] pr-4">
-                <motion.div className="space-y-4">
-                  <AnimatePresence>
-                    {dates.map((date, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 20 }}
-                        className="flex items-center space-x-2"
-                      >
-                        <Input
-                          type="datetime-local"
-                          value={date}
-                          onChange={(e) =>
-                            handleDateChange(index, e.target.value)
-                          }
-                          className="w-full"
-                        />
-                        <Button
-                          onClick={() => removeDateField(index)}
-                          variant="destructive"
-                          size="icon"
-                          className="flex-shrink-0"
-                        >
-                          <Trash2 size={18} />
-                        </Button>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </motion.div>
-              </ScrollArea>
-
-              <div className="space-y-4 mt-4">
-                <Button
-                  onClick={addDateField}
-                  variant="outline"
-                  className="w-full"
-                >
-                  Add Date
-                </Button>
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Button
-                    onClick={handleSubmitDates}
-                    disabled={
-                      isSubmitDisabled || saveAppointmentDateMutation.isPending
-                    }
-                    className="w-full bg-green-600 hover:bg-green-700 text-white"
-                  >
-                    {saveAppointmentDateMutation.isPending
-                      ? "Saving..."
-                      : "Set Dates"}
-                  </Button>
-                </motion.div>
-              </div>
-
-              <div className="mt-6">
-                <h3 className="text-lg font-bold mb-2">
-                  Available Appointment Dates
-                </h3>
-                <ScrollArea className="h-[30vh]">
-                  <div className="space-y-2">
-                    {appointmentDates.map((appointmentDate) => (
-                      <motion.div
-                        key={appointmentDate.id}
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        className="bg-gray-100 dark:bg-background p-3 rounded-md flex justify-between items-center"
-                      >
-                        <div>
-                          {appointmentDate.dates.map((date, index) => (
-                            <div
-                              key={index}
-                              className="text-sm dark:text-white"
-                            >
-                              {formatDate(date)}
-                            </div>
-                          ))}
-                        </div>
-                        <Button
-                          onClick={() => handleDelete(appointmentDate.id!)}
-                          disabled={deleteAppointmentDateMutation.isPending}
-                          variant="ghost"
-                          size="icon"
-                          className="hover:bg-transparent text-red-500 hover:text-red-700 dark:text-red-500 dark:hover:text-red-700"
-                        >
-                          <Trash2 size={18} />
-                        </Button>
-                      </motion.div>
-                    ))}
-                  </div>
-                </ScrollArea>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="new-appointment" className="space-y-4">
-              {hasAvailableDates && hasAvailableAccounts ? (
-                <FallbackBoundary>
-                  <DynamicForm<AddAppointmentValues>
-                    form={form}
-                    onSubmit={handleSubmitAppointment}
-                    fields={addAppointmentFields(
-                      availableAccounts,
-                      appointmentDates,
-                      appointments,
-                    )}
-                    submitButtonTitle="Add Appointment"
-                    submitButtonClassname="bg-green-500 rounded-3xl hover:dark:text-black"
-                    submitButtonTitleClassname="text-md font-medium"
-                    mutation={createAppointmentMutation}
-                  />
-                </FallbackBoundary>
-              ) : (
+          {isOnClient ? (
+            <FallbackBoundary>
+              {userHasAppointment ? (
                 <div className="text-center py-8 text-gray-500">
-                  {!hasAvailableDates
-                    ? "No dates available for new appointments. Please add available dates first."
-                    : "All users already have appointments scheduled."}
+                  You already have an appointment scheduled. You cannot create
+                  more appointments.
                 </div>
+              ) : (
+                <DynamicForm<AddAppointmentValues>
+                  form={form}
+                  onSubmit={handleSubmitAppointment}
+                  fields={addAppointmentFields(
+                    availableAccounts,
+                    appointmentDates,
+                    appointments,
+                    isOnClient,
+                  )}
+                  submitButtonTitle="Book Appointment"
+                  submitButtonClassname="bg-green-500 rounded-3xl hover:dark:text-black"
+                  submitButtonTitleClassname="text-md font-medium"
+                  mutation={createAppointmentMutation}
+                />
               )}
-            </TabsContent>
-          </Tabs>
+            </FallbackBoundary>
+          ) : (
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full"
+            >
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger
+                  value="set-dates"
+                  className="flex items-center gap-2"
+                >
+                  <Calendar size={16} />
+                  Set Available Dates
+                </TabsTrigger>
+                <TabsTrigger
+                  value="new-appointment"
+                  className="flex items-center gap-2"
+                  disabled={!hasAvailableDates || !hasAvailableAccounts}
+                >
+                  {hasAvailableDates && hasAvailableAccounts ? (
+                    <>
+                      <Plus size={16} />
+                      <span>New Appointment</span>
+                    </>
+                  ) : (
+                    <>
+                      {!hasAvailableDates && " (No Available Dates)"}
+                      {!hasAvailableAccounts && " (No Available Users)"}
+                    </>
+                  )}
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="set-dates">
+                <ScrollArea className="max-h-[40vh] pr-4">
+                  <motion.div className="space-y-4">
+                    <AnimatePresence>
+                      {dates.map((date, index) => (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, y: -20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 20 }}
+                          className="flex items-center space-x-2"
+                        >
+                          <Input
+                            type="datetime-local"
+                            value={date}
+                            onChange={(e) =>
+                              handleDateChange(index, e.target.value)
+                            }
+                            className="w-full"
+                          />
+                          <Button
+                            onClick={() => removeDateField(index)}
+                            variant="destructive"
+                            size="icon"
+                            className="flex-shrink-0"
+                          >
+                            <Trash2 size={18} />
+                          </Button>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </motion.div>
+                </ScrollArea>
+
+                <div className="space-y-4 mt-4">
+                  <Button
+                    onClick={addDateField}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    Add Date
+                  </Button>
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Button
+                      onClick={handleSubmitDates}
+                      disabled={
+                        isSubmitDisabled ||
+                        saveAppointmentDateMutation.isPending
+                      }
+                      className="w-full bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      {saveAppointmentDateMutation.isPending
+                        ? "Saving..."
+                        : "Set Dates"}
+                    </Button>
+                  </motion.div>
+                </div>
+
+                <div className="mt-6">
+                  <h3 className="text-lg font-bold mb-2">
+                    Available Appointment Dates
+                  </h3>
+                  <ScrollArea className="h-[30vh]">
+                    <div className="space-y-2">
+                      {appointmentDates.map((appointmentDate) => (
+                        <motion.div
+                          key={appointmentDate.id}
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          className="bg-gray-100 dark:bg-background p-3 rounded-md flex justify-between items-center"
+                        >
+                          <div>
+                            {appointmentDate.dates.map((date, index) => (
+                              <div
+                                key={index}
+                                className="text-sm dark:text-white"
+                              >
+                                {formatDate(date)}
+                              </div>
+                            ))}
+                          </div>
+                          <Button
+                            onClick={() => handleDelete(appointmentDate.id!)}
+                            disabled={deleteAppointmentDateMutation.isPending}
+                            variant="ghost"
+                            size="icon"
+                            className="hover:bg-transparent text-red-500 hover:text-red-700 dark:text-red-500 dark:hover:text-red-700"
+                          >
+                            <Trash2 size={18} />
+                          </Button>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="new-appointment" className="space-y-4">
+                {hasAvailableDates && hasAvailableAccounts ? (
+                  <FallbackBoundary>
+                    <DynamicForm<AddAppointmentValues>
+                      form={form}
+                      onSubmit={handleSubmitAppointment}
+                      fields={addAppointmentFields(
+                        availableAccounts,
+                        appointmentDates,
+                        appointments,
+                        isOnClient!,
+                      )}
+                      submitButtonTitle="Add Appointment"
+                      submitButtonClassname="bg-green-500 rounded-3xl hover:dark:text-black"
+                      submitButtonTitleClassname="text-md font-medium"
+                      mutation={createAppointmentMutation}
+                    />
+                  </FallbackBoundary>
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    {!hasAvailableDates
+                      ? "No dates available for new appointments. Please add available dates first."
+                      : "All users already have appointments scheduled."}
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
+          )}
         </DialogContent>
       </Dialog>
     </>

@@ -1,6 +1,7 @@
 "use client"
 
 // components
+import FallbackBoundary from "@/components/shared/fallback-boundary"
 import { columns } from "@/components/client/reserved/columns"
 import { Separator } from "@/components/ui/separator"
 import DataTable from "@/components/ui/data-table"
@@ -46,26 +47,28 @@ const ReservedPropertiesClient = () => {
   const propertyCount = reservedProperties.length
 
   return (
-    <>
-      <div className="flex items-start justify-between">
-        <Heading
-          title={`Reserved Properties (${propertyCount})`}
-          description="Manage reserved properties"
-        />
+    <FallbackBoundary>
+      <div className="container p-10">
+        <div className="flex items-start justify-between">
+          <Heading
+            title={`Reserved Properties (${propertyCount})`}
+            description="Manage reserved properties"
+          />
+        </div>
+        <Separator className="mt-2" />
+        <div ref={topRef}>
+          <DataTable
+            placeholder="Search..."
+            columns={columns}
+            isOnProperties
+            data={reservedProperties}
+            noBulkDelete
+            isOnClient
+          />
+        </div>
+        <div ref={bottomRef} />
       </div>
-      <Separator className="mt-2" />
-      <div ref={topRef}>
-        <DataTable
-          placeholder="Search..."
-          columns={columns}
-          isOnProperties
-          data={reservedProperties}
-          noBulkDelete
-          isOnClient
-        />
-      </div>
-      <div ref={bottomRef} />
-    </>
+    </FallbackBoundary>
   )
 }
 

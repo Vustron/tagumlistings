@@ -241,53 +241,61 @@ export const addAppointmentFields = (
   accounts: UserData[],
   appointmentDates: AppointmentDate[],
   appointments: Appointment[],
-): FieldConfig<AddAppointmentValues>[] => [
-  {
-    name: "user",
-    type: "select",
-    label: "Select a Client",
-    placeholder: "Select a client",
-    options: accounts
-      .filter((account) => {
-        // Check if the user already has an appointment
-        const hasAppointment = appointments.some(
-          (appointment) => appointment.user === account.name,
-        )
-        // Only include users who do not have an appointment
-        return account.id !== undefined && !hasAppointment
-      })
-      .map((account) => ({
-        value: account.name,
-        label: account.name,
+  isOnClient?: boolean,
+): FieldConfig<AddAppointmentValues>[] => {
+  const fields: FieldConfig<AddAppointmentValues>[] = [
+    {
+      name: "date",
+      type: "select",
+      label: "Select Appointment Date",
+      placeholder: "Select appointment date",
+      options: appointmentDates.map((appointmentDate) => ({
+        value: appointmentDate.dates?.[0]
+          ? appointmentDate.dates[0].toString()
+          : "",
+        label: appointmentDate.dates?.[0]
+          ? format(new Date(appointmentDate.dates[0]), "yyyy-MM-dd")
+          : "",
       })),
-  },
-  {
-    name: "date",
-    type: "select",
-    label: "Select Appointment Date",
-    placeholder: "Select appointment date",
-    options: appointmentDates.map((appointmentDate) => ({
-      value: appointmentDate.dates?.[0]
-        ? appointmentDate.dates[0].toString()
-        : "",
-      label: appointmentDate.dates?.[0]
-        ? format(new Date(appointmentDate.dates[0]), "yyyy-MM-dd")
-        : "",
-    })),
-  },
-  {
-    name: "description",
-    type: "text",
-    label: "Appointment Description",
-    placeholder: "Enter description",
-  },
-  {
-    name: "color",
-    type: "color",
-    label: "Color",
-    placeholder: "Select color",
-  },
-]
+    },
+    {
+      name: "description",
+      type: "text",
+      label: "Appointment Description",
+      placeholder: "Enter description",
+    },
+    {
+      name: "color",
+      type: "color",
+      label: "Color",
+      placeholder: "Select color",
+    },
+  ]
+
+  if (!isOnClient) {
+    fields.unshift({
+      name: "user",
+      type: "select",
+      label: "Select a Client",
+      placeholder: "Select a client",
+      options: accounts
+        .filter((account) => {
+          // Check if the user already has an appointment
+          const hasAppointment = appointments.some(
+            (appointment) => appointment.user === account.name,
+          )
+          // Only include users who do not have an appointment
+          return account.id !== undefined && !hasAppointment
+        })
+        .map((account) => ({
+          value: account.name,
+          label: account.name,
+        })),
+    })
+  }
+
+  return fields
+}
 
 // update appointment form fields
 export const updateAppointmentFields = (

@@ -1,13 +1,70 @@
 "use client"
 
 // components
-import AppointmentCalendar from "@/components/admin/appointments/calendar"
+import FallbackBoundary from "@/components/shared/fallback-boundary"
+import { Separator } from "@/components/ui/separator"
+import DataTable from "@/components/ui/data-table"
+import { Heading } from "@/components/ui/heading"
+
+// hooks
+import { useGetAppointmentDates } from "@/lib/hooks/appointment/get-dates"
+import { useGetAppointments } from "@/lib/hooks/appointment/get-all"
+import { useFetchScroll } from "@/lib/hooks/utils/use-fetch-scroll"
+import { useSession } from "@/components/providers/session"
+import { useRef, useMemo } from "react"
+
+// utils
+import { columns } from "@/components/client/appointments/columns"
+
+// types
+import type { Appointment } from "@/lib/types"
+import type { ElementRef } from "react"
 
 const AppointmentsClient = () => {
+  const { data: appointmentsData } = useGetAppointments()
+  const { data: datesData } = useGetAppointmentDates()
+  const session = useSession()
+
+  const topRef = useRef<ElementRef<"div">>(null)
+  const bottomRef = useRef<ElementRef<"div">>(null)
+  useFetchScroll({
+    topRef,
+    bottomRef,
+  })
+
+  const filteredAppointments = useMemo(() => {
+    return appointmentsData.appointments.filter((appointment: Appointment) => {
+      return appointment.user === session.name
+    })
+  }, [appointmentsData.appointments, session.name])
+
+  const appointmentsCount = filteredAppointments.length
+  const dates = datesData?.dates ?? []
+
   return (
-    <div className="mt-6 mb-2">
-      <AppointmentCalendar events={[]} appointmentDates={[]} />
-    </div>
+    <FallbackBoundary>
+      <div className="container p-10">
+        <div className="flex items-start justify-between">
+          <Heading
+            title={`Appointments (${appointmentsCount})`}
+            description="Manage your appointments"
+          />
+        </div>
+        <Separator className="mt-2" />
+
+        <div ref={topRef}>
+          <DataTable
+            placeholder="Search.."
+            columns={columns}
+            data={filteredAppointments}
+            appointment={filteredAppointments}
+            appointmentDates={dates}
+            isOnClientAppointments
+          />
+        </div>
+        <div ref={bottomRef} />
+      </div>
+    </FallbackBoundary>
   )
 }
 

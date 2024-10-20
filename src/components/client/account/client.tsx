@@ -26,7 +26,7 @@ const AccountClient = ({ id }: { id?: string }) => {
 
   return (
     <FallbackBoundary>
-      <div className="container p-5">
+      <div className="container p-10">
         <div className="flex items-start justify-between">
           <Heading
             title="Current Account"
