@@ -18,7 +18,6 @@ import { firestore } from "@/lib/config/firebase"
 import { getSession } from "@/lib/actions/session/get"
 
 // types
-
 import type { AddPropertyValues } from "@/lib/validation"
 import type { NextRequest } from "next/server"
 import type { Property } from "@/lib/types"

@@ -203,3 +203,12 @@ export const reservePropertySchema = z.object({
 
 /* ReservePropertyValues Type */
 export type ReservePropertyValues = z.infer<typeof addPropertySchema>
+
+// createMessageSchema
+export const createMessageSchema = z.object({
+  content: requiredString.optional(),
+  images: z.array(requiredString.optional()),
+})
+
+/* AddMessageValues Type */
+export type AddMessageValues = z.infer<typeof createMessageSchema>

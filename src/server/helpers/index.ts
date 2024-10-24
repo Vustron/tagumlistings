@@ -26,6 +26,7 @@ import type {
 } from "@/lib/types"
 import type { NextRequest } from "next/server"
 import type { HttpMethod } from "@/server/routes"
+import { preFetchMessages } from "@/lib/hooks/messages/get-all"
 
 /**------------------util non async functions ------------------**/
 
@@ -131,6 +132,7 @@ const queryKeys: QueryKeys = {
   appointment: (id) => ["appointment", id],
   payments: () => ["payments"],
   payment: (id) => ["payment", id],
+  messages: () => ["messages"],
 }
 
 // determine the pathname for query key
@@ -182,6 +184,9 @@ export const determinePrefetchQueryKey = (
 
     case "payments":
       return queryKeys.payments()
+
+    case "messages":
+      return queryKeys.messages()
 
     default:
       return ["unknown"]
@@ -278,6 +283,10 @@ export const createRouteConfigs = (props: {
     {
       pathname: "/search",
       prefetchFns: [() => preFetchProperties()],
+    },
+    {
+      pathname: "/admin/messages",
+      prefetchFns: [() => preFetchAccounts(), () => preFetchMessages()],
     },
   ]
 }

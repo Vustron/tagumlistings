@@ -115,10 +115,27 @@ export interface UserData {
   email: string
   role: string
   password?: string
+  messages?: Message[]
   loggedIn?: boolean
   reservedProperties?: Property[]
   createdAt?: string
   updatedAt?: string
+}
+
+/* Message Type */
+export interface Message {
+  id?: string
+  senderId?: string
+  receiverId?: string
+  content?: string
+  images?: string[]
+  createdAt?: string
+  updatedAt?: string
+}
+
+/* Messages Type */
+export interface Messages {
+  messages: Message[]
 }
 
 /* Accounts Type */
@@ -260,6 +277,7 @@ export type QueryKeys = {
   appointment: (id: string) => ["appointment", string]
   payments: () => ["payments"]
   payment: (id: string) => ["payment", string]
+  messages: () => ["messages"]
 }
 
 /* RouteConfig Type */

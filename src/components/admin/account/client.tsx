@@ -35,7 +35,7 @@ const AccountClient = ({ id }: { id?: string }) => {
       <Separator className="mt-2" />
 
       <div className="container flex flex-col justify-center items-center lg:w-[400px] sm:w-[300px] h-auto p-5 mt-5">
-        <AccountForm id={id} data={userData!} isOnClient />
+        <AccountForm id={id} data={userData!} />
       </div>
     </FallbackBoundary>
   )

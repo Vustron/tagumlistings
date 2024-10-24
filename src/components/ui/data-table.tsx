@@ -218,7 +218,7 @@ export default function DataTable<TData, TValue>({
             )}
 
             {/* create new payment */}
-            {isOnPayments && (
+            {isOnPayments && !isOnClient && (
               <Button
                 variant="outline"
                 size="sm"

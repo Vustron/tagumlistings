@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function ClientPaymentsPage() {
   return (
-    <div className="container p-5">
+    <div className="container p-10">
       <BounceWrapper>
         <PaymentsClient />
       </BounceWrapper>
