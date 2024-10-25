@@ -132,7 +132,7 @@ const ChatWindow = ({
                   }`}
                 >
                   <div className="flex items-start gap-2 max-w-[70%]">
-                     <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2">
                       {msg.content && (
                         <div
                           className={`break-words whitespace-pre-wrap p-3 rounded-lg ${
