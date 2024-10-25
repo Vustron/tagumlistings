@@ -1,11 +1,11 @@
 "use client"
 
 // components
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Menu, Search, X } from "lucide-react"
+import { Input } from "@/components/ui/input"
 
 // hooks
 import { useEffect, useRef } from "react"
@@ -138,10 +138,14 @@ const Sidebar = ({
                   className="ml-3 overflow-hidden"
                 >
                   <div className="font-medium truncate">{user.name}</div>
-                  <div className="text-sm text-black/70 truncate dark:text-white">
+                  <div
+                    className={`text-sm truncate ${selectedUser?.id === user.id ? "text-white" : "text-black/70 dark:text-white"}`}
+                  >
                     {user.email}
                   </div>
-                  <div className="text-xs text-black/70 truncate dark:text-white">
+                  <div
+                    className={`text-xs truncate ${selectedUser?.id === user.id ? "text-white" : "text-black/70 dark:text-white"}`}
+                  >
                     {user.contact_number}
                   </div>
                 </motion.div>

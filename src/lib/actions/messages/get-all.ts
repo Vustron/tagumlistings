@@ -31,6 +31,10 @@ export async function getMessages(): Promise<{ messages: Message[] }> {
           })
         }
 
+        messages.sort((a, b) =>
+          (a.createdAt || "").localeCompare(b.createdAt || ""),
+        )
+
         queryClient.setQueryData(["messages"], {
           messages: messages,
         })

@@ -6,20 +6,17 @@ import Sidebar from "@/components/admin/messages/sidebar"
 import { Card, CardContent } from "@/components/ui/card"
 
 // hooks
+import { useCreateMessage } from "@/lib/hooks/messages/create"
 import { useGetMessages } from "@/lib/hooks/messages/get-all"
+import { useEffect, useState, useRef, useMemo } from "react"
 import { useSession } from "@/components/providers/session"
 import { useGetAccounts } from "@/lib/hooks/auth/get-all"
-import { useQueryClient } from "@tanstack/react-query"
-import { useEffect, useState, useRef } from "react"
-import { useRouter } from "next-nprogress-bar"
 
 // utils
-import { addDoc, collection } from "firebase/firestore"
-import { firestore } from "@/lib/config/firebase"
+import toast from "react-hot-toast"
 
 // types
-import type { QueryFilters } from "@tanstack/react-query"
-import type { Message, UserData } from "@/lib/types"
+import type { UserData } from "@/lib/types"
 
 interface MessagesClientProps {
   isAdmin?: boolean
@@ -34,21 +31,34 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
-  const queryClient = useQueryClient()
-  const router = useRouter()
 
   // Data fetching
   const { data: accountsData } = useGetAccounts()
   const { data: messagesData } = useGetMessages()
+  const createMessageMutation = useCreateMessage()
   const session = useSession()
   const accounts = accountsData?.accounts ?? []
-  const messages = messagesData.messages ?? []
+  const messages = messagesData?.messages ?? []
+
+  // Set default user if not admin and no user is selected
+  useEffect(() => {
+    if (!isAdmin && accounts.length > 0 && !selectedUser) {
+      if (accounts[0]) {
+        setSelectedUser(accounts[0])
+      }
+    }
+  }, [isAdmin, accounts, selectedUser])
 
   // Filter messages for selected user
-  const filteredMessages = messages.filter(
-    (msg) =>
-      msg.senderId === selectedUser?.id || msg.receiverId === selectedUser?.id,
-  )
+  const filteredMessages = useMemo(() => {
+    return messages
+      .filter(
+        (msg) =>
+          msg.senderId === selectedUser?.id ||
+          msg.receiverId === selectedUser?.id,
+      )
+      .sort((a, b) => (a.createdAt || "").localeCompare(b.createdAt || ""))
+  }, [messages, selectedUser])
 
   // Handle window resize
   useEffect(() => {
@@ -84,39 +94,21 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
       return
 
     try {
-      const messagesRef = collection(firestore, "messages")
-
       // Upload images if any
       const imageUrls =
         selectedImages.length > 0 ? await handleImageUpload(selectedImages) : []
 
-      const newMessage: Message = {
+      await createMessageMutation.mutateAsync({
         content: message.trim(),
         images: imageUrls,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
         senderId: session.id,
         receiverId: selectedUser.id,
-      }
-
-      await addDoc(messagesRef, newMessage)
-
-      const queryFilter: QueryFilters = {
-        queryKey: ["messages"],
-      }
-
-      await queryClient.cancelQueries(queryFilter)
-      queryClient.setQueryData<Message[]>(["messages"], (oldMessages = []) => {
-        if (!oldMessages) return [newMessage]
-
-        return [...oldMessages, newMessage]
       })
 
       setMessage("")
       setSelectedImages([])
-      router.refresh()
     } catch (error) {
-      console.error("Error sending message:", error)
+      toast.error("Error sending message")
     }
   }
 
@@ -152,6 +144,8 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
             isMobile={isMobile}
             toggleSidebar={toggleSidebar}
             scrollAreaRef={scrollAreaRef}
+            isLoading={createMessageMutation.isPending}
+            currentUserId={session.id}
           />
         </div>
       </CardContent>

@@ -208,6 +208,8 @@ export type ReservePropertyValues = z.infer<typeof addPropertySchema>
 export const createMessageSchema = z.object({
   content: requiredString.optional(),
   images: z.array(requiredString.optional()),
+  senderId: requiredString.optional(),
+  receiverId: requiredString.optional(),
 })
 
 /* AddMessageValues Type */

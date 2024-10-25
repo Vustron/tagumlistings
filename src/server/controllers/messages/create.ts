@@ -22,7 +22,7 @@ import type { AddMessageValues } from "@/lib/validation"
 import type { NextRequest } from "next/server"
 import type { Message } from "@/lib/types"
 
-export async function createMessageController(request: NextRequest) {
+export async function createMessageControl(request: NextRequest) {
   try {
     const rateLimitCheck = await convertAndCheckRateLimit(request)
 
@@ -39,7 +39,7 @@ export async function createMessageController(request: NextRequest) {
     const createMessageBody =
       await requestBodyHandler<AddMessageValues>(request)
 
-    const { content, images } = createMessageBody
+    const { content, images, senderId, receiverId } = createMessageBody
 
     const requiredFields: (keyof typeof createMessageBody)[] = ["content"]
 
@@ -50,7 +50,9 @@ export async function createMessageController(request: NextRequest) {
     const messageData = {
       content,
       images,
-      created_at: serverTimestamp(),
+      senderId,
+      receiverId,
+      createdAt: serverTimestamp(),
     }
 
     const messageRef = await addDoc(

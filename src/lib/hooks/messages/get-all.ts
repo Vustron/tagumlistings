@@ -1,20 +1,21 @@
 "use client"
 
-// hooks
-import {
-  queryOptions,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query"
-
 // configs
+import { firestore } from "@/lib/config/firebase"
+
+// actions
+import { getMessages } from "@/lib/actions/messages/get-all"
+
+// hooks
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
+
+// utils
+import { collection, onSnapshot } from "firebase/firestore"
+import { queryOptions } from "@tanstack/react-query"
+import { clientErrorHandler } from "@/lib/utils"
 
 // types
 import type { Message, Messages } from "@/lib/types"
-import { firestore } from "@/lib/config/firebase"
-import { clientErrorHandler } from "@/lib/utils"
-import { collection, onSnapshot } from "firebase/firestore"
-import { getMessages } from "@/lib/actions/messages/get-all"
 
 export const useGetMessages = () => {
   return useSuspenseQuery({
