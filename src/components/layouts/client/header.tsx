@@ -167,7 +167,7 @@ const ClientHeader = () => {
                 >
                   <div className="flex items-center justify-center gap-20">
                     <ThemeToggle />
-                    <UserButton isOnClient />
+                    {session?.loggedIn && <UserButton isOnClient />}
                   </div>
                 </motion.div>
               </motion.div>
