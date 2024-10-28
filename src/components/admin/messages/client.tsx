@@ -58,7 +58,7 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
           msg.senderId === selectedUser?.id ||
           msg.receiverId === selectedUser?.id,
       )
-      .sort((a, b) => (a.createdAt || "").localeCompare(b.createdAt || ""))
+      .sort((a, b) => (a.createdAt ?? "").localeCompare(b.createdAt ?? ""))
   }, [messages, selectedUser])
 
   // Handle window resize
