@@ -13,6 +13,7 @@ import { useSession } from "@/components/providers/session"
 import { useGetAccounts } from "@/lib/hooks/auth/get-all"
 
 // utils
+import { uploadMultipleImages } from "@/lib/utils"
 import toast from "react-hot-toast"
 
 // types
@@ -81,11 +82,13 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
 
   // Handle image upload
   const handleImageUpload = async (files: File[]): Promise<string[]> => {
-    // Implement your image upload logic here
-    // This is a placeholder that returns placeholder image URLs
-    return files.map(
-      (_, index) => `/api/placeholder/400/300?text=Image${index + 1}`,
-    )
+    try {
+      const imageUrls = await uploadMultipleImages(files, session.id)
+      return imageUrls
+    } catch (error) {
+      toast.error(`Error: ${(error as Error).message}`)
+      throw error
+    }
   }
 
   // Send message handler
@@ -108,7 +111,8 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
       setMessage("")
       setSelectedImages([])
     } catch (error) {
-      toast.error("Error sending message")
+      toast.error(`Error: ${(error as Error).message}`)
+      throw error
     }
   }
 

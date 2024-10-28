@@ -1,10 +1,14 @@
 // utils
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { format, isValid, parseISO } from "date-fns"
 import { NextResponse } from "next/server"
 import { twMerge } from "tailwind-merge"
 import toast from "react-hot-toast"
 import { ZodError } from "zod"
 import { clsx } from "clsx"
+
+// config
+import { firebaseStorage } from "@/lib/config/firebase"
 
 // types
 import type { ErrorResponseData, UniqueId } from "@/lib/types"
@@ -14,6 +18,78 @@ import type { Appointment } from "@/lib/types"
 import type { ClassValue } from "clsx"
 import type DOMPurify from "dompurify"
 import type { z } from "zod"
+
+export const uploadImageToFirebase = async (
+  file: File,
+  userId: string,
+): Promise<string> => {
+  try {
+    // Check if the file type is allowed
+    const allowedExtensions = ["png", "jpg", "jpeg"]
+    const fileExtension = file.name.split(".").pop()?.toLowerCase()
+
+    if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
+      throw new Error("Only PNG, JPG, and JPEG are allowed.")
+    }
+
+    // Check if the file size is within the 1 MB limit
+    const maxSize = 1048576
+    if (file.size > maxSize) {
+      // 1 MB in bytes
+      throw new Error("File size must be 1 MB or less.")
+    }
+
+    // Create a unique file name to avoid collisions
+    const fileName = `${createUniqueId()}.${fileExtension}`
+
+    // Create a reference to the file location
+    const storageRef = ref(firebaseStorage, `messages/${userId}/${fileName}`)
+
+    // Upload the file
+    const snapshot = await uploadBytes(storageRef, file)
+
+    // Get the download URL
+    const downloadURL = await getDownloadURL(snapshot.ref)
+
+    return downloadURL
+  } catch (error) {
+    throw new Error(`${(error as Error).message}`)
+  }
+}
+
+export const uploadMultipleImages = async (
+  files: File[],
+  userId: string,
+): Promise<string[]> => {
+  try {
+    const allowedExtensions = ["png", "jpg", "jpeg"]
+    const maxSize = 1048576 // 1 MB in bytes
+
+    const validatedFiles = files.filter((file) => {
+      const fileExtension = file.name.split(".").pop()?.toLowerCase()
+      return (
+        fileExtension &&
+        allowedExtensions.includes(fileExtension) &&
+        file.size <= maxSize
+      )
+    })
+
+    if (validatedFiles.length !== files.length) {
+      throw new Error(
+        "Files must be PNG, JPG, or JPEG and 1 MB or less in size.",
+      )
+    }
+
+    const uploadPromises = validatedFiles.map((file) =>
+      uploadImageToFirebase(file, userId),
+    )
+
+    const urls = await Promise.all(uploadPromises)
+    return urls
+  } catch (error) {
+    throw new Error(`${(error as Error).message}`)
+  }
+}
 
 export const filterAppointmentsForLastHour = (
   appointments: Appointment[],

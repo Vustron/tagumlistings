@@ -7,16 +7,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { createMessage } from "@/lib/actions/messages/create"
 
 // utils
-import { clientErrorHandler, sanitizer } from "@/lib/utils"
-import { createMessageSchema } from "@/lib/validation"
-import DOMPurify from "dompurify"
+import { clientErrorHandler } from "@/lib/utils"
 
 // types
 import type { AddMessageValues } from "@/lib/validation"
 import type { QueryFilters } from "@tanstack/react-query"
 import type { Messages } from "@/lib/types"
-
-const purify = DOMPurify
 
 export const useCreateMessage = () => {
   const queryClient = useQueryClient()
@@ -24,12 +20,7 @@ export const useCreateMessage = () => {
   return useMutation({
     mutationKey: ["create-message"],
     mutationFn: async (values: AddMessageValues) => {
-      const sanitizedData = sanitizer<AddMessageValues>(
-        values,
-        createMessageSchema,
-        purify,
-      )
-      return await createMessage(sanitizedData)
+      return await createMessage(values)
     },
     onSuccess: async (newMessage) => {
       const queryFilter: QueryFilters = {

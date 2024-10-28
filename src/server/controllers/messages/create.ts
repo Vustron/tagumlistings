@@ -8,7 +8,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore"
 import { convertAndCheckRateLimit, handleErrorResponse } from "@/server/helpers"
-import { checkRequiredFields, requestBodyHandler } from "@/lib/utils"
+import { requestBodyHandler } from "@/lib/utils"
 import { NextResponse } from "next/server"
 
 // configs
@@ -40,12 +40,6 @@ export async function createMessageControl(request: NextRequest) {
       await requestBodyHandler<AddMessageValues>(request)
 
     const { content, images, senderId, receiverId } = createMessageBody
-
-    const requiredFields: (keyof typeof createMessageBody)[] = ["content"]
-
-    const errorResponse = checkRequiredFields(createMessageBody, requiredFields)
-
-    if (errorResponse) return errorResponse
 
     const messageData = {
       content,
