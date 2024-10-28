@@ -136,7 +136,7 @@ const ClientHeader = () => {
                 </motion.div>
                 <nav className="flex-grow">
                   <AnimatePresence>
-                    {navLinks.map((link, index) => (
+                    {filteredNavLinks.map((link, index) => (
                       <motion.div
                         key={link.href}
                         initial={{ opacity: 0, x: -20 }}
@@ -167,7 +167,16 @@ const ClientHeader = () => {
                 >
                   <div className="flex items-center justify-center gap-20">
                     <ThemeToggle />
-                    {session?.loggedIn && <UserButton isOnClient />}
+                    {!session?.loggedIn ? (
+                      <Button
+                        variant="outline"
+                        onClick={() => router.push("/login")}
+                      >
+                        Login
+                      </Button>
+                    ) : (
+                      <UserButton isOnClient />
+                    )}
                   </div>
                 </motion.div>
               </motion.div>

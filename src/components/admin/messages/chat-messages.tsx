@@ -7,7 +7,7 @@ import Image from "next/image"
 
 // utils
 import { motion, AnimatePresence } from "framer-motion"
-import { format, parseISO, isValid } from "date-fns"
+// import { format, parseISO, isValid } from "date-fns"
 
 // types
 import type { Message } from "@/lib/types"
@@ -48,7 +48,7 @@ export default function ChatMessages({
             }`}
           >
             <div className="flex items-start gap-2 max-w-[70%]">
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 p-2">
                 {msg.content && (
                   <div
                     className={`break-words whitespace-pre-wrap p-3 rounded-lg ${
@@ -90,11 +90,11 @@ export default function ChatMessages({
                 )}
               </div>
             </div>
-            {msg.createdAt && isValid(parseISO(msg.createdAt)) && (
+            {/* {msg.createdAt && isValid(parseISO(msg.createdAt)) && (
               <time className="text-xs text-muted-foreground">
                 {format(parseISO(msg.createdAt), "PPpp")}
               </time>
-            )}
+            )} */}
           </motion.div>
         ))}
       </AnimatePresence>
