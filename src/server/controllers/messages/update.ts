@@ -1,7 +1,7 @@
 // utils
 import { convertAndCheckRateLimit, handleErrorResponse } from "@/server/helpers"
-import { addDoc, collection, serverTimestamp } from "firebase/firestore"
-import { createUniqueId, requestBodyHandler } from "@/lib/utils"
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore"
+import { requestBodyHandler } from "@/lib/utils"
 import { NextResponse } from "next/server"
 
 // configs
@@ -15,7 +15,7 @@ import type { AddMessageValues } from "@/lib/validation"
 import type { NextRequest } from "next/server"
 // import type { Message } from "@/lib/types"
 
-export async function createMessageControl(request: NextRequest) {
+export async function updateMessageControl(request: NextRequest) {
   try {
     const rateLimitCheck = await convertAndCheckRateLimit(request)
 
@@ -29,21 +29,28 @@ export async function createMessageControl(request: NextRequest) {
       return NextResponse.json({ error: "Missing session" }, { status: 400 })
     }
 
-    const createMessageBody =
+    const updateMessageBody =
       await requestBodyHandler<AddMessageValues>(request)
 
-    const { content, images, senderId, receiverId } = createMessageBody
+    const { id, content, images, senderId, receiverId } = updateMessageBody
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Message ID is required" },
+        { status: 400 },
+      )
+    }
 
     const messageData = {
-      id: createUniqueId(),
+      id,
       content,
       images,
       senderId,
       receiverId,
-      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
     }
 
-    await addDoc(collection(firestore, "messages"), messageData)
+    await updateDoc(doc(firestore, "messages", id), messageData)
 
     // const id = messageRef.id
     // await updateDoc(doc(firestore, "messages", id), {

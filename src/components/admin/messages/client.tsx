@@ -13,7 +13,7 @@ import { useSession } from "@/components/providers/session"
 import { useGetAccounts } from "@/lib/hooks/auth/get-all"
 
 // utils
-import { uploadMultipleImages } from "@/lib/utils"
+import { clientErrorHandler, uploadMultipleImages } from "@/lib/utils"
 import toast from "react-hot-toast"
 
 // types
@@ -58,7 +58,12 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
           msg.senderId === selectedUser?.id ||
           msg.receiverId === selectedUser?.id,
       )
-      .sort((a, b) => (a.createdAt ?? "").localeCompare(b.createdAt ?? ""))
+      .sort((a, b) => {
+        // Handle different possible date formats
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0
+        return dateA - dateB
+      })
   }, [messages, selectedUser])
 
   // Handle window resize
@@ -96,30 +101,32 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
     if ((!message.trim() && selectedImages.length === 0) || !selectedUser)
       return
 
-    try {
-      // Upload images if any
-      const imageUrls =
-        selectedImages.length > 0 ? await handleImageUpload(selectedImages) : []
+    // Upload images if any
+    const imageUrls =
+      selectedImages.length > 0 ? await handleImageUpload(selectedImages) : []
 
-      await createMessageMutation.mutateAsync({
+    await toast.promise(
+      createMessageMutation.mutateAsync({
         content: message.trim(),
         images: imageUrls,
         senderId: session.id,
         receiverId: selectedUser.id,
-      })
+      }),
+      {
+        loading: <span className="animate-pulse">Sending message...</span>,
+        success: "Message sent",
+        error: (error: unknown) => clientErrorHandler(error),
+      },
+    )
 
-      setMessage("")
-      setSelectedImages([])
-    } catch (error) {
-      toast.error(`Error: ${(error as Error).message}`)
-      throw error
-    }
+    setMessage("")
+    setSelectedImages([])
   }
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
 
   return (
-    <Card className="rounded-lg border-none mt-6 h-[calc(100vh-100px)]">
+    <Card className="rounded-lg border-none h-[calc(100vh+200px)] p-20">
       <CardContent
         className={`p-0 h-full ${isAdmin ? "w-auto container" : "w-full"}`}
       >

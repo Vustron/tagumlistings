@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function ClientMessagesPage() {
   return (
-    <div className="container p-10">
+    <div className="container">
       <BounceWrapper>
         {/* client */}
         <MessagesClient />

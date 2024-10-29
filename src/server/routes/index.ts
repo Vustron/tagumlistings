@@ -37,9 +37,13 @@ import { updatePaymentController } from "@/server/controllers/payment/update"
 import { getPaymentsController } from "@/server/controllers/payment/get-all"
 import { getPaymentController } from "@/server/controllers/payment/get"
 
+// message controllers
+import { createMessageControl } from "@/server/controllers/messages/create"
+import { updateMessageControl } from "@/server/controllers/messages/update"
+import { deleteMessageControl } from "@/server/controllers/messages/delete"
+
 // types
 import type { NextRequest, NextResponse } from "next/server"
-import { createMessageControl } from "../controllers/messages/create"
 
 export type HttpMethod = "GET" | "POST" | "PATCH" | "DELETE"
 
@@ -121,6 +125,10 @@ export const routes: Record<HttpMethod, Route[]> = {
       path: "/api/v1/payment/update",
       handler: updatePaymentController,
     },
+    {
+      path: "/api/v1/messages/update",
+      handler: updateMessageControl,
+    },
   ],
   DELETE: [
     { path: "/api/v1/auth/delete", handler: deleteAccountController },
@@ -136,6 +144,10 @@ export const routes: Record<HttpMethod, Route[]> = {
     {
       path: "/api/v1/payment/delete",
       handler: deletePaymentController,
+    },
+    {
+      path: "/api/v1/messages/delete",
+      handler: deleteMessageControl,
     },
   ],
 }

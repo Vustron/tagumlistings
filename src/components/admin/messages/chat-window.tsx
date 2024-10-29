@@ -56,7 +56,7 @@ const ChatWindow = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.3 }}
-      className="flex-grow flex flex-col h-full bg-background"
+      className="flex-grow flex flex-col bg-background"
     >
       {selectedUser ? (
         <>

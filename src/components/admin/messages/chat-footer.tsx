@@ -1,10 +1,11 @@
 // components
 import { ImageIcon, X, Loader2, SendHorizontal } from "lucide-react"
+import { Textarea } from "@/components/ui/text-area"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 
 // hooks
-import { useRef } from "react"
+import { useCallback, useRef } from "react"
+import { cn } from "@/lib/utils"
 
 interface ChatFooterProps {
   message: string
@@ -23,7 +24,7 @@ const ChatFooter = ({
   setSelectedImages,
   isLoading = false,
 }: ChatFooterProps) => {
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,17 +38,31 @@ const ChatFooter = ({
   const removeImage = (index: number) => {
     setSelectedImages(selectedImages.filter((_, i) => i !== index))
   }
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault()
+        handleSendMessage()
+      }
+    },
+    [handleSendMessage],
+  )
 
   return (
     <footer className="p-4 border-t border-border bg-card">
       {selectedImages.length > 0 && (
-        <div className="mb-4 flex gap-2 overflow-x-auto pb-2">
+        <div
+          className="mb-4 flex gap-2 overflow-x-auto pb-2"
+          role="list"
+          aria-label="Selected images"
+        >
           {selectedImages.map((file, index) => (
-            <div key={index} className="relative">
+            <div key={index} className="relative" role="listitem">
               <img
                 src={URL.createObjectURL(file)}
-                alt={`Selected ${index + 1}`}
+                alt={`Selected file ${index + 1}`}
                 className="h-20 w-20 object-cover rounded"
+                loading="lazy"
               />
               <Button
                 size="icon"
@@ -55,6 +70,7 @@ const ChatFooter = ({
                 className="absolute -top-2 -right-2 h-6 w-6"
                 onClick={() => removeImage(index)}
                 disabled={isLoading}
+                aria-label={`Remove image ${index + 1}`}
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -62,6 +78,7 @@ const ChatFooter = ({
           ))}
         </div>
       )}
+
       <form
         onSubmit={(e) => {
           e.preventDefault()
@@ -77,46 +94,53 @@ const ChatFooter = ({
           ref={fileInputRef}
           onChange={handleFileSelect}
           disabled={isLoading}
+          aria-label="Upload images"
         />
-        <Button
-          type="button"
-          size="icon"
-          variant="outline"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={isLoading}
-        >
-          <ImageIcon className="size-5" />
-          <span className="sr-only">Add images</span>
-        </Button>
-        <Input
+
+        <Textarea
           ref={inputRef}
           placeholder="Type a message..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="flex-grow"
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault()
-              handleSendMessage()
-            }
-          }}
-          disabled={isLoading}
-        />
-        <Button
-          type="submit"
-          size="icon"
-          className="bg-green-500 text-primary-foreground hover:bg-green-400"
-          disabled={
-            (!message.trim() && selectedImages.length === 0) || isLoading
-          }
-        >
-          {isLoading ? (
-            <Loader2 className="animate-spin size-5" />
-          ) : (
-            <SendHorizontal className="size-5" />
+          onKeyDown={handleKeyDown}
+          className={cn(
+            "flex-grow min-h-[80px] resize-none",
+            isLoading && "opacity-50 cursor-not-allowed",
           )}
-          <span className="sr-only">Send message</span>
-        </Button>
+          disabled={isLoading}
+          aria-label="Message input"
+        />
+
+        <div className="flex flex-col space-y-2">
+          <Button
+            type="submit"
+            size="icon"
+            className={cn(
+              "bg-green-500 text-primary-foreground",
+              !isLoading && "hover:bg-green-400",
+            )}
+            disabled={
+              (!message.trim() && selectedImages.length === 0) || isLoading
+            }
+            aria-label="Send message"
+          >
+            {isLoading ? (
+              <Loader2 className="animate-spin size-4" />
+            ) : (
+              <SendHorizontal className="size-4" />
+            )}
+          </Button>
+
+          <Button
+            type="button"
+            size="icon"
+            variant="outline"
+            disabled={isLoading}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <ImageIcon className="size-5" />
+          </Button>
+        </div>
       </form>
     </footer>
   )

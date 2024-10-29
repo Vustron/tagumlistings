@@ -35,12 +35,8 @@ export const useGetMessages = () => {
               ;(messages as Message[]).push({
                 ...data,
                 id: doc.id,
-                createdAt: data.createdAt
-                  ? data.createdAt.toString()
-                  : undefined,
-                updatedAt: data.updatedAt
-                  ? data.updatedAt.toString()
-                  : undefined,
+                createdAt: data.createdAt ? data.createdAt : undefined,
+                updatedAt: data.updatedAt ? data.updatedAt : undefined,
               })
             }
 
