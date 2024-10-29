@@ -1,3 +1,5 @@
+"use client"
+
 // components
 import ChatMessages from "@/components/admin/messages/chat-messages"
 import ChatHeader from "@/components/admin/messages/chat-header"

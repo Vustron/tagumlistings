@@ -17,7 +17,7 @@ import { format } from "date-fns"
 import { useDeleteMessage } from "@/lib/hooks/messages/delete"
 import { useUpdateMessage } from "@/lib/hooks/messages/update"
 import { useConfirm } from "@/lib/hooks/utils/use-confirm"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 
 // types
 import type { Timestamp } from "firebase/firestore"
@@ -48,31 +48,36 @@ export default function ChatMessages({
     "You are about to delete this message",
   )
 
-  const isMessageFromCurrentUser = (msg: Message) =>
-    msg.senderId === currentUserId
+  const isMessageFromCurrentUser = useCallback(
+    (msg: Message) => msg.senderId === currentUserId,
+    [currentUserId],
+  )
 
-  const formatTimestamp = (timestamp: Timestamp | string | undefined) => {
-    if (!timestamp) return "Invalid date"
+  const formatTimestamp = useCallback(
+    (timestamp: Timestamp | string | undefined) => {
+      if (!timestamp) return "Invalid date"
 
-    let date: Date
-    if (
-      typeof timestamp === "object" &&
-      "seconds" in timestamp &&
-      "nanoseconds" in timestamp
-    ) {
-      date = new Date(
-        timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000,
-      )
-    } else if (typeof timestamp === "string") {
-      date = new Date(timestamp)
-    } else {
-      return "Invalid date"
-    }
+      let date: Date
+      if (
+        typeof timestamp === "object" &&
+        "seconds" in timestamp &&
+        "nanoseconds" in timestamp
+      ) {
+        date = new Date(
+          timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000,
+        )
+      } else if (typeof timestamp === "string") {
+        date = new Date(timestamp)
+      } else {
+        return "Invalid date"
+      }
 
-    return Number.isNaN(date.getTime())
-      ? "Invalid date"
-      : format(date, "MM/dd/yyyy - h:mm a")
-  }
+      return Number.isNaN(date.getTime())
+        ? "Invalid date"
+        : format(date, "MM/dd/yyyy - h:mm a")
+    },
+    [],
+  )
 
   const sortedMessages = [...messages].sort((a, b) => {
     const aTime =
@@ -121,9 +126,71 @@ export default function ChatMessages({
     }
   }
 
-  const handleImageLoad = (messageId: string) => {
+  const handleImageLoad = useCallback((messageId: string) => {
     setLoadingImages((prev) => ({ ...prev, [messageId]: false }))
+  }, [])
+
+  const renderMessageActions = (msg: Message) => {
+    // Only render actions if the message is from the current user
+    if (!isMessageFromCurrentUser(msg)) return null
+
+    return (
+      <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity ml-2">
+        {msg.content && (
+          <EditMessageDialog
+            msg={msg}
+            isEditDialogOpen={isEditDialogOpen && editingMessageId === msg.id}
+            setIsEditDialogOpen={(open) => {
+              setIsEditDialogOpen(open)
+              setEditingMessageId(open ? msg.id! : null)
+            }}
+            handleSaveEdit={handleSaveEdit}
+          />
+        )}
+
+        <Button
+          variant="ghost"
+          className="p-1"
+          onClick={() => handleDelete(msg)}
+        >
+          <TrashIcon className="size-4 text-white" />
+        </Button>
+      </div>
+    )
   }
+
+  const renderMessageContent = (msg: Message) => (
+    <div className="flex flex-col gap-2 p-2">
+      {msg.content && (
+        <div
+          className={`relative break-words whitespace-pre-wrap p-3 rounded-lg ${
+            isMessageFromCurrentUser(msg)
+              ? "bg-primary text-primary-foreground"
+              : "bg-secondary text-secondary-foreground"
+          }`}
+        >
+          {msg.content}
+        </div>
+      )}
+
+      {msg.images?.length! > 0 && (
+        <div className="grid grid-cols-1 gap-2">
+          {msg.images!.map((image, index) => (
+            <ViewImageDialog
+              key={`${msg.id}-image-${index}`}
+              image={image}
+              index={index}
+              messageId={msg.id!}
+              onLoad={() => handleImageLoad(msg.id!)}
+              isLoading={loadingImages[msg.id!]}
+            />
+          ))}
+        </div>
+      )}
+
+      {renderMessageActions(msg)}
+    </div>
+  )
 
   return (
     <>
@@ -133,10 +200,6 @@ export default function ChatMessages({
           {sortedMessages.map((msg: Message) => (
             <motion.div
               key={msg.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
               className={`group flex flex-col space-y-2 ${
                 isMessageFromCurrentUser(msg) ? "items-end" : "items-start"
               }`}
@@ -147,65 +210,7 @@ export default function ChatMessages({
                 </time>
               )}
               <div className="relative flex items-start gap-2 max-w-[70%]">
-                <div className="flex flex-col gap-2 p-2">
-                  {msg.content && (
-                    <div
-                      className={`relative break-words whitespace-pre-wrap p-3 rounded-lg ${
-                        isMessageFromCurrentUser(msg)
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-secondary text-secondary-foreground"
-                      }`}
-                    >
-                      {msg.content}
-                    </div>
-                  )}
-
-                  {msg.images && msg.images.length > 0 && (
-                    <div className="grid grid-cols-1 gap-2">
-                      {msg.images.map((image, index) => (
-                        <ViewImageDialog
-                          key={index}
-                          image={image}
-                          index={index}
-                          messageId={msg.id!}
-                          onLoad={() => handleImageLoad(msg.id!)}
-                          isLoading={loadingImages[msg.id!]}
-                        />
-                      ))}
-                    </div>
-                  )}
-                  <div
-                    className={`flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity ${
-                      isMessageFromCurrentUser(msg) ? "ml-2" : "mr-2"
-                    }`}
-                  >
-                    {msg.content && (
-                      <EditMessageDialog
-                        msg={msg}
-                        isEditDialogOpen={
-                          isEditDialogOpen && editingMessageId === msg.id
-                        }
-                        setIsEditDialogOpen={(open) => {
-                          setIsEditDialogOpen(open)
-                          if (open) {
-                            setEditingMessageId(msg.id!)
-                          } else {
-                            setEditingMessageId(null)
-                          }
-                        }}
-                        handleSaveEdit={handleSaveEdit}
-                      />
-                    )}
-
-                    <Button
-                      variant="ghost"
-                      className="p-1"
-                      onClick={() => handleDelete(msg)}
-                    >
-                      <TrashIcon className="size-4 text-white" />
-                    </Button>
-                  </div>
-                </div>
+                {renderMessageContent(msg)}
               </div>
             </motion.div>
           ))}
