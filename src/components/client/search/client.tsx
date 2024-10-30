@@ -211,7 +211,7 @@ const SearchClient = () => {
               <Button
                 onClick={() => setShowSoldProperties(!showSoldProperties)}
                 variant={showSoldProperties ? "default" : "outline"}
-                className="flex items-center gap-2 bg-green-500 hover:bg-green-400 dark:bg-black dark:hover:bg-green-400"
+                className="flex items-center gap-2 bg-green-500 hover:bg-green-400 dark:bg-black dark:hover:bg-green-400 text-white"
               >
                 <FilterX className="size-4" />
                 {showSoldProperties ? "Show All" : "Hide Sold Properties"}

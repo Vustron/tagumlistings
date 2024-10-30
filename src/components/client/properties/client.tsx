@@ -104,7 +104,7 @@ const PropertiesClient = () => {
             <Button
               onClick={() => setShowAllProperties(!showAllProperties)}
               variant={showAllProperties ? "default" : "outline"}
-              className="flex items-center gap-2 bg-green-500 hover:bg-green-400 dark:bg-black dark:hover:bg-green-400"
+              className="flex items-center gap-2 bg-green-500 hover:bg-green-400 dark:bg-black dark:hover:bg-green-400 text-white"
             >
               <FilterX className="size-4" />
               {showAllProperties
