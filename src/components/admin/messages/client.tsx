@@ -50,6 +50,15 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
     }
   }, [isAdmin, accounts, selectedUser])
 
+  const filteredAccounts = useMemo(() => {
+    return accounts.filter((account) => {
+      if (session.role === "admin") {
+        return account.role !== "admin"
+      }
+      return account.role === "admin"
+    })
+  }, [accounts, session.role])
+
   // Filter messages for selected user
   const filteredMessages = useMemo(() => {
     return messages
@@ -127,22 +136,18 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
 
   return (
     <Card className="rounded-lg border-none h-[calc(100vh+200px)] p-20">
-      <CardContent
-        className={`p-0 h-full ${isAdmin ? "w-auto container" : "w-full"}`}
-      >
+      <CardContent className={"p-0 h-full w-auto container"}>
         <div className="flex h-full bg-background">
-          {isAdmin && (
-            <Sidebar
-              users={accounts}
-              isSidebarOpen={isSidebarOpen}
-              isMobile={isMobile}
-              toggleSidebar={toggleSidebar}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              setSelectedUser={setSelectedUser}
-              selectedUser={selectedUser}
-            />
-          )}
+          <Sidebar
+            users={filteredAccounts}
+            isSidebarOpen={isSidebarOpen}
+            isMobile={isMobile}
+            toggleSidebar={toggleSidebar}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            setSelectedUser={setSelectedUser}
+            selectedUser={selectedUser}
+          />
           <ChatWindow
             selectedUser={selectedUser}
             message={message}

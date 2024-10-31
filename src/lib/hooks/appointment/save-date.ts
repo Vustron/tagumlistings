@@ -2,6 +2,7 @@
 
 // hooks
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useSession } from "@/components/providers/session"
 import { useRouter } from "next-nprogress-bar"
 
 // actions
@@ -20,6 +21,7 @@ import type { AppointmentDates } from "@/lib/types"
 export const useSaveAppointment = () => {
   const queryClient = useQueryClient()
   const router = useRouter()
+  const session = useSession()
 
   return useMutation({
     mutationKey: ["save-appointment-date"],
@@ -42,6 +44,9 @@ export const useSaveAppointment = () => {
       )
     },
     onSettled: () => {
+      if (session.role !== "admin") {
+        return router.push("/appointments")
+      }
       router.push("/admin/appointments")
       router.refresh()
     },
