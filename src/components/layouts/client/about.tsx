@@ -12,19 +12,19 @@ interface RMEDetails {
 
 const rmeDetails: RMEDetails[] = [
   {
-    letter: "R",
-    name: "RYLEE MAEKO",
-    description: "Founded in April 27, 2018",
-  },
-  {
-    letter: "M",
-    name: "MCKENZIE ELLISE",
-    description: "Professional Real Estate Service",
-  },
-  {
     letter: "E",
-    name: "ELVIE",
-    description: "Excellence in Property Solutions",
+    name: "Elvie Tabale",
+    description: "Owner",
+  },
+  {
+    letter: "P",
+    name: "Pauline Alexandria Go",
+    description: "File Assistant",
+  },
+  {
+    letter: "C",
+    name: "Charme Cahapay Royo",
+    description: "Agent",
   },
 ]
 
