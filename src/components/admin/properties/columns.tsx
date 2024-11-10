@@ -16,11 +16,13 @@ export const columns: ColumnDef<Property>[] = [
   {
     id: "select",
     header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
+      <div className="whitespace-nowrap">
+        <Checkbox
+          checked={table.getIsAllPageRowsSelected()}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      </div>
     ),
     cell: ({ row }) => (
       <Checkbox
@@ -34,17 +36,17 @@ export const columns: ColumnDef<Property>[] = [
   },
   {
     accessorKey: "category",
-    header: "Category",
+    header: () => <div className="whitespace-nowrap">Category</div>,
     cell: ({ row }) => truncateText(row.getValue("category") || "N/A", 20),
   },
   {
     accessorKey: "location",
-    header: "Location",
+    header: () => <div className="whitespace-nowrap">Location</div>,
     cell: ({ row }) => truncateText(row.getValue("location") || "N/A", 20),
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: () => <div className="whitespace-nowrap">Status</div>,
     cell: ({ row }) => {
       const status = row.getValue("status") as string
       return (
@@ -56,7 +58,7 @@ export const columns: ColumnDef<Property>[] = [
   },
   {
     accessorKey: "price",
-    header: "Reservation Fee",
+    header: () => <div className="whitespace-nowrap">Reservation Fee</div>,
     cell: ({ row }) => {
       const price = row.getValue("price") as string
       return formatPriceToPHP(price || "0")
@@ -64,21 +66,27 @@ export const columns: ColumnDef<Property>[] = [
   },
   {
     accessorKey: "no_of_bedrooms",
-    header: "Bedrooms",
+    header: () => <div className="whitespace-nowrap">Bedrooms</div>,
     cell: ({ row }) => row.getValue("no_of_bedrooms") || "N/A",
   },
   {
     accessorKey: "no_of_bathrooms",
-    header: "Bathrooms",
+    header: () => <div className="whitespace-nowrap">Bathrooms</div>,
     cell: ({ row }) => row.getValue("no_of_bathrooms") || "N/A",
   },
   {
     accessorKey: "square_meter",
-    header: "Area (sqm)",
+    header: () => <div className="whitespace-nowrap">Area (sqm)</div>,
     cell: ({ row }) => row.getValue("square_meter") || "N/A",
   },
   {
+    accessorKey: "user",
+    header: () => <div className="whitespace-nowrap">Reserved user</div>,
+    cell: ({ row }) => truncateText(row.getValue("user") || "N/A", 20),
+  },
+  {
     id: "actions",
+    header: () => <div className="whitespace-nowrap">Actions</div>,
     cell: ({ row }) => <CellActions data={row.original} />,
   },
 ]

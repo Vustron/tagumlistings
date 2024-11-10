@@ -23,6 +23,7 @@ import { ViewPropertyDialog } from "@/components/admin/appointments/view-propert
 // hooks
 import { useUpdateAppointment } from "@/lib/hooks/appointment/update"
 import { useDeleteAppointment } from "@/lib/hooks/appointment/delete"
+import { useUpdateProperty } from "@/lib/hooks/property/update"
 import { useConfirm } from "@/lib/hooks/utils/use-confirm"
 import { useState } from "react"
 
@@ -40,6 +41,7 @@ interface CellActionProps {
 const CellActions = ({ data }: CellActionProps) => {
   const deleteMutation = useDeleteAppointment()
   const updateAppointmentMutation = useUpdateAppointment(data.id!)
+  const updatePropertyMutation = useUpdateProperty(data.propertyId!)
 
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure?",
@@ -77,6 +79,23 @@ const CellActions = ({ data }: CellActionProps) => {
         error: (error: unknown) => clientErrorHandler(error),
       },
     )
+
+    if (status === "confirmed") {
+      await toast.promise(
+        updatePropertyMutation.mutateAsync({
+          id: data.propertyId,
+          status: "reserved",
+          user: data.user,
+        }),
+        {
+          loading: (
+            <span className="animate-pulse">Updating appointment...</span>
+          ),
+          success: "Appointment updated",
+          error: (error: unknown) => clientErrorHandler(error),
+        },
+      )
+    }
   }
 
   return (

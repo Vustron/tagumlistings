@@ -178,7 +178,7 @@ export interface Property {
   category?: string
   location?: string
   status?: string
-  user_id?: string
+  user?: string
   price?: string
   appointment_id?: string | null
   propertyPics?: { url: string }[]

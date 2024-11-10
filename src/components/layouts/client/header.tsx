@@ -1,8 +1,6 @@
 "use client"
 
 // components
-import MessageNotification from "@/components/layouts/admin/message-notification"
-
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import SearchButton from "@/components/layouts/client/search-button"
 import UserButton from "@/components/shared/user-button"
@@ -18,7 +16,11 @@ import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 
+// actions
+import { updateMessagesSeenStatus } from "@/lib/actions/messages/status"
+
 // hooks
+import { useUnseenMessages } from "@/lib/hooks/messages/unseen"
 import { useSession } from "@/components/providers/session"
 import { useTransform, useScroll } from "framer-motion"
 import { useRouter } from "next-nprogress-bar"
@@ -46,6 +48,7 @@ const ClientHeader = () => {
   const pathName = usePathname()
   const session = useSession()
   const router = useRouter()
+  const unseenMessages = useUnseenMessages(session?.id)
 
   const navX = useTransform(scrollY, [0, 50], [0, 42])
   const logoScale = useTransform(scrollY, [0, 50], [1, 0.8])
@@ -61,6 +64,13 @@ const ClientHeader = () => {
   const filteredNavLinks = navLinks.filter(
     (link) => !link.requiresAuth || session?.loggedIn,
   )
+
+  const handleContactClick = async () => {
+    if (unseenMessages.length > 0) {
+      await updateMessagesSeenStatus(unseenMessages)
+    }
+    router.push("/contact")
+  }
 
   return (
     <>
@@ -104,7 +114,6 @@ const ClientHeader = () => {
               </Button>
             ) : (
               <>
-                <MessageNotification />
                 <UserButton isOnClient />
               </>
             )}
@@ -150,13 +159,24 @@ const ClientHeader = () => {
                       >
                         <Link
                           href={link.href}
-                          className={`block px-4 py-3 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors ${
+                          className={`${
                             pathName === link.href
                               ? "font-bold text-green-500"
                               : ""
-                          }`}
+                          } hover:text-green-500 transition-colors relative inline-flex items-center gap-1`}
+                          onClick={
+                            link.href === "/contact"
+                              ? handleContactClick
+                              : undefined
+                          }
                         >
                           {link.label}
+                          {link.href === "/contact" &&
+                            unseenMessages.length > 0 && (
+                              <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-green-500 rounded-full">
+                                {unseenMessages.length}
+                              </span>
+                            )}
                         </Link>
                       </motion.div>
                     ))}
@@ -203,14 +223,23 @@ const ClientHeader = () => {
               key={link.href}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              className="relative"
             >
               <Link
                 href={link.href}
                 className={`${
                   pathName === link.href ? "font-bold text-green-500" : ""
-                } hover:text-green-500 transition-colors`}
+                } hover:text-green-500 transition-colors relative inline-flex items-center gap-1`}
+                onClick={
+                  link.href === "/contact" ? handleContactClick : undefined
+                }
               >
                 {link.label}
+                {link.href === "/contact" && unseenMessages.length > 0 && (
+                  <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-green-500 rounded-full">
+                    {unseenMessages.length}
+                  </span>
+                )}
               </Link>
             </motion.li>
           ))}

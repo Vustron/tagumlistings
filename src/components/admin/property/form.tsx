@@ -16,14 +16,16 @@ import { useForm } from "react-hook-form"
 
 // types
 import type { UpdatePropertyValues } from "@/lib/validation"
-import type { Property } from "@/lib/types"
+import type { Property, Accounts } from "@/lib/types"
 
 interface UpdatePropertyFormProps {
   data: Property
+  accounts: Accounts
 }
 
-const UpdatePropertyForm = ({ data }: UpdatePropertyFormProps) => {
+const UpdatePropertyForm = ({ data, accounts }: UpdatePropertyFormProps) => {
   const updateProperty = useUpdateProperty(data?.id)
+  const accountsList = accounts?.accounts || []
 
   const form = useForm<UpdatePropertyValues>({
     resolver: zodResolver(updatePropertySchema),
@@ -37,6 +39,7 @@ const UpdatePropertyForm = ({ data }: UpdatePropertyFormProps) => {
       no_of_bedrooms: data.no_of_bedrooms,
       no_of_bathrooms: data.no_of_bathrooms,
       square_meter: data.square_meter,
+      user: data.user,
     },
   })
 
@@ -55,7 +58,7 @@ const UpdatePropertyForm = ({ data }: UpdatePropertyFormProps) => {
     <DynamicForm<UpdatePropertyValues>
       form={form}
       onSubmit={submitHandler}
-      fields={updatePropertyFields}
+      fields={updatePropertyFields(accountsList)}
       submitButtonTitle="Save changes"
       submitButtonClassname="bg-green-500 rounded-3xl hover:dark:text-black"
       submitButtonTitleClassname="text-md font-medium"

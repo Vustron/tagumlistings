@@ -185,7 +185,9 @@ export const addPropertyFields: FieldConfig<AddPropertyValues>[] = [
 ]
 
 // update property form fields
-export const updatePropertyFields: FieldConfig<UpdatePropertyValues>[] = [
+export const updatePropertyFields = (
+  accounts: UserData[],
+): FieldConfig<UpdatePropertyValues>[] => [
   {
     name: "propertyPics",
     type: "image",
@@ -245,6 +247,18 @@ export const updatePropertyFields: FieldConfig<UpdatePropertyValues>[] = [
     type: "number",
     label: "Square Meter",
     placeholder: "1",
+  },
+  {
+    name: "user",
+    type: "select",
+    label: "Select a user",
+    placeholder: "Select a user",
+    options: accounts
+      .filter((account) => account.id !== undefined)
+      .map((account) => ({
+        value: account.name,
+        label: account.name,
+      })),
   },
 ]
 
