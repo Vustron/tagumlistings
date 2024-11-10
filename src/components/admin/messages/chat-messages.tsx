@@ -153,7 +153,7 @@ export default function ChatMessages({
           className="p-1"
           onClick={() => handleDelete(msg)}
         >
-          <TrashIcon className="size-4 text-white" />
+          <TrashIcon className="size-4 dark:text-white" />
         </Button>
       </div>
     )
@@ -170,6 +170,11 @@ export default function ChatMessages({
           }`}
         >
           {msg.content}
+          {/* {!isMessageFromCurrentUser(msg) && (
+            <div className="text-xs text-muted-foreground mt-1">
+              {msg.status}
+            </div>
+          )} */}
         </div>
       )}
 
@@ -203,6 +208,7 @@ export default function ChatMessages({
               className={`group flex flex-col space-y-2 ${
                 isMessageFromCurrentUser(msg) ? "items-end" : "items-start"
               }`}
+              data-message-id={msg.id}
             >
               {msg.createdAt && (
                 <time className="text-xs text-muted-foreground">

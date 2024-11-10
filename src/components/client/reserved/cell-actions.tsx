@@ -62,6 +62,7 @@ const CellActions = ({ data }: CellActionProps) => {
             category: data.category,
             location: data.location,
             status: "available",
+            price: data.price!,
             propertyPics: data.propertyPics,
             no_of_bedrooms: data.no_of_bedrooms,
             no_of_bathrooms: data.no_of_bathrooms,

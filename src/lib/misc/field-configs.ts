@@ -159,6 +159,12 @@ export const addPropertyFields: FieldConfig<AddPropertyValues>[] = [
     ],
   },
   {
+    name: "price",
+    type: "text",
+    label: "Price",
+    placeholder: "1,000",
+  },
+  {
     name: "no_of_bedrooms",
     type: "number",
     label: "Number of Bedrooms",
@@ -215,6 +221,12 @@ export const updatePropertyFields: FieldConfig<UpdatePropertyValues>[] = [
       { value: "sold", label: "Sold" },
       { value: "reserved", label: "Reserved" },
     ],
+  },
+  {
+    name: "price",
+    type: "text",
+    label: "Price",
+    placeholder: "1,000",
   },
   {
     name: "no_of_bedrooms",

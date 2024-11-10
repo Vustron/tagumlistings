@@ -9,151 +9,30 @@ import { Button } from "@/components/ui/button"
 import { Loader2, FilterX } from "lucide-react"
 
 // hooks
-import { useGetProperties } from "@/lib/hooks/property/get-all"
-import { useState, useMemo, useEffect } from "react"
-import { useSearchParams } from "next/navigation"
-import { useRouter } from "next-nprogress-bar"
+import { useSearchClient } from "@/components/client/search/use-search-client"
 
 // utils
+import {
+  containerVariants,
+  itemVariants,
+} from "@/components/client/search/animation-variants"
 import { motion, AnimatePresence } from "framer-motion"
 
-// types
-import type { Filter, Property } from "@/lib/types"
-
 const SearchClient = () => {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const currentPage = Number(searchParams.get("page")) || 1
-  const itemsPerPage = 9
-  const query = searchParams.get("query") || ""
-  const [showSoldProperties, setShowSoldProperties] = useState(false)
-
-  // Initialize filters from URL params
-  const initialFilters: Partial<Filter> = {
-    category: searchParams.get("category") || "",
-    location: searchParams.get("location") || "",
-    status: searchParams.get("status") || "",
-  }
-
-  const [filters, setFilters] = useState<Partial<Filter>>(initialFilters)
-
-  // Determine if we should use pagination
-  const shouldPaginate =
-    query || Object.values(filters).some((value) => value !== "")
-
-  // Fetch properties based on whether we need pagination
-  const { data, isLoading } = shouldPaginate
-    ? useGetProperties({
-        page: currentPage,
-        limit: itemsPerPage,
-        query,
-      })
-    : useGetProperties()
-
-  // Filter and memoize properties
-  const filteredProperties = useMemo(() => {
-    if (!data?.properties) return []
-
-    return data.properties.filter((property: Property) => {
-      if (!property) return false
-
-      // First check if we should show sold properties
-      if (!showSoldProperties && property.status?.toLowerCase() === "sold") {
-        return false
-      }
-
-      const matchesCategory = filters.category
-        ? property.category === filters.category
-        : true
-      const matchesLocation = filters.location
-        ? (property.location ?? "")
-            .toLowerCase()
-            .includes(filters.location.toLowerCase())
-        : true
-      const matchesStatus = filters.status
-        ? property.status === filters.status
-        : true
-
-      return matchesCategory && matchesLocation && matchesStatus
-    })
-  }, [data?.properties, filters, showSoldProperties])
-
-  const totalCount = filteredProperties.length
-  const totalPages = Math.ceil(totalCount / itemsPerPage)
-
-  // Client-side pagination
-  const displayProperties = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage
-    const endIndex = startIndex + itemsPerPage
-    return shouldPaginate
-      ? filteredProperties
-      : filteredProperties.slice(startIndex, endIndex)
-  }, [currentPage, filteredProperties, shouldPaginate])
-
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-      },
-    },
-  }
-
-  // Update URL params when filters or page changes
-  useEffect(() => {
-    const params = new URLSearchParams()
-
-    if (currentPage > 1) {
-      params.set("page", currentPage.toString())
-    }
-
-    if (query) {
-      params.set("query", query)
-    }
-
-    // Add filter params if they have values
-    for (const [key, value] of Object.entries(filters)) {
-      if (value) {
-        params.set(key, value)
-      }
-    }
-
-    // Update URL without reloading the page
-    const queryString = params.toString()
-    router.push(queryString ? `/search?${queryString}` : "/search", {
-      scroll: false,
-    })
-  }, [filters, currentPage, query, router])
-
-  const handleFilterChange = (filterType: keyof Filter, value: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      [filterType]: value,
-    }))
-  }
-
-  const clearFilters = () => {
-    setFilters({
-      category: "",
-      location: "",
-      status: "",
-    })
-    router.push("/search")
-  }
+  const {
+    query,
+    filters,
+    setFilters,
+    handleFilterChange,
+    clearFilters,
+    showSoldProperties,
+    setShowSoldProperties,
+    isLoading,
+    displayProperties,
+    totalCount,
+    totalPages,
+    currentPage,
+  } = useSearchClient()
 
   if (isLoading) {
     return (
@@ -183,7 +62,7 @@ const SearchClient = () => {
 
         <SearchBar
           initialQuery={query}
-          filters={filters as Filter}
+          filters={filters}
           setFilters={setFilters}
           onFilterChange={handleFilterChange}
           onClearFilters={clearFilters}
@@ -227,7 +106,7 @@ const SearchClient = () => {
           >
             <AnimatePresence mode="wait">
               {displayProperties.length > 0 ? (
-                displayProperties.map((property: Property, index: number) => (
+                displayProperties.map((property, index) => (
                   <motion.div
                     key={property.id}
                     variants={itemVariants}
@@ -272,7 +151,7 @@ const SearchClient = () => {
             >
               <PaginationWithLinks
                 totalCount={totalCount}
-                pageSize={itemsPerPage}
+                pageSize={9}
                 page={currentPage}
               />
             </motion.div>

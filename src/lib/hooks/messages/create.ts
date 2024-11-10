@@ -10,8 +10,8 @@ import { createMessage } from "@/lib/actions/messages/create"
 import { clientErrorHandler } from "@/lib/utils"
 
 // types
-import type { AddMessageValues } from "@/lib/validation"
 import type { QueryFilters } from "@tanstack/react-query"
+import type { AddMessageValues } from "@/lib/validation"
 import type { Messages } from "@/lib/types"
 
 export const useCreateMessage = () => {

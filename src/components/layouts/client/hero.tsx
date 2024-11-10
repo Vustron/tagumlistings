@@ -1,10 +1,8 @@
 "use client"
 
 // components
-import { Button as UIButton } from "@/components/ui/button"
 import WaveReveal from "@/components/shared/wave-reveal"
 import TypingText from "@/components/shared/typing-text"
-import { Input } from "@/components/ui/input"
 
 // assets
 import logo from "@/app/assets/icons/logo_2.png"
@@ -13,13 +11,13 @@ import image1 from "@/app/assets/images/1.jpg"
 import image3 from "@/app/assets/images/3.png"
 
 // hooks
-import { useRouter } from "next-nprogress-bar"
 import { useState } from "react"
 
 // utils
-import { AnimatePresence, motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
+import { Button } from "@/components/ui/button"
+import { useRouter } from "next-nprogress-bar"
 
 // ImageWithWave Component
 function ImageWithWave() {
@@ -134,36 +132,7 @@ function Card({
 function InfoContainer({
   changeStackAlign,
 }: { changeStackAlign: (card: string) => void }) {
-  const [showChatInput, setShowChatInput] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
   const router = useRouter()
-
-  const handleChatNowClick = () => {
-    setShowChatInput(true)
-  }
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (searchQuery.trim()) {
-      router.push(`/search?query=${encodeURIComponent(searchQuery)}`)
-    }
-  }
-
-  const buttonVariants = {
-    initial: { scale: 1 },
-    hover: { scale: 1.1 },
-    tap: { scale: 0.95 },
-    exit: { opacity: 0, y: 20, transition: { duration: 0.2 } },
-  }
-
-  const inputVariants = {
-    initial: { opacity: 0, y: 20 },
-    animate: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.3, ease: "easeOut" },
-    },
-  }
 
   const underlinedWord = (text: string, card: string) => (
     <span
@@ -180,62 +149,18 @@ function InfoContainer({
       <ImageWithWave />
       <p className="mt-5 w-full animate-fadeIn text-center text-lg leading-8 dark:text-white md:w-[80%] md:text-left">
         We offer the most affordable house and lot with good quality and
-        services. {underlinedWord("Beautifully", "card1")},{" "}
-        {underlinedWord("Designed", "card2")},{" "}
-        {underlinedWord("Homes", "card3")} brought by RME Real Estate Brokerage.
+        services. Our properties are {underlinedWord("Beautifully", "card1")}{" "}
+        crafted with attention to detail, {underlinedWord("Designed", "card2")}{" "}
+        to meet your needs, and provide comfortable{" "}
+        {underlinedWord("Homes", "card3")} for you and your family.
       </p>
-      <div className="mt-6 flex animate-fadeIn justify-center gap-2 md:justify-start">
-        <AnimatePresence mode="wait">
-          {!showChatInput ? (
-            <motion.div
-              key="button"
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              whileHover="hover"
-              whileTap="tap"
-              variants={buttonVariants}
-            >
-              <UIButton
-                onClick={handleChatNowClick}
-                className="h-10 sm:h-8 w-full sm:w-36 bg-gradient-to-br from-green-950 to-blue-950 dark:from-green-500 dark:to-green-900 border border-green-900 dark:border-green-300 rounded-lg flex items-center justify-center gap-1.5"
-              >
-                <span className="text-sm">Search property</span>
-                <motion.span
-                  className="inline-block"
-                  initial={{ x: 0 }}
-                  whileHover={{ x: 5 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 10,
-                  }}
-                >
-                  &rarr;
-                </motion.span>
-              </UIButton>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="input"
-              initial="initial"
-              animate="animate"
-              variants={inputVariants}
-              className="w-full max-w-md"
-            >
-              <form onSubmit={handleSearch} className="w-full">
-                <Input
-                  type="text"
-                  placeholder="Search property name..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-4 py-2 text-black dark:text-white bg-white dark:bg-gradient-to-br from-green-950 to-blue-950 border border-green-900 dark:border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                  autoFocus
-                />
-              </form>
-            </motion.div>
-          )}
-        </AnimatePresence>
+      <div className="my-4">
+        <Button
+          className="w-full md:w-auto rounded-lg bg-green-500 hover:bg-green-400"
+          onClick={() => router.push("/properties")}
+        >
+          View Properties
+        </Button>
       </div>
     </div>
   )

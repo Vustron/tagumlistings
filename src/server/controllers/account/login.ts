@@ -3,7 +3,7 @@ import {
   getAccountsFromDB,
   handleErrorResponse,
   findAccountByParams,
-  convertAndCheckRateLimit,
+  rateLimit,
 } from "@/server/helpers"
 import { checkRequiredFields, requestBodyHandler } from "@/lib/utils"
 import { NextResponse } from "next/server"
@@ -22,7 +22,7 @@ import type { UserData } from "@/lib/types"
 
 export async function loginAccountController(request: NextRequest) {
   try {
-    const rateLimitCheck = await convertAndCheckRateLimit(request)
+    const rateLimitCheck = await rateLimit(request)
 
     if (rateLimitCheck instanceof NextResponse) {
       return rateLimitCheck

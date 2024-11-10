@@ -129,6 +129,7 @@ export interface Message {
   receiverId?: string
   content?: string
   images?: string[]
+  seen?: boolean
   createdAt?: string
   updatedAt?: string
 }
@@ -178,6 +179,7 @@ export interface Property {
   location?: string
   status?: string
   user_id?: string
+  price?: string
   appointment_id?: string | null
   propertyPics?: { url: string }[]
   no_of_bedrooms?: string
@@ -218,6 +220,8 @@ export type Appointment = Omit<Event, "id"> & {
   date: Date
   description: string
   color: string
+  status?: string
+  propertyId?: string
 }
 
 /* Appointments Type */

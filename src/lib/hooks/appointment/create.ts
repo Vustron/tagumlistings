@@ -53,10 +53,10 @@ export const useCreateAppointment = () => {
     },
     onSettled: () => {
       if (session.role !== "admin") {
-        return router.push("/appointments")
+        return router.push("/contact")
       }
       router.push("/admin/appointments")
-      router.refresh()
+      // router.refresh()
     },
     onError: (error) => clientErrorHandler(error),
   })

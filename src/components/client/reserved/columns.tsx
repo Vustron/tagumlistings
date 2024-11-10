@@ -1,7 +1,7 @@
 "use client"
 
 // components
-import CellActions from "@/components/client/reserved/cell-actions"
+// import CellActions from "@/components/client/reserved/cell-actions"
 // import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
 
@@ -52,8 +52,8 @@ export const columns: ColumnDef<Property>[] = [
       )
     },
   },
-  {
-    id: "actions",
-    cell: ({ row }) => <CellActions data={row.original} />,
-  },
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => <CellActions data={row.original} />,
+  // },
 ]

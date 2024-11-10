@@ -1,5 +1,5 @@
 // utils
-import { convertAndCheckRateLimit, handleErrorResponse } from "@/server/helpers"
+import { rateLimit, handleErrorResponse } from "@/server/helpers"
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore"
 import { requestBodyHandler } from "@/lib/utils"
 import { NextResponse } from "next/server"
@@ -17,7 +17,7 @@ import type { NextRequest } from "next/server"
 
 export async function updateMessageControl(request: NextRequest) {
   try {
-    const rateLimitCheck = await convertAndCheckRateLimit(request)
+    const rateLimitCheck = await rateLimit(request)
 
     if (rateLimitCheck instanceof NextResponse) {
       return rateLimitCheck

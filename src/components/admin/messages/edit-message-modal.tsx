@@ -34,7 +34,7 @@ export default function EditMessageDialog({
           className="p-1"
           onClick={() => setIsEditDialogOpen(true)}
         >
-          <PencilIcon className="size-4 text-white" />
+          <PencilIcon className="size-4 dark:text-white" />
         </Button>
       </DialogTrigger>
       <DialogContent>

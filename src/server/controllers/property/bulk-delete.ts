@@ -6,7 +6,7 @@ import {
   writeBatch,
   collection,
 } from "firebase/firestore"
-import { convertAndCheckRateLimit, handleErrorResponse } from "@/server/helpers"
+import { rateLimit, handleErrorResponse } from "@/server/helpers"
 import { deleteObject, ref } from "firebase/storage"
 import { requestBodyHandler } from "@/lib/utils"
 import { NextResponse } from "next/server"
@@ -24,7 +24,7 @@ import type { Property } from "@/lib/types"
 
 export async function deletePropertiesController(request: NextRequest) {
   try {
-    const rateLimitCheck = await convertAndCheckRateLimit(request)
+    const rateLimitCheck = await rateLimit(request)
 
     if (rateLimitCheck instanceof NextResponse) {
       return rateLimitCheck

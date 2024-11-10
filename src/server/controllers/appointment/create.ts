@@ -7,7 +7,7 @@ import {
   collection,
   serverTimestamp,
 } from "firebase/firestore"
-import { convertAndCheckRateLimit, handleErrorResponse } from "@/server/helpers"
+import { rateLimit, handleErrorResponse } from "@/server/helpers"
 import { checkRequiredFields, requestBodyHandler } from "@/lib/utils"
 import { NextResponse } from "next/server"
 
@@ -24,7 +24,7 @@ import type { Appointment } from "@/lib/types"
 
 export async function createAppointmentController(request: NextRequest) {
   try {
-    const rateLimitCheck = await convertAndCheckRateLimit(request)
+    const rateLimitCheck = await rateLimit(request)
 
     if (rateLimitCheck instanceof NextResponse) {
       return rateLimitCheck
@@ -39,7 +39,7 @@ export async function createAppointmentController(request: NextRequest) {
     const createAppointmentBody =
       await requestBodyHandler<AddAppointmentValues>(request)
 
-    const { user, date, description, color } = createAppointmentBody
+    const { user, date, description, color, propertyId } = createAppointmentBody
 
     const requiredFields: (keyof typeof createAppointmentBody)[] = [
       "user",
@@ -60,6 +60,8 @@ export async function createAppointmentController(request: NextRequest) {
       date,
       description,
       color,
+      status: "pending",
+      propertyId,
       created_at: serverTimestamp(),
     }
 

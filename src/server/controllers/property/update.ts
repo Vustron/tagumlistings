@@ -1,5 +1,5 @@
 // utils
-import { convertAndCheckRateLimit, handleErrorResponse } from "@/server/helpers"
+import { rateLimit, handleErrorResponse } from "@/server/helpers"
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore"
 import {
   checkRequiredFields,
@@ -21,7 +21,7 @@ import type { Property } from "@/lib/types"
 
 export async function updatePropertyController(request: NextRequest) {
   try {
-    const rateLimitCheck = await convertAndCheckRateLimit(request)
+    const rateLimitCheck = await rateLimit(request)
 
     if (rateLimitCheck instanceof NextResponse) {
       return rateLimitCheck
@@ -42,6 +42,7 @@ export async function updatePropertyController(request: NextRequest) {
       location,
       status,
       propertyPics,
+      price,
       no_of_bedrooms,
       no_of_bathrooms,
       square_meter,
@@ -71,6 +72,7 @@ export async function updatePropertyController(request: NextRequest) {
       location,
       status,
       propertyPics,
+      price,
       no_of_bedrooms,
       no_of_bathrooms,
       square_meter,

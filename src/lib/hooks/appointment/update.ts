@@ -63,7 +63,6 @@ export const useUpdateAppointment = (id?: string) => {
         }
       })
       router.push("/admin/appointments")
-      router.refresh()
     },
     onSettled: () => {
       router.refresh()

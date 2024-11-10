@@ -1,5 +1,5 @@
 // utils
-import { convertAndCheckRateLimit, handleErrorResponse } from "@/server/helpers"
+import { rateLimit, handleErrorResponse } from "@/server/helpers"
 import { NextResponse } from "next/server"
 
 // actions
@@ -14,7 +14,7 @@ import type { UserData } from "@/lib/types"
 
 export async function deleteAccountController(request: NextRequest) {
   try {
-    const rateLimitCheck = await convertAndCheckRateLimit(request)
+    const rateLimitCheck = await rateLimit(request)
 
     if (rateLimitCheck instanceof NextResponse) {
       return rateLimitCheck

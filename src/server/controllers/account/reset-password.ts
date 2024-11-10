@@ -1,5 +1,5 @@
 // utils
-import { handleErrorResponse, convertAndCheckRateLimit } from "@/server/helpers"
+import { handleErrorResponse, rateLimit } from "@/server/helpers"
 import { checkRequiredFields, requestBodyHandler } from "@/lib/utils"
 import { NextResponse } from "next/server"
 import bcrypt from "bcryptjs"
@@ -19,7 +19,7 @@ import type { NextRequest } from "next/server"
 export async function resetPasswordControl(request: NextRequest) {
   try {
     // init rate limitter
-    const rateLimitCheck = await convertAndCheckRateLimit(request)
+    const rateLimitCheck = await rateLimit(request)
 
     if (rateLimitCheck instanceof NextResponse) {
       // check rate limit

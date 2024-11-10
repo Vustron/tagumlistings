@@ -6,6 +6,7 @@ import FallbackBoundary from "@/components/shared/fallback-boundary"
 import PropertyCard from "@/components/layouts/client/property-card"
 import { Button } from "@/components/ui/button"
 import { Loader2, FilterX } from "lucide-react"
+import { Input } from "@/components/ui/input"
 
 // hooks
 import { useGetProperties } from "@/lib/hooks/property/get-all"
@@ -23,6 +24,8 @@ const PropertiesClient = () => {
   const currentPage = Number(searchParams.get("page")) || 1
   const itemsPerPage = 9
   const [showAllProperties, setShowAllProperties] = useState(false)
+  const [minPrice, setMinPrice] = useState<number | undefined>()
+  const [maxPrice, setMaxPrice] = useState<number | undefined>()
 
   // Fetch all properties
   const { data, isLoading } = useGetProperties()
@@ -30,13 +33,20 @@ const PropertiesClient = () => {
   // Filter and memoize properties
   const filteredProperties = useMemo(() => {
     if (!data?.properties) return []
-    return data.properties.filter((property: Property) =>
-      showAllProperties
-        ? true
-        : property.status?.toLowerCase() !== "sold" &&
-          property.status?.toLowerCase() !== "reserved",
-    )
-  }, [data?.properties, showAllProperties])
+    return data.properties.filter((property: Property) => {
+      const price = Number.parseFloat(property.price || "0")
+      const isWithinPriceRange =
+        (minPrice === undefined || price >= minPrice) &&
+        (maxPrice === undefined || price <= maxPrice)
+      return (
+        isWithinPriceRange &&
+        (showAllProperties
+          ? true
+          : property.status?.toLowerCase() !== "sold" &&
+            property.status?.toLowerCase() !== "reserved")
+      )
+    })
+  }, [data?.properties, showAllProperties, minPrice, maxPrice])
 
   const totalCount = filteredProperties.length
   const totalPages = Math.ceil(totalCount / itemsPerPage)
@@ -100,7 +110,38 @@ const PropertiesClient = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
+            className="flex flex-col sm:flex-row gap-4"
           >
+            <div className="flex items-center gap-2">
+              <Input
+                type="number"
+                placeholder="Min Price"
+                value={minPrice ?? ""}
+                min={0}
+                onChange={(e: { target: { value: string } }) =>
+                  setMinPrice(
+                    e.target.value && Number.parseFloat(e.target.value) >= 0
+                      ? Number.parseFloat(e.target.value)
+                      : undefined,
+                  )
+                }
+                className="w-30"
+              />
+              <Input
+                type="number"
+                placeholder="Max Price"
+                value={maxPrice ?? ""}
+                min={0}
+                onChange={(e: { target: { value: string } }) =>
+                  setMaxPrice(
+                    e.target.value && Number.parseFloat(e.target.value) >= 0
+                      ? Number.parseFloat(e.target.value)
+                      : undefined,
+                  )
+                }
+                className="w-30"
+              />
+            </div>
             <Button
               onClick={() => setShowAllProperties(!showAllProperties)}
               variant={showAllProperties ? "default" : "outline"}

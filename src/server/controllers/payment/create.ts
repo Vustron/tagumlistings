@@ -7,7 +7,7 @@ import {
   collection,
   serverTimestamp,
 } from "firebase/firestore"
-import { convertAndCheckRateLimit, handleErrorResponse } from "@/server/helpers"
+import { rateLimit, handleErrorResponse } from "@/server/helpers"
 import { checkRequiredFields, requestBodyHandler } from "@/lib/utils"
 import { NextResponse } from "next/server"
 
@@ -24,7 +24,7 @@ import type { Payment } from "@/lib/types"
 
 export async function createPaymentController(request: NextRequest) {
   try {
-    const rateLimitCheck = await convertAndCheckRateLimit(request)
+    const rateLimitCheck = await rateLimit(request)
 
     if (rateLimitCheck instanceof NextResponse) {
       return rateLimitCheck

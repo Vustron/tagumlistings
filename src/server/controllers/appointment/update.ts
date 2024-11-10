@@ -1,7 +1,7 @@
 // utils
-import { convertAndCheckRateLimit, handleErrorResponse } from "@/server/helpers"
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore"
 import { checkRequiredFields, requestBodyHandler } from "@/lib/utils"
+import { rateLimit, handleErrorResponse } from "@/server/helpers"
 import { NextResponse } from "next/server"
 
 // configs
@@ -18,7 +18,7 @@ import type { NextRequest } from "next/server"
 
 export async function updateAppointmentController(request: NextRequest) {
   try {
-    const rateLimitCheck = await convertAndCheckRateLimit(request)
+    const rateLimitCheck = await rateLimit(request)
 
     if (rateLimitCheck instanceof NextResponse) {
       return rateLimitCheck
@@ -33,7 +33,7 @@ export async function updateAppointmentController(request: NextRequest) {
     const updateAppointmentBody =
       await requestBodyHandler<UpdateAppointmentValues>(request)
 
-    const { id, user, date, description, color } = updateAppointmentBody
+    const { id, user, date, description, color, status } = updateAppointmentBody
 
     const requiredFields: (keyof typeof updateAppointmentBody)[] = [
       "id",
@@ -41,6 +41,7 @@ export async function updateAppointmentController(request: NextRequest) {
       "date",
       "description",
       "color",
+      "status",
     ]
 
     const errorResponse = checkRequiredFields(
@@ -56,6 +57,7 @@ export async function updateAppointmentController(request: NextRequest) {
       date,
       description,
       color,
+      status,
       updatedAt: serverTimestamp(),
     })
 

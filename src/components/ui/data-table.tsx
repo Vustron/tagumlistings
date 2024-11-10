@@ -22,7 +22,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react"
-import CreateAppointmentDialog from "@/components/admin/appointments/create"
+// import CreateAppointmentDialog from "@/components/admin/appointments/create"
 import { FloatingLabelInput } from "@/components/ui/floating-label-input"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import CreateUserModal from "@/components/admin/users/create-user"
@@ -32,7 +32,7 @@ import { Button } from "@/components/ui/button"
 import { useConfirm } from "@/lib/hooks/utils/use-confirm"
 import { useReactTable } from "@tanstack/react-table"
 import { useRouter } from "next-nprogress-bar"
-import { useState } from "react"
+// import { useState } from "react"
 
 // utils
 import {
@@ -80,12 +80,10 @@ export default function DataTable<TData, TValue>({
   isOnUsers,
   isOnProperties,
   isOnPayments,
-  isOnClientAppointments,
+
   noBulkDelete,
   isOnClient,
   placeholder,
-  appointment,
-  appointmentDates,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter()
   const [ConfirmDialog, confirm] = useConfirm(
@@ -104,14 +102,14 @@ export default function DataTable<TData, TValue>({
     () => data.filter((item) => deepSearch(item, filterValue)),
     [data, filterValue],
   )
-  const [createAppointmentDialogOpen, setIsCreateAppointmentDialogOpen] =
-    useState(false)
-  const [availableDates, setAvailableDates] = useState<Date[]>([])
+  // const [createAppointmentDialogOpen, setIsCreateAppointmentDialogOpen] =
+  //   useState(false)
+  // const [availableDates, setAvailableDates] = useState<Date[]>([])
 
-  const setAppointmentDates = (dates: Date[]) => {
-    setAvailableDates(dates)
-    setIsCreateAppointmentDialogOpen(false)
-  }
+  // const setAppointmentDates = (dates: Date[]) => {
+  //   setAvailableDates(dates)
+  //   setIsCreateAppointmentDialogOpen(false)
+  // }
 
   // init table
   const table = useReactTable({
@@ -181,7 +179,7 @@ export default function DataTable<TData, TValue>({
             {/* create new user */}
             {isOnUsers && !isOnClient && <CreateUserModal />}
 
-            {isOnClientAppointments && (
+            {/* {isOnClientAppointments && (
               <>
                 <CreateAppointmentDialog
                   isOpen={createAppointmentDialogOpen}
@@ -202,7 +200,7 @@ export default function DataTable<TData, TValue>({
                   New Appointment
                 </Button>
               </>
-            )}
+            )} */}
 
             {/* create new property */}
             {isOnProperties && !isOnClient && (

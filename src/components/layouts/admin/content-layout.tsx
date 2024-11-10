@@ -3,10 +3,6 @@
 // components
 import Navbar from "@/components/layouts/admin/navbar"
 
-// hooks
-// import { useRouter } from "next-nprogress-bar"
-// import { useEffect, useState } from "react"
-
 export interface ContentLayoutProps {
   children: React.ReactNode
   title: string

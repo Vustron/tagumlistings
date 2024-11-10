@@ -10,7 +10,7 @@ import { useRouter } from "next-nprogress-bar"
 import { useState } from "react"
 
 // utils
-import { placeholderImage } from "@/lib/utils"
+import { placeholderImage, formatPriceToPHP } from "@/lib/utils"
 import { motion } from "framer-motion"
 import Image from "next/image"
 
@@ -23,6 +23,7 @@ const PropertyCard = ({
   category,
   location,
   status,
+  price,
   no_of_bedrooms,
   no_of_bathrooms,
   square_meter,
@@ -184,6 +185,9 @@ const PropertyCard = ({
               >
                 View Details
               </Button>
+            </div>
+            <div className="text-lg font-bold text-black dark:text-white">
+              {formatPriceToPHP(price || "0")}
             </div>
           </div>
         </CardContent>

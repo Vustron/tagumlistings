@@ -1,6 +1,8 @@
 "use client"
 
 // components
+import MessageNotification from "@/components/layouts/admin/message-notification"
+
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import SearchButton from "@/components/layouts/client/search-button"
 import UserButton from "@/components/shared/user-button"
@@ -35,7 +37,6 @@ const navLinks: NavLink[] = [
   { href: "/contact", label: "Contact", requiresAuth: true },
   { href: "/payments", label: "Payments", requiresAuth: true },
   { href: "/appointments", label: "Appointments", requiresAuth: true },
-  { href: "/reserved", label: "Reserved", requiresAuth: true },
   { href: "/account", label: "Account", requiresAuth: true },
 ]
 
@@ -102,7 +103,10 @@ const ClientHeader = () => {
                 Login
               </Button>
             ) : (
-              <UserButton isOnClient />
+              <>
+                <MessageNotification />
+                <UserButton isOnClient />
+              </>
             )}
           </div>
 
@@ -151,7 +155,6 @@ const ClientHeader = () => {
                               ? "font-bold text-green-500"
                               : ""
                           }`}
-                          onClick={() => setIsOpen(false)}
                         >
                           {link.label}
                         </Link>

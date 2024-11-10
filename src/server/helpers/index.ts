@@ -59,7 +59,7 @@ export async function handleErrorResponse(error: unknown) {
   return NextResponse.json({ error: message }, { status: statusCode })
 }
 
-export async function convertAndCheckRateLimit(request: NextRequest) {
+export async function rateLimit(request: NextRequest) {
   const compatibleRequest: CompatibleRequest = {
     headers: Object.fromEntries(request.headers.entries()),
     url: request.url,

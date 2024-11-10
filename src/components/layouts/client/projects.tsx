@@ -58,7 +58,7 @@ const Projects = () => {
       <div className="container relative mx-auto px-4 flex flex-col items-center justify-center">
         <div className="mb-16 max-w-3xl">
           <h2 className="text-4xl font-bold text-green-500 dark:text-white md:text-5xl lg:text-6xl">
-            Our Projects
+            Our Partnerships
           </h2>
         </div>
 

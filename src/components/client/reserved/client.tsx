@@ -52,7 +52,7 @@ const ReservedPropertiesClient = () => {
         <div className="flex items-start justify-between">
           <Heading
             title={`Reserved Properties (${propertyCount})`}
-            description="Manage reserved properties"
+            description=""
           />
         </div>
         <Separator className="mt-2" />

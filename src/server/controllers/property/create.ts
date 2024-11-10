@@ -7,7 +7,7 @@ import {
   collection,
   serverTimestamp,
 } from "firebase/firestore"
-import { convertAndCheckRateLimit, handleErrorResponse } from "@/server/helpers"
+import { rateLimit, handleErrorResponse } from "@/server/helpers"
 import { checkRequiredFields, requestBodyHandler } from "@/lib/utils"
 import { NextResponse } from "next/server"
 
@@ -24,7 +24,7 @@ import type { Property } from "@/lib/types"
 
 export async function createPropertyController(request: NextRequest) {
   try {
-    const rateLimitCheck = await convertAndCheckRateLimit(request)
+    const rateLimitCheck = await rateLimit(request)
 
     if (rateLimitCheck instanceof NextResponse) {
       return rateLimitCheck
@@ -44,6 +44,7 @@ export async function createPropertyController(request: NextRequest) {
       location,
       status,
       propertyPics,
+      price,
       no_of_bedrooms,
       no_of_bathrooms,
       square_meter,
@@ -54,6 +55,7 @@ export async function createPropertyController(request: NextRequest) {
       "location",
       "status",
       "propertyPics",
+      "price",
       "no_of_bedrooms",
       "no_of_bathrooms",
       "square_meter",
@@ -73,6 +75,7 @@ export async function createPropertyController(request: NextRequest) {
       user_id: null,
       appointment_id: null,
       propertyPics,
+      price,
       no_of_bedrooms,
       no_of_bathrooms,
       square_meter,

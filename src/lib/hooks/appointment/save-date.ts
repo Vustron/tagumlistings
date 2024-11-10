@@ -18,7 +18,7 @@ import type { QueryFilters } from "@tanstack/react-query"
 // types
 import type { AppointmentDates } from "@/lib/types"
 
-export const useSaveAppointment = () => {
+export const useSaveAppointmentDate = () => {
   const queryClient = useQueryClient()
   const router = useRouter()
   const session = useSession()

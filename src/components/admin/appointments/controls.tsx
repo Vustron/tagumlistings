@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectContent,
 } from "@/components/ui/select"
-import { Menu, ChevronLeft, ChevronRight, Search, Plus } from "lucide-react"
+import { Menu, ChevronLeft, ChevronRight, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -26,7 +26,7 @@ interface CalendarControlsProps {
   setView: (view: CalendarView) => void
   searchQuery: string
   setSearchQuery: (query: string) => void
-  setIsCreateAppointmentDialogOpen: (open: boolean) => void
+  // setIsCreateAppointmentDialogOpen: (open: boolean) => void
 }
 
 const CalendarControls: React.FC<CalendarControlsProps> = ({
@@ -37,7 +37,7 @@ const CalendarControls: React.FC<CalendarControlsProps> = ({
   setView,
   searchQuery,
   setSearchQuery,
-  setIsCreateAppointmentDialogOpen,
+  // setIsCreateAppointmentDialogOpen,
 }) => {
   return (
     <div className="flex flex-col space-y-4 sm:space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0 md:space-x-4">
@@ -114,7 +114,7 @@ const CalendarControls: React.FC<CalendarControlsProps> = ({
             size={20}
           />
         </div>
-        <div className="flex space-x-2">
+        {/* <div className="flex space-x-2">
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -127,7 +127,7 @@ const CalendarControls: React.FC<CalendarControlsProps> = ({
               <Plus className="mr-2 size-4" /> Create Appointment
             </Button>
           </motion.div>
-        </div>
+        </div> */}
       </div>
     </div>
   )

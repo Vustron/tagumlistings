@@ -1,6 +1,7 @@
 "use client"
 
 // components
+import MessageNotification from "@/components/layouts/admin/message-notification"
 import SheetMenu from "@/components/layouts/admin/sheet-menu"
 import UserButton from "@/components/shared/user-button"
 import ThemeToggle from "@/components/ui/theme-toggle"
@@ -19,6 +20,7 @@ const Navbar = ({ title }: NavbarProps) => {
         </div>
 
         <div className="flex flex-1 items-center space-x-2 justify-end">
+          <MessageNotification />
           <ThemeToggle />
           <UserButton />
         </div>

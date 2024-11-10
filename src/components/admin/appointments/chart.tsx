@@ -19,7 +19,7 @@ import { Monitor } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
 // utils
-import { getMonthName } from "@/lib/utils"
+import { formatDate } from "@/lib/utils"
 
 // types
 import type { ChartConfig } from "@/components/ui/chart"
@@ -30,19 +30,19 @@ interface AppointmentsChartProps {
 }
 
 const AppointmentsChart = ({ appointments }: AppointmentsChartProps) => {
-  const appointmentsByMonth = appointments.reduce(
+  const appointmentsByDay = appointments.reduce(
     (acc, appointment) => {
-      const month = getMonthName(new Date(appointment.date))
-      acc[month] = (acc[month] || 0) + 1
+      const day = formatDate(new Date(appointment.date))
+      acc[day] = (acc[day] || 0) + 1
       return acc
     },
     {} as Record<string, number>,
   )
 
   // Convert the grouped data into chart data format
-  const chartData = Object.keys(appointmentsByMonth).map((month) => ({
-    month,
-    appointments: appointmentsByMonth[month],
+  const chartData = Object.keys(appointmentsByDay).map((day) => ({
+    day,
+    appointments: appointmentsByDay[day],
   }))
 
   // init chart config
@@ -62,9 +62,7 @@ const AppointmentsChart = ({ appointments }: AppointmentsChartProps) => {
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
           <CardTitle className="text-green-600">Appointments</CardTitle>
-          <CardDescription>
-            Showing total appointments for the last 3 months
-          </CardDescription>
+          <CardDescription>Showing total appointments by day</CardDescription>
         </div>
       </CardHeader>
       <CardContent className="px-2 sm:p-6">
@@ -82,13 +80,14 @@ const AppointmentsChart = ({ appointments }: AppointmentsChartProps) => {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="day"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
               minTickGap={32}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => value.slice(0, 6)}
             />
+            {/* <YAxis /> */}
             <ChartTooltip
               content={<ChartTooltipContent className="w-[150px]" />}
             />

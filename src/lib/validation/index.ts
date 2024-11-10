@@ -2,7 +2,7 @@
 import { z } from "zod"
 
 // required string method
-const requiredString = z.string().trim().min(1, "Required")
+const requiredString = z.string().trim().min(1, "Required").max(255)
 
 // signUpSchema
 export const registerSchema = z.object({
@@ -66,6 +66,7 @@ export const addPropertySchema = z.object({
   propertyPics: z
     .array(z.object({ url: z.string().url("Invalid URL") }))
     .optional(),
+  price: requiredString,
   no_of_bedrooms: requiredString,
   no_of_bathrooms: requiredString,
   square_meter: requiredString,
@@ -90,6 +91,7 @@ export const updatePropertySchema = z.object({
   propertyPics: z
     .array(z.object({ url: z.string().url("Invalid URL") }))
     .optional(),
+  price: requiredString.optional(),
   no_of_bedrooms: requiredString.optional(),
   no_of_bathrooms: requiredString.optional(),
   square_meter: requiredString.optional(),
@@ -113,6 +115,8 @@ export const addAppointmentSchema = z.object({
   date: requiredString.optional(),
   description: requiredString.optional(),
   color: requiredString.optional(),
+  status: requiredString.optional(),
+  propertyId: requiredString.optional(),
 })
 
 /* AddAppointmentValues Type */
@@ -144,6 +148,8 @@ export const updateAppointmentSchema = z.object({
   date: requiredString.optional(),
   description: requiredString.optional(),
   color: requiredString.optional(),
+  status: requiredString.optional(),
+  propertyId: requiredString.optional(),
 })
 
 /* UpdateAppointmentValues Type */
@@ -211,6 +217,7 @@ export const createMessageSchema = z.object({
   images: z.array(requiredString.optional()),
   senderId: requiredString.optional(),
   receiverId: requiredString.optional(),
+  seen: z.boolean().optional(),
 })
 
 /* AddMessageValues Type */

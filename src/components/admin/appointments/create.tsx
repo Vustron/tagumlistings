@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input"
 
 // hooks
 import { useDeleteAppointmentDate } from "@/lib/hooks/appointment/delete-date"
-import { useSaveAppointment } from "@/lib/hooks/appointment/save-date"
+import { useSaveAppointmentDate } from "@/lib/hooks/appointment/save-date"
 import { useCreateAppointment } from "@/lib/hooks/appointment/create"
 import { useState, useCallback, useMemo, useEffect } from "react"
 import { useSession } from "@/components/providers/session"
@@ -45,6 +45,7 @@ interface SetAppointmentDatesDialogProps {
   appointmentDates: AppointmentDate[]
   appointments: Appointment[]
   isOnClient?: boolean
+  propertyId?: string
 }
 
 const CreateAppointmentDialog = ({
@@ -54,6 +55,7 @@ const CreateAppointmentDialog = ({
   appointmentDates,
   appointments,
   isOnClient,
+  propertyId,
 }: SetAppointmentDatesDialogProps) => {
   const [activeTab, setActiveTab] = useState(
     isOnClient ? "new-appointment" : "set-dates",
@@ -68,10 +70,14 @@ const CreateAppointmentDialog = ({
   const { data: accountsData } = useGetAccounts()
   const allAccounts = accountsData?.accounts ?? []
 
-  // Check if the current user already has an appointment
+  // Check if the current user already has an appointment for the given property
   const userHasAppointment = useMemo(() => {
-    return appointments.some((appointment) => appointment.user === session.name)
-  }, [appointments, session.name])
+    return appointments.some(
+      (appointment) =>
+        appointment.user === session.name &&
+        appointment.propertyId === propertyId,
+    )
+  }, [appointments, session.name, propertyId])
 
   // Filter available accounts based on isOnClient and existing appointments
   const availableAccounts = useMemo(() => {
@@ -95,7 +101,7 @@ const CreateAppointmentDialog = ({
     [appointmentDates],
   )
 
-  const saveAppointmentDateMutation = useSaveAppointment()
+  const saveAppointmentDateMutation = useSaveAppointmentDate()
   const deleteAppointmentDateMutation = useDeleteAppointmentDate()
   const createAppointmentMutation = useCreateAppointment()
   const [ConfirmDialog, confirm] = useConfirm(
@@ -103,7 +109,6 @@ const CreateAppointmentDialog = ({
     "You are about to delete this appointment date",
   )
 
-  // Form setup for new appointments
   const form = useForm<AddAppointmentValues>({
     resolver: zodResolver(addAppointmentSchema),
     defaultValues: {
@@ -111,6 +116,7 @@ const CreateAppointmentDialog = ({
       date: "",
       description: "",
       color: "",
+      propertyId: propertyId,
     },
   })
 
@@ -168,7 +174,7 @@ const CreateAppointmentDialog = ({
   // New appointment handler with improved validation
   const handleSubmitAppointment = async (values: AddAppointmentValues) => {
     if (isOnClient && userHasAppointment) {
-      toast.error("You already have an appointment scheduled")
+      toast.error("You already have an appointment scheduled for this property")
       return
     }
 
@@ -217,7 +223,7 @@ const CreateAppointmentDialog = ({
         <DialogContent className="max-w-md w-full sm:max-w-lg">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold">
-              Appointment Management
+              Create Appointment
             </DialogTitle>
           </DialogHeader>
 
@@ -260,8 +266,8 @@ const CreateAppointmentDialog = ({
             <TabsContent value="set-dates">
               {userHasAppointment && isOnClient ? (
                 <div className="text-center py-8 text-gray-500">
-                  You already have an appointment scheduled. You cannot set more
-                  dates.
+                  You already have an appointment scheduled for this property.
+                  You cannot set more dates.
                 </div>
               ) : (
                 <>
@@ -382,8 +388,8 @@ const CreateAppointmentDialog = ({
                 <FallbackBoundary>
                   {userHasAppointment && isOnClient ? (
                     <div className="text-center py-8 text-gray-500">
-                      You already have an appointment scheduled. You cannot
-                      create more appointments.
+                      You already have an appointment scheduled for this
+                      property. You cannot create more appointments.
                     </div>
                   ) : (
                     <DynamicForm<AddAppointmentValues>

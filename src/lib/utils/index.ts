@@ -19,6 +19,31 @@ import type { ClassValue } from "clsx"
 import type DOMPurify from "dompurify"
 import type { z } from "zod"
 
+export const formatDateLocal = (dateString?: string) => {
+  if (!dateString) return "N/A"
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  })
+}
+
+// Utility function to format price to Philippine Peso
+export const formatPriceToPHP = (price: string) => {
+  const amount = Number.parseFloat(price)
+  return amount.toLocaleString("en-PH", { style: "currency", currency: "PHP" })
+}
+
+// Utility function to truncate text with ellipsis
+export const truncateText = (text: string, maxLength: number) => {
+  if (text.length > maxLength) {
+    return `${text.substring(0, maxLength)}...`
+  }
+  return text
+}
+
 export const uploadImageToFirebase = async (
   file: File,
   userId: string,
@@ -194,9 +219,9 @@ export const getRoleBadgeColor = (role: string) => {
     case "client":
       return "bg-blue-100 text-blue-800 hover:text-white dark:hover:text-black"
     case "admin":
-      return "bg-green-100 text-green-800 hover:text-white dark:hover:text-black"
-    case "available":
       return "bg-yellow-100 text-yellow-800 hover:text-white dark:hover:text-black"
+    case "available":
+      return "bg-green-100 text-green-800 hover:text-white dark:hover:text-black"
     case "sold":
       return "bg-red-100 text-red-800 hover:text-white dark:hover:text-black"
     case "reserved":

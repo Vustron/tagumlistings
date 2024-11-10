@@ -4,13 +4,13 @@ import { motion } from "framer-motion"
 
 import type { FC } from "react"
 
-interface RMEDetails {
+interface EPCDetails {
   letter: string
   name: string
   description: string
 }
 
-const rmeDetails: RMEDetails[] = [
+const epcDetails: EPCDetails[] = [
   {
     letter: "E",
     name: "Elvie Tabale",
@@ -42,13 +42,13 @@ const About: FC = () => {
             About Us
           </h1>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-center">
             {/* Text Content */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="space-y-6"
+              className="space-y-2"
             >
               <p className="text-lg dark:text-white">
                 Located at Door 5, NTA building, Magsaysay st. near Corner
@@ -70,25 +70,22 @@ const About: FC = () => {
               className="relative"
             >
               <div className="space-y-4">
-                {rmeDetails.map((detail, index) => (
+                {epcDetails.map((detail, index) => (
                   <motion.div
                     key={detail.letter}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 * (index + 1) }}
-                    className={`bg-slate-700 rounded-xl p-6 shadow-lg ${
+                    className={`bg-white dark:bg-slate-700 rounded-xl p-6 shadow-lg ${
                       index === 0 ? "ml-0" : index === 1 ? "ml-4" : "ml-8"
                     }`}
                   >
                     <div className="flex items-center space-x-4">
-                      <span className="text-3xl font-bold text-emerald-400">
-                        {detail.letter}
-                      </span>
                       <div>
-                        <h3 className="text-xl font-semibold text-white">
+                        <h3 className="text-green-500 font-bold text-2xl dark:text-white">
                           {detail.name}
                         </h3>
-                        <p className="text-slate-300 text-sm">
+                        <p className="text-slate-500 text-sm">
                           {detail.description}
                         </p>
                       </div>

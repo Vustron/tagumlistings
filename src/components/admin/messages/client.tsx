@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card"
 // hooks
 import { useCreateMessage } from "@/lib/hooks/messages/create"
 import { useGetMessages } from "@/lib/hooks/messages/get-all"
+
 import { useEffect, useState, useRef, useMemo } from "react"
 import { useSession } from "@/components/providers/session"
 import { useGetAccounts } from "@/lib/hooks/auth/get-all"
@@ -44,19 +45,18 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
   // Set default user if not admin and no user is selected
   useEffect(() => {
     if (!isAdmin && accounts.length > 0 && !selectedUser) {
-      if (accounts[0]) {
-        setSelectedUser(accounts[0])
+      const adminAccount = accounts.find((account) => account.role === "admin")
+      if (adminAccount) {
+        setSelectedUser(adminAccount)
       }
     }
   }, [isAdmin, accounts, selectedUser])
 
   const filteredAccounts = useMemo(() => {
-    return accounts.filter((account) => {
-      if (session.role === "admin") {
-        return account.role !== "admin"
-      }
-      return account.role === "admin"
-    })
+    if (session.role === "admin") {
+      return accounts.filter((account) => account.role !== "admin")
+    }
+    return accounts.filter((account) => account.role === "admin")
   }, [accounts, session.role])
 
   // Filter messages for selected user
@@ -64,8 +64,9 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
     return messages
       .filter(
         (msg) =>
-          msg.senderId === selectedUser?.id ||
-          msg.receiverId === selectedUser?.id,
+          (msg.senderId === selectedUser?.id &&
+            msg.receiverId === session.id) ||
+          (msg.receiverId === selectedUser?.id && msg.senderId === session.id),
       )
       .sort((a, b) => {
         // Handle different possible date formats
@@ -73,7 +74,7 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
         const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0
         return dateA - dateB
       })
-  }, [messages, selectedUser])
+  }, [messages, selectedUser, session.id])
 
   // Handle window resize
   useEffect(() => {
@@ -135,19 +136,25 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
 
   return (
-    <Card className="rounded-lg border-none h-[calc(100vh+200px)] p-20">
+    <Card
+      className={`rounded-lg border-none h-[calc(100vh+200px)] ${
+        session.role === "admin" ? "p-5" : "p-20"
+      } mt-5`}
+    >
       <CardContent className={"p-0 h-full w-auto container"}>
         <div className="flex h-full bg-background">
-          <Sidebar
-            users={filteredAccounts}
-            isSidebarOpen={isSidebarOpen}
-            isMobile={isMobile}
-            toggleSidebar={toggleSidebar}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            setSelectedUser={setSelectedUser}
-            selectedUser={selectedUser}
-          />
+          {session.role === "admin" && (
+            <Sidebar
+              users={filteredAccounts}
+              isSidebarOpen={isSidebarOpen}
+              isMobile={isMobile}
+              toggleSidebar={toggleSidebar}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              setSelectedUser={setSelectedUser}
+              selectedUser={selectedUser}
+            />
+          )}
           <ChatWindow
             selectedUser={selectedUser}
             message={message}

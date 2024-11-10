@@ -1,7 +1,7 @@
 "use client"
 
 // components
-// import CellActions from "@/components/client/appointments/cell-actions"
+import CellActions from "@/components/admin/appointments/cell-actions"
 
 // utils
 import { format } from "date-fns/format"
@@ -12,8 +12,13 @@ import type { Appointment } from "@/lib/types"
 
 export const columns: ColumnDef<Appointment>[] = [
   {
+    accessorKey: "user",
+    header: "User",
+    cell: ({ row }) => row.original.user,
+  },
+  {
     accessorKey: "date",
-    header: "Date",
+    header: "Appointment Date",
     cell: ({ row }) => {
       const date = new Date(row.original.date)
       return format(date, "PPP")
@@ -51,9 +56,9 @@ export const columns: ColumnDef<Appointment>[] = [
       )
     },
   },
-  // {
-  //   id: "actions",
-  //   cell: ({ row }) => <CellActions data={row.original} />,
-  //   header: "Actions",
-  // },
+  {
+    id: "actions",
+    cell: ({ row }) => <CellActions data={row.original} />,
+    header: "Actions",
+  },
 ]

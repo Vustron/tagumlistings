@@ -1,7 +1,7 @@
 // utils
-import { convertAndCheckRateLimit, handleErrorResponse } from "@/server/helpers"
-import { addDoc, collection, serverTimestamp } from "firebase/firestore"
+import { setDoc, doc, serverTimestamp } from "firebase/firestore"
 import { createUniqueId, requestBodyHandler } from "@/lib/utils"
+import { rateLimit, handleErrorResponse } from "@/server/helpers"
 import { NextResponse } from "next/server"
 
 // configs
@@ -17,7 +17,7 @@ import type { NextRequest } from "next/server"
 
 export async function createMessageControl(request: NextRequest) {
   try {
-    const rateLimitCheck = await convertAndCheckRateLimit(request)
+    const rateLimitCheck = await rateLimit(request)
 
     if (rateLimitCheck instanceof NextResponse) {
       return rateLimitCheck
@@ -34,26 +34,19 @@ export async function createMessageControl(request: NextRequest) {
 
     const { content, images, senderId, receiverId } = createMessageBody
 
+    const messageId = createUniqueId()
+
     const messageData = {
-      id: createUniqueId(),
+      id: messageId,
       content,
       images,
       senderId,
       receiverId,
+      seen: false,
       createdAt: serverTimestamp(),
     }
 
-    await addDoc(collection(firestore, "messages"), messageData)
-
-    // const id = messageRef.id
-    // await updateDoc(doc(firestore, "messages", id), {
-    //   ...messageData,
-    //   id,
-    //   updatedAt: serverTimestamp(),
-    // })
-
-    // const updatedMessage = await getDoc(doc(firestore, "messages", id))
-    // const message = updatedMessage.data() as Message
+    await setDoc(doc(firestore, "messages", messageId), messageData)
 
     return NextResponse.json(messageData, { status: 200 })
   } catch (error) {

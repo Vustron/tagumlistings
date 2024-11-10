@@ -10,7 +10,7 @@ import {
   collection,
   serverTimestamp,
 } from "firebase/firestore"
-import { convertAndCheckRateLimit, handleErrorResponse } from "@/server/helpers"
+import { rateLimit, handleErrorResponse } from "@/server/helpers"
 import { checkRequiredFields, requestBodyHandler } from "@/lib/utils"
 import { NextResponse } from "next/server"
 
@@ -27,7 +27,7 @@ import type { NextRequest } from "next/server"
 
 export async function saveAppointmentDateController(request: NextRequest) {
   try {
-    const rateLimitCheck = await convertAndCheckRateLimit(request)
+    const rateLimitCheck = await rateLimit(request)
 
     if (rateLimitCheck instanceof NextResponse) {
       return rateLimitCheck

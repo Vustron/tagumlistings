@@ -47,7 +47,7 @@ const AppointmentsClient = () => {
         <div className="flex items-start justify-between">
           <Heading
             title={`Appointments (${appointmentsCount})`}
-            description="Manage your appointments"
+            description=""
           />
         </div>
         <Separator className="mt-2" />

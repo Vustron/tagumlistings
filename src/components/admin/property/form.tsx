@@ -33,6 +33,7 @@ const UpdatePropertyForm = ({ data }: UpdatePropertyFormProps) => {
       location: data.location,
       status: data.status,
       propertyPics: data.propertyPics,
+      price: data.price,
       no_of_bedrooms: data.no_of_bedrooms,
       no_of_bathrooms: data.no_of_bathrooms,
       square_meter: data.square_meter,

@@ -39,6 +39,8 @@ const UpdateAppointmentForm = ({
       date: new Date(appointment.date).toISOString(),
       description: appointment.description,
       color: appointment.color,
+      status: appointment.status,
+      propertyId: appointment.propertyId,
     },
   })
 
