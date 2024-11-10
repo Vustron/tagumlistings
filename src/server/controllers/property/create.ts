@@ -72,13 +72,13 @@ export async function createPropertyController(request: NextRequest) {
       category,
       location,
       status,
-      user_id: null,
-      appointment_id: null,
       propertyPics,
       price,
       no_of_bedrooms,
       no_of_bathrooms,
       square_meter,
+      user: null,
+      appointment_id: null,
       created_at: serverTimestamp(),
     }
 

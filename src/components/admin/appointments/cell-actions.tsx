@@ -54,48 +54,48 @@ const CellActions = ({ data }: CellActionProps) => {
     const ok = await confirm()
 
     if (ok) {
-      await toast.promise(deleteMutation.mutateAsync(data.id!), {
-        loading: <span className="animate-pulse">Deleting appointment...</span>,
-        success: "Appointment deleted",
-        error: (error: unknown) => clientErrorHandler(error),
-      })
+      await toast.promise(
+        deleteMutation.mutateAsync(data.id!).then(() => Promise.all([])),
+        {
+          loading: (
+            <span className="animate-pulse">Deleting appointment...</span>
+          ),
+          success: "Appointment deleted",
+          error: (error: unknown) => clientErrorHandler(error),
+        },
+      )
     }
   }
 
   const handleStatusChange = async (status: string) => {
+    const updateAppointmentPromise = updateAppointmentMutation.mutateAsync({
+      id: data.id,
+      user: data.user,
+      date: data.date.toString(),
+      description: data.description,
+      color: data.color,
+      status,
+      propertyId: data.propertyId,
+    })
+
+    const updatePropertyPromise =
+      status === "confirmed"
+        ? updatePropertyMutation.mutateAsync({
+            id: data.propertyId,
+            status: "reserved",
+            user: data.user,
+            appointment_id: data.id,
+          })
+        : Promise.resolve()
+
     await toast.promise(
-      updateAppointmentMutation.mutateAsync({
-        id: data.id,
-        user: data.user,
-        date: data.date.toString(),
-        description: data.description,
-        color: data.color,
-        status,
-        propertyId: data.propertyId,
-      }),
+      Promise.all([updateAppointmentPromise, updatePropertyPromise]),
       {
         loading: <span className="animate-pulse">Updating appointment...</span>,
         success: "Appointment updated",
         error: (error: unknown) => clientErrorHandler(error),
       },
     )
-
-    if (status === "confirmed") {
-      await toast.promise(
-        updatePropertyMutation.mutateAsync({
-          id: data.propertyId,
-          status: "reserved",
-          user: data.user,
-        }),
-        {
-          loading: (
-            <span className="animate-pulse">Updating appointment...</span>
-          ),
-          success: "Appointment updated",
-          error: (error: unknown) => clientErrorHandler(error),
-        },
-      )
-    }
   }
 
   return (

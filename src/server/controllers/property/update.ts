@@ -46,18 +46,11 @@ export async function updatePropertyController(request: NextRequest) {
       no_of_bedrooms,
       no_of_bathrooms,
       square_meter,
+      user,
+      appointment_id,
     } = updatePropertyBody
 
-    const requiredFields: (keyof typeof updatePropertyBody)[] = [
-      "id",
-      "category",
-      "location",
-      "status",
-      "propertyPics",
-      "no_of_bedrooms",
-      "no_of_bathrooms",
-      "square_meter",
-    ]
+    const requiredFields: (keyof typeof updatePropertyBody)[] = ["id"]
 
     const errorResponse = checkRequiredFields(
       updatePropertyBody,
@@ -67,7 +60,9 @@ export async function updatePropertyController(request: NextRequest) {
     if (errorResponse) return errorResponse
 
     const propertyRef = doc(firestore, "properties", id!)
-    await updateDoc(propertyRef, {
+
+    // Filter out undefined fields
+    const updateData: Partial<Property> = {
       category,
       location,
       status,
@@ -76,8 +71,18 @@ export async function updatePropertyController(request: NextRequest) {
       no_of_bedrooms,
       no_of_bathrooms,
       square_meter,
-      updatedAt: serverTimestamp(),
-    })
+      user,
+      appointment_id,
+      updated_at: serverTimestamp(),
+    }
+
+    for (const key of Object.keys(updateData)) {
+      if (updateData[key as keyof Property] === undefined) {
+        delete updateData[key as keyof Property]
+      }
+    }
+
+    await updateDoc(propertyRef, updateData)
 
     const updatedPropertySnapshot = await getDoc(propertyRef)
     const updatedProperty = updatedPropertySnapshot.data() as Property

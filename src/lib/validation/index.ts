@@ -96,6 +96,7 @@ export const updatePropertySchema = z.object({
   no_of_bathrooms: requiredString.optional(),
   square_meter: requiredString.optional(),
   user: requiredString.optional(),
+  appointment_id: requiredString.optional(),
 })
 
 /* UpdatePropertyValues Type */

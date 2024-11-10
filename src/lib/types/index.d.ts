@@ -186,7 +186,7 @@ export interface Property {
   no_of_bathrooms?: string
   square_meter?: string
   created_at?: string
-  updated_at?: string
+  updated_at?: string | FieldValue
 }
 
 export interface PaginationMetadata {

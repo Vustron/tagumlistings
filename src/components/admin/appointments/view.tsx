@@ -18,7 +18,6 @@ interface AppointmentsViewProps {
 
 const AppointmentsView: React.FC<AppointmentsViewProps> = ({
   events,
-
   appointmentDates,
 }) => {
   return (
