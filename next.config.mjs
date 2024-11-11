@@ -7,18 +7,19 @@ const withBundleAnalyzerConfig = withBundleAnalyzer({
 })
 
 // configure content security policy
-// const ContentSecurityPolicy = `
-//     default-src 'self' vercel.live;
-//     script-src 'self' 'unsafe-eval' 'unsafe-inline' cdn.vercel-insights.com vercel.live va.vercel-scripts.com https://upload-widget.cloudinary.com/global/all.js firestore.googleapis.com;
-//     style-src 'self' 'unsafe-inline';
-//     img-src * blob: data: https://upload-widget.cloudinary.com/global/all.js;
-//     media-src 'none';
-//     connect-src 'self' firestore.googleapis.com;
-//     font-src 'self' data:;
-//     frame-src 'self' *.codesandbox.io vercel.live https://upload-widget.cloudinary.com/;
-// `
 const ContentSecurityPolicy = `
-  
+    default-src 'self' vercel.live;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' cdn.vercel-insights.com vercel.live va.vercel-scripts.com https://upload-widget.cloudinary.com/global/all.js firestore.googleapis.com;
+    style-src 'self' 'unsafe-inline';
+    img-src * blob: data: https://upload-widget.cloudinary.com/global/all.js;
+    media-src 'none';
+    connect-src 'self' firestore.googleapis.com firebasestorage.googleapis.com;
+    font-src 'self' data:;
+    frame-src 'self' *.codesandbox.io vercel.live https://upload-widget.cloudinary.com/;
+    base-uri 'self';
+    form-action 'self';
+    frame-ancestors 'none';
+    upgrade-insecure-requests;
 `
 
 // init allowed origins
