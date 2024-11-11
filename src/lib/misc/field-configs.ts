@@ -253,12 +253,15 @@ export const updatePropertyFields = (
     type: "select",
     label: "Select a user",
     placeholder: "Select a user",
-    options: accounts
-      .filter((account) => account.id !== undefined)
-      .map((account) => ({
-        value: account.name,
-        label: account.name,
-      })),
+    options: [
+      { value: "N/A", label: "N/A" },
+      ...accounts
+        .filter((account) => account.id !== undefined)
+        .map((account) => ({
+          value: account.name,
+          label: account.name,
+        })),
+    ],
   },
 ]
 
