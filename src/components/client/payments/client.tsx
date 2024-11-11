@@ -2,7 +2,7 @@
 
 // components
 import FallbackBoundary from "@/components/shared/fallback-boundary"
-import { columns } from "@/components/admin/payments/columns"
+import { columns } from "@/components/client/payments/columns"
 import { Separator } from "@/components/ui/separator"
 import DataTable from "@/components/ui/data-table"
 import { Heading } from "@/components/ui/heading"
