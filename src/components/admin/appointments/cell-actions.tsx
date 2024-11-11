@@ -10,7 +10,7 @@ import {
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu"
 import {
-  Eye,
+  // Eye,
   Trash,
   Clock,
   XCircle,
@@ -18,14 +18,14 @@ import {
   MoreHorizontal,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { ViewPropertyDialog } from "@/components/admin/appointments/view-property"
+// import { ViewPropertyDialog } from "@/components/admin/appointments/view-property"
 
 // hooks
 import { useUpdateAppointment } from "@/lib/hooks/appointment/update"
 import { useDeleteAppointment } from "@/lib/hooks/appointment/delete"
 import { useUpdateProperty } from "@/lib/hooks/property/update"
 import { useConfirm } from "@/lib/hooks/utils/use-confirm"
-import { useState } from "react"
+// import { useState } from "react"
 
 // utils
 import { clientErrorHandler } from "@/lib/utils"
@@ -48,7 +48,7 @@ const CellActions = ({ data }: CellActionProps) => {
     "You are about to remove this appointment",
   )
 
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false)
+  // const [isViewModalOpen, setIsViewModalOpen] = useState(false)
 
   const handleDelete = async () => {
     const ok = await confirm()
@@ -101,11 +101,11 @@ const CellActions = ({ data }: CellActionProps) => {
   return (
     <>
       <ConfirmDialog />
-      <ViewPropertyDialog
+      {/* <ViewPropertyDialog
         propertyId={data.propertyId!}
         isOpen={isViewModalOpen}
         onClose={() => setIsViewModalOpen(false)}
-      />
+      /> */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="size-8 p-0">
@@ -118,9 +118,9 @@ const CellActions = ({ data }: CellActionProps) => {
           <DropdownMenuItem onClick={handleDelete}>
             <Trash className="mr-2 size-4" /> Delete
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setIsViewModalOpen(true)}>
+          {/* <DropdownMenuItem onClick={() => setIsViewModalOpen(true)}>
             <Eye className="mr-2 size-4" /> View
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuGroup>
             <DropdownMenuLabel>Set Status</DropdownMenuLabel>
             <DropdownMenuItem

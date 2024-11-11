@@ -9,7 +9,7 @@ const withBundleAnalyzerConfig = withBundleAnalyzer({
 // configure content security policy
 const ContentSecurityPolicy = `
     default-src 'self' vercel.live;
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' cdn.vercel-insights.com vercel.live va.vercel-scripts.com https://upload-widget.cloudinary.com/global/all.js;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' cdn.vercel-insights.com vercel.live va.vercel-scripts.com https://upload-widget.cloudinary.com/global/all.js firestore.googleapis.com;
     style-src 'self' 'unsafe-inline';
     img-src * blob: data: https://upload-widget.cloudinary.com/global/all.js;
     media-src 'none';
