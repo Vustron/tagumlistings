@@ -13,7 +13,7 @@ const ContentSecurityPolicy = `
     style-src 'self' 'unsafe-inline';
     img-src * blob: data: https://upload-widget.cloudinary.com/global/all.js;
     media-src 'none';
-    connect-src *;
+    connect-src 'self' firestore.googleapis.com;
     font-src 'self' data:;
     frame-src 'self' *.codesandbox.io vercel.live https://upload-widget.cloudinary.com/;
 `
