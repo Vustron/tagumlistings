@@ -27,6 +27,7 @@ const propertySchema = z.object({
   no_of_bedrooms: z.string().optional(),
   no_of_bathrooms: z.string().optional(),
   square_meter: z.string().optional(),
+  user: z.string().optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
 })
@@ -95,7 +96,7 @@ export const updatePropertySchema = z.object({
   no_of_bedrooms: requiredString.optional(),
   no_of_bathrooms: requiredString.optional(),
   square_meter: requiredString.optional(),
-  user: requiredString.optional(),
+  user: z.string().trim().max(255).optional(),
   appointment_id: requiredString.optional(),
 })
 

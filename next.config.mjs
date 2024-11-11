@@ -90,6 +90,7 @@ export const securityHeaders = [
 const nextConfig = {
   // experimental
   experimental: {
+    useLightningcss: true,
     // caching
     staleTimes: {
       dynamic: 0,
