@@ -12,7 +12,7 @@ import { headers } from "next/headers"
 // types
 import type { ReactNode } from "react"
 
-const HydrationBoundaryWrapper = ({
+const HydrationBoundaryWrapper = async ({
   children,
   accountId,
   appointmentId,
@@ -26,7 +26,7 @@ const HydrationBoundaryWrapper = ({
   propertyId?: string
 }) => {
   const headersList = headers()
-  const pathname = headersList.get("x-pathname") || "/"
+  const pathname = (await headersList).get("x-pathname") || "/"
 
   const queryClient = new QueryClient({
     defaultOptions: {

@@ -1,6 +1,9 @@
 // utils
 import withBundleAnalyzer from "@next/bundle-analyzer"
 
+// types
+type ImageFormat = "image/webp" | "image/avif"
+
 // configure the bundle analyzer
 const withBundleAnalyzerConfig = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
@@ -87,15 +90,20 @@ export const securityHeaders = [
 
 /** @type {import('next').NextConfig} */
 
-const nextConfig = {
+const nextConfig: import("next").NextConfig = {
+  // Automatically bundle external packages in the Pages Router:
+  bundlePagesRouterDependencies: true,
+
   // experimental
   experimental: {
-   
+    // react compiler
+    reactCompiler: true,
+    // enables unstable_after
+    after: true,
     // caching
     staleTimes: {
       dynamic: 0,
     },
-
     // turbo configs
     turbo: {
       rules: {
@@ -120,7 +128,6 @@ const nextConfig = {
       ],
     },
   },
-
   // headers
   async headers() {
     return [
@@ -131,39 +138,36 @@ const nextConfig = {
       },
     ]
   },
-
   // image domains
   images: {
-    // config formats
-    formats: ["image/avif", "image/webp"],
+    formats: ["image/webp", "image/avif"] as ImageFormat[],
     remotePatterns: [
       {
-        protocol: "https",
+        protocol: "https" as const,
         hostname: "res.cloudinary.com",
       },
       {
-        protocol: "https",
+        protocol: "https" as const,
         hostname: "avatars.githubusercontent.com",
       },
       {
-        protocol: "https",
+        protocol: "https" as const,
         hostname: "lh3.googleusercontent.com",
       },
       {
-        protocol: "https",
+        protocol: "https" as const,
         hostname: "ik.imagekit.io",
       },
       {
-        protocol: "https",
+        protocol: "https" as const,
         hostname: "firebasestorage.googleapis.com",
       },
       {
-        protocol: "https",
+        protocol: "https" as const,
         hostname: "placehold.co",
       },
     ],
   },
-
   // logging
   logging: {
     fetches: {

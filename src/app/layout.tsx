@@ -5,8 +5,8 @@ import Providers from "@/components/providers"
 import { siteConfig } from "@/lib/config/meta-data"
 
 // utils
-import "@/lib/styles/globals.css"
 import { inter } from "@/lib/fonts"
+import "@/lib/styles/globals.css"
 
 // init meta data
 export const metadata = siteConfig.meta

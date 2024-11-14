@@ -11,7 +11,10 @@ import { cookies } from "next/headers"
 import type { SessionData } from "@/lib/config/session"
 
 export async function getSession() {
-  const session = await getIronSession<SessionData>(cookies(), sessionOptions)
+  const session = await getIronSession<SessionData>(
+    await cookies(),
+    sessionOptions,
+  )
 
   if (!session.loggedIn) {
     session.loggedIn = defaultSession.loggedIn

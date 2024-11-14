@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "Property",
 }
 
-export default function PropertyIdPage({
+export default async function PropertyIdPage({
   params,
 }: {
   params: { id: string }

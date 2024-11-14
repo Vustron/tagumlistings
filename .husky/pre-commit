@@ -1,5 +1,5 @@
-# Run bun fmt
-bun fmt
+# Run bun fix
+bun fix
 
 # Get the current version from package.json
 current_version=$(node -p "require('./package.json').version")
