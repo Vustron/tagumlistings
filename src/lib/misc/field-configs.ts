@@ -93,13 +93,19 @@ export const updateAccountFields = (
   {
     name: "password",
     type: "password",
-    label: "Password",
+    label: "Current Password",
     placeholder: "******",
   },
   {
     name: "newpassword",
     type: "password",
     label: "New Password",
+    placeholder: "******",
+  },
+  {
+    name: "confirmPassword",
+    type: "password",
+    label: "Confirm Password",
     placeholder: "******",
   },
 ]
