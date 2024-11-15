@@ -79,8 +79,7 @@ export default function DataTable<TData, TValue>({
   disabled,
   isOnUsers,
   isOnProperties,
-  isOnPayments,
-
+  // isOnPayments,
   noBulkDelete,
   isOnClient,
   placeholder,
@@ -216,7 +215,7 @@ export default function DataTable<TData, TValue>({
             )}
 
             {/* create new payment */}
-            {isOnPayments && !isOnClient && (
+            {/* {isOnPayments && !isOnClient && (
               <Button
                 variant="outline"
                 size="sm"
@@ -226,7 +225,7 @@ export default function DataTable<TData, TValue>({
                 <PlusIcon className="mr-2 size-4" aria-hidden="true" />
                 New Payment
               </Button>
-            )}
+            )} */}
 
             {/* visibility */}
             <DropdownMenu>

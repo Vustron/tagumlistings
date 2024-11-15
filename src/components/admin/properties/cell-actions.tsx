@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu"
-import { Edit, MoreHorizontal, Trash } from "lucide-react"
+import { Coins, Edit, MoreHorizontal, Trash } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 // hooks
@@ -62,7 +62,9 @@ const CellActions = ({ data }: CellActionProps) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
+          <DropdownMenuItem onClick={() => router.push("/admin/payments/new")}>
+            <Coins className="mr-2 size-4" /> Add payments
+          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => router.push(`/admin/properties/${data.id}`)}
           >

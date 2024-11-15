@@ -54,7 +54,7 @@ export const paymentItems: BreadcrumbItemProps[] = [
 // add payment
 export const addPaymentItems: BreadcrumbItemProps[] = [
   { label: "Dashboard", href: "/admin" },
-  { label: "Payment", href: "/admin/payments" },
+  { label: "Properties", href: "/admin/properties" },
   { label: "Add Payment" },
 ]
 
@@ -82,4 +82,10 @@ export const propertyItems: BreadcrumbItemProps[] = [
 export const messagesItems: BreadcrumbItemProps[] = [
   { label: "Dashboard", href: "/admin" },
   { label: "Messages" },
+]
+
+// reports
+export const reportItems: BreadcrumbItemProps[] = [
+  { label: "Dashboard", href: "/admin" },
+  { label: "Reports" },
 ]

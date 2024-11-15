@@ -6,6 +6,7 @@ import {
   HandCoins,
   LayoutGrid,
   ClipboardPen,
+  // ClipboardPlus,
   MessageSquareText,
 } from "lucide-react"
 
@@ -71,6 +72,13 @@ export function getMenuList(pathname: string): Group[] {
           icon: MessageSquareText,
           submenus: [],
         },
+        // {
+        //   href: "/admin/reports",
+        //   label: "Reports",
+        //   active: pathname.includes("/admin/reports"),
+        //   icon: ClipboardPlus,
+        //   submenus: [],
+        // },
       ],
     },
     {

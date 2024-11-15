@@ -32,7 +32,7 @@ export const useUpdateAccount = (id?: string) => {
     mutationFn: async (values: UpdateAccountValues) => {
       const sanitizedData = sanitizer<UpdateAccountValues>(
         values,
-        updateAccountSchema,
+        updateAccountSchema.innerType(),
         purify,
       )
       return await updateAccount(sanitizedData)

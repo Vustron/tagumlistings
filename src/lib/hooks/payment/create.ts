@@ -50,7 +50,7 @@ export const useCreatePayment = () => {
       })
     },
     onSettled: () => {
-      router.push("/admin/payments")
+      router.push("/admin/properties")
       router.refresh()
     },
     onError: (error) => clientErrorHandler(error),

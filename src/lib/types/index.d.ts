@@ -185,6 +185,7 @@ export interface Property {
   no_of_bedrooms?: string
   no_of_bathrooms?: string
   square_meter?: string
+  payments?: Payment[]
   created_at?: string
   updated_at?: string | FieldValue
 }

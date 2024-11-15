@@ -9,11 +9,11 @@ import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 
 // hooks
-import { useRouter } from "next/navigation"
+import { useSearchParams, useRouter } from "next/navigation"
 import { useState, useCallback } from "react"
 
 // types
-import type { Filter, Property } from "@/lib/types"
+import type { Filter } from "@/lib/types"
 import type { Variants } from "framer-motion"
 
 export const fadeInUp: Variants = {
@@ -28,57 +28,73 @@ const buttonVariants: Variants = {
   tap: { scale: 0.95 },
 }
 
+const getCategoryIcon = (category: string) => {
+  switch (category.toLowerCase()) {
+    case "residential":
+      return <Home size={14} className="mr-1" />
+    case "apartment":
+      return <Building size={14} className="mr-1" />
+    case "land":
+      return <MapPin size={14} className="mr-1" />
+    case "commercial":
+      return <Briefcase size={14} className="mr-1" />
+    default:
+      return null
+  }
+}
+
 const SearchBar = ({
   initialQuery,
   filters,
+  // @ts-ignore
   setFilters,
   onFilterChange,
   onClearFilters,
+  categories,
 }: {
   initialQuery: string
   filters: Filter
   setFilters: React.Dispatch<React.SetStateAction<Filter>>
   onFilterChange: (filterType: keyof Filter, value: any) => void
   onClearFilters: () => void
+  categories: string[]
 }) => {
   const [query, setQuery] = useState(initialQuery)
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const params = new URLSearchParams()
+    const params = new URLSearchParams(searchParams.toString())
     if (query.trim()) {
       params.set("query", query)
+    } else {
+      params.delete("query")
     }
     router.push(`/search?${params.toString()}`)
   }
 
   const clearQuery = () => {
     setQuery("")
-    router.push("/search")
-    router.refresh()
+    const params = new URLSearchParams(searchParams.toString())
+    params.delete("query")
+    router.push(`/search?${params.toString()}`)
   }
 
   const toggleFilter = useCallback(
-    (category: Property) => {
-      setFilters((prev) => {
-        const newCategory =
-          prev.category === category ? "" : (category as string)
-        onFilterChange("category", newCategory)
-        return {
-          ...prev,
-          category: newCategory,
-        }
-      })
+    (category: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      if (filters.category === category) {
+        params.delete("category")
+        onFilterChange("category", "")
+      } else {
+        params.set("category", category)
+        onFilterChange("category", category)
+      }
+      router.push(`/search?${params.toString()}`)
     },
-    [setFilters, onFilterChange],
+    [filters.category, onFilterChange, router, searchParams],
   )
-
-  const handleClearFilters = () => {
-    onClearFilters()
-    router.push("/search")
-    router.refresh()
-  }
 
   return (
     <motion.div
@@ -128,7 +144,7 @@ const SearchBar = ({
       </form>
 
       <div className="flex flex-wrap gap-2 mb-4">
-        {["House", "Apartment", "Land", "Commercial"].map((category) => (
+        {categories.map((category) => (
           <motion.div
             key={category}
             variants={buttonVariants}
@@ -136,21 +152,14 @@ const SearchBar = ({
             whileTap="tap"
           >
             <Button
-              onClick={() => toggleFilter(category as Property)}
+              onClick={() => toggleFilter(category)}
               className={`px-3 py-1 rounded-lg text-sm ${
                 filters.category === category
                   ? "bg-green-500 text-white dark:hover:bg-green-400"
                   : "bg-gray-200 text-black dark:text-black hover:bg-gray-300 hover:dark:text-black"
               }`}
             >
-              {category === "House" && <Home size={14} className="mr-1" />}
-              {category === "Apartment" && (
-                <Building size={14} className="mr-1" />
-              )}
-              {category === "Land" && <MapPin size={14} className="mr-1" />}
-              {category === "Commercial" && (
-                <Briefcase size={14} className="mr-1" />
-              )}
+              {getCategoryIcon(category)}
               {category}
             </Button>
           </motion.div>
@@ -158,7 +167,7 @@ const SearchBar = ({
       </div>
 
       <Button
-        onClick={handleClearFilters}
+        onClick={onClearFilters}
         className="bg-red-500 hover:bg-red-600 text-white"
       >
         Clear Filters

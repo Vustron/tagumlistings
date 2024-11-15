@@ -33,19 +33,35 @@ const propertySchema = z.object({
 })
 
 // updateAccountSchema
-export const updateAccountSchema = z.object({
-  id: requiredString.optional(),
-  name: requiredString.optional(),
-  address: requiredString.optional(),
-  contact_number: requiredString.optional(),
-  email: requiredString.email("Invalid email address").optional(),
-  role: requiredString.optional(),
-  password: requiredString.min(8, "Must be at least 8 characters").optional(),
-  newpassword: requiredString
-    .min(8, "Must be at least 8 characters")
-    .optional(),
-  reservedProperties: z.array(propertySchema).optional(),
-})
+export const updateAccountSchema = z
+  .object({
+    id: requiredString.optional(),
+    name: requiredString.optional(),
+    address: requiredString.optional(),
+    contact_number: requiredString.optional(),
+    email: requiredString.email("Invalid email address").optional(),
+    role: requiredString.optional(),
+    password: requiredString.min(8, "Must be at least 8 characters").optional(),
+    confirmPassword: requiredString
+      .min(8, "Must be at least 8 characters")
+      .optional(),
+    newpassword: requiredString
+      .min(8, "Must be at least 8 characters")
+      .optional(),
+    reservedProperties: z.array(propertySchema).optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.newpassword && data.confirmPassword) {
+        return data.newpassword === data.confirmPassword
+      }
+      return true
+    },
+    {
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+    },
+  )
 
 /* UpdateAccountValues Type */
 export type UpdateAccountValues = z.infer<typeof updateAccountSchema>
@@ -71,6 +87,11 @@ export const addPropertySchema = z.object({
   no_of_bedrooms: requiredString,
   no_of_bathrooms: requiredString,
   square_meter: requiredString,
+  payment: requiredString,
+  user: requiredString.optional(),
+  appointment: requiredString.optional(),
+  paidAmount: requiredString.optional(),
+  paid_date: requiredString.optional(),
 })
 
 /* AddPropertyValues Type */
@@ -98,6 +119,10 @@ export const updatePropertySchema = z.object({
   square_meter: requiredString.optional(),
   user: z.string().trim().max(255).optional(),
   appointment_id: requiredString.optional(),
+  payment: requiredString.optional(),
+  appointment: requiredString.optional(),
+  amount: requiredString.optional(),
+  paid_date: requiredString.optional(),
 })
 
 /* UpdatePropertyValues Type */
@@ -161,6 +186,7 @@ export type UpdateAppointmentValues = z.infer<typeof updateAppointmentSchema>
 // addAppointmentSchema
 export const addPaymentSchema = z.object({
   property: requiredString.optional(),
+  propertyId: requiredString.optional(),
   user: requiredString.optional(),
   appointment: requiredString.optional(),
   amount: requiredString,
@@ -174,6 +200,7 @@ export type AddPaymentValues = z.infer<typeof addPaymentSchema>
 export const updatePaymentSchema = z.object({
   id: requiredString.optional(),
   property: requiredString.optional(),
+  propertyId: requiredString.optional(),
   user: requiredString.optional(),
   appointment: requiredString.optional(),
   amount: requiredString.optional(),

@@ -110,6 +110,17 @@ export const useSearchClient = () => {
     router.push("/search")
   }
 
+  // Extract unique categories from properties
+  const categories = useMemo(() => {
+    if (!data?.properties) return []
+    const uniqueCategories = new Set(
+      data.properties
+        .map((property: Property) => property.category)
+        .filter(Boolean), // Remove null/undefined values
+    )
+    return Array.from(uniqueCategories)
+  }, [data?.properties])
+
   return {
     query,
     filters,
@@ -123,5 +134,6 @@ export const useSearchClient = () => {
     totalCount,
     totalPages,
     currentPage,
+    categories,
   }
 }

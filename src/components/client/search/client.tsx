@@ -32,6 +32,7 @@ const SearchClient = () => {
     totalCount,
     totalPages,
     currentPage,
+    categories,
   } = useSearchClient()
 
   if (isLoading) {
@@ -66,6 +67,9 @@ const SearchClient = () => {
           setFilters={setFilters}
           onFilterChange={handleFilterChange}
           onClearFilters={clearFilters}
+          categories={categories.filter(
+            (category): category is string => category !== undefined,
+          )}
         />
 
         <div className="w-full space-y-6">

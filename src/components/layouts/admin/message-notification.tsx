@@ -1,16 +1,12 @@
 "use client"
 
-// components
 import { Button } from "@/components/ui/button"
 import { Bell } from "lucide-react"
-
-// actions
 import { updateMessagesSeenStatus } from "@/lib/actions/messages/status"
-
-// hooks
 import { useMessageNotifications } from "@/lib/hooks/messages/notification"
 import { useSession } from "@/components/providers/session"
 import { useRouter } from "next-nprogress-bar"
+import { useEffect } from "react"
 
 export default function MessageNotification() {
   const router = useRouter()
@@ -18,7 +14,9 @@ export default function MessageNotification() {
   const { unseenCount, unseenMessages, startListening } =
     useMessageNotifications(session.id)
 
-  startListening()
+  useEffect(() => {
+    startListening()
+  }, [startListening])
 
   const handleClick = async () => {
     if (unseenMessages.length > 0) {

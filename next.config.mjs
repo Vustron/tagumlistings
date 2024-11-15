@@ -1,9 +1,6 @@
 // utils
 import withBundleAnalyzer from "@next/bundle-analyzer"
 
-// types
-type ImageFormat = "image/webp" | "image/avif"
-
 // configure the bundle analyzer
 const withBundleAnalyzerConfig = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
@@ -16,7 +13,7 @@ const ContentSecurityPolicy = `
     style-src 'self' 'unsafe-inline';
     img-src * blob: data: https://upload-widget.cloudinary.com/global/all.js;
     media-src 'none';
-    connect-src 'self' firestore.googleapis.com firebasestorage.googleapis.com;
+    connect-src 'self' firestore.googleapis.com firebasestorage.googleapis.com *.imagekit.io;
     font-src 'self' data:;
     frame-src 'self' *.codesandbox.io vercel.live https://upload-widget.cloudinary.com/;
     base-uri 'self';
@@ -90,16 +87,9 @@ export const securityHeaders = [
 
 /** @type {import('next').NextConfig} */
 
-const nextConfig: import("next").NextConfig = {
-  // Automatically bundle external packages in the Pages Router:
-  bundlePagesRouterDependencies: true,
-
+const nextConfig = {
   // experimental
   experimental: {
-    // react compiler
-    reactCompiler: true,
-    // enables unstable_after
-    after: true,
     // caching
     staleTimes: {
       dynamic: 0,
@@ -140,30 +130,30 @@ const nextConfig: import("next").NextConfig = {
   },
   // image domains
   images: {
-    formats: ["image/webp", "image/avif"] as ImageFormat[],
+    formats: ["image/webp", "image/avif"],
     remotePatterns: [
       {
-        protocol: "https" as const,
+        protocol: "https",
         hostname: "res.cloudinary.com",
       },
       {
-        protocol: "https" as const,
+        protocol: "https",
         hostname: "avatars.githubusercontent.com",
       },
       {
-        protocol: "https" as const,
+        protocol: "https",
         hostname: "lh3.googleusercontent.com",
       },
       {
-        protocol: "https" as const,
+        protocol: "https",
         hostname: "ik.imagekit.io",
       },
       {
-        protocol: "https" as const,
+        protocol: "https",
         hostname: "firebasestorage.googleapis.com",
       },
       {
-        protocol: "https" as const,
+        protocol: "https",
         hostname: "placehold.co",
       },
     ],

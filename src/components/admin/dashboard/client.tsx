@@ -8,13 +8,8 @@ import {
   CardContent,
   CardDescription,
 } from "@/components/ui/card"
-import {
-  BellPlus,
-  BookMarked,
-  MapPinHouse,
-  CircleDollarSign,
-} from "lucide-react"
-import AppointmentsChart from "@/components/admin/appointments/chart"
+import { BellPlus, CircleDollarSign, MapPinHouse, Clock } from "lucide-react"
+import ReportsChart from "@/components/admin/reports/reports-chart"
 import FallbackBoundary from "@/components/shared/fallback-boundary"
 import AppointmentsList from "@/components/admin/appointments/list"
 import DashboardCard from "@/components/admin/dashboard/card"
@@ -22,6 +17,7 @@ import DashboardCard from "@/components/admin/dashboard/card"
 // hooks
 import { useGetAppointments } from "@/lib/hooks/appointment/get-all"
 import { useGetProperties } from "@/lib/hooks/property/get-all"
+import { useGetPayments } from "@/lib/hooks/payment/get-all"
 
 // utils
 import {
@@ -29,12 +25,10 @@ import {
   filterAppointmentsForCurrentMonth,
 } from "@/lib/utils"
 
-// utils
-import type { Property } from "@/lib/types"
-
 const AdminDashboardClient = () => {
   const { data: appointmentsData } = useGetAppointments()
   const { data: propertiesData } = useGetProperties()
+  const { data: paymentsData } = useGetPayments()
 
   const appointments = appointmentsData?.appointments ?? []
   const currentMonthAppointments =
@@ -46,19 +40,15 @@ const AdminDashboardClient = () => {
   const properties = propertiesData?.properties ?? []
   const propertiesCount = properties.length
 
-  const reservedProperties = properties.filter(
-    (property: Property) => property.status === "reserved",
-  ).length
-
-  const soldProperties = properties.filter(
-    (property: Property) => property.status === "sold",
-  ).length
+  const payments = paymentsData?.payments ?? []
+  const paymentsCount = payments.length
+  const pendingPayments = appointmentsCount - paymentsCount
 
   const lastMonth = new Date()
   lastMonth.setMonth(lastMonth.getMonth() - 1)
 
   const propertiesLastMonth = properties.filter(
-    (property: Property) =>
+    (property) =>
       property.created_at && new Date(property.created_at) >= lastMonth,
   ).length
 
@@ -69,32 +59,27 @@ const AdminDashboardClient = () => {
   ).toFixed(2)
   const propertiesChangeSign = propertiesChange >= 0 ? "+" : ""
 
-  const lastWeek = new Date()
-  lastWeek.setDate(lastWeek.getDate() - 7)
-
-  const reservedPropertiesLastWeek = properties.filter(
-    (property: Property) =>
-      property.status === "reserved" &&
-      property.created_at &&
-      new Date(property.created_at) >= lastWeek,
+  const paymentsLastMonth = payments.filter(
+    (payment) => payment.paid_date && new Date(payment.paid_date) >= lastMonth,
   ).length
 
-  const reservedPropertiesChangeSign =
-    reservedPropertiesLastWeek >= 0 ? "+" : ""
-
-  const soldPropertiesLastMonth = properties.filter(
-    (property: Property) =>
-      property.status === "sold" &&
-      property.created_at &&
-      new Date(property.created_at) >= lastMonth,
-  ).length
-
-  const soldPropertiesChange = soldProperties - soldPropertiesLastMonth
-  const soldPropertiesPercentageChange = (
-    (soldPropertiesChange / (soldPropertiesLastMonth || 1)) *
+  const paymentsChange = paymentsCount - paymentsLastMonth
+  const paymentsPercentageChange = (
+    (paymentsChange / (paymentsLastMonth || 1)) *
     100
   ).toFixed(2)
-  const soldPropertiesChangeSign = soldPropertiesChange >= 0 ? "+" : ""
+  const paymentsChangeSign = paymentsChange >= 0 ? "+" : ""
+
+  const pendingPaymentsLastMonth =
+    appointments.filter((a) => new Date(a.date) >= lastMonth).length -
+    paymentsLastMonth
+
+  const pendingChange = pendingPayments - pendingPaymentsLastMonth
+  const pendingPercentageChange = (
+    (pendingChange / (pendingPaymentsLastMonth || 1)) *
+    100
+  ).toFixed(2)
+  const pendingChangeSign = pendingChange >= 0 ? "+" : ""
 
   const percentageChange = (
     (lastHourAppointmentsCount / (appointmentsCount || 1)) *
@@ -111,17 +96,17 @@ const AdminDashboardClient = () => {
     },
     {
       id: "2",
-      title: "Reserved",
-      amount: `${reservedProperties}`,
-      percentageChange: `${reservedPropertiesChangeSign}${reservedPropertiesLastWeek} this week`,
-      icon: <BookMarked className="size-4 text-muted-foreground" />,
+      title: "Total Payments",
+      amount: `${paymentsCount}`,
+      percentageChange: `${paymentsChangeSign}${paymentsPercentageChange}% from last month`,
+      icon: <CircleDollarSign className="size-4 text-muted-foreground" />,
     },
     {
       id: "3",
-      title: "Sold",
-      amount: `${soldProperties}`,
-      percentageChange: `${soldPropertiesChangeSign}${soldPropertiesPercentageChange}% from last month`,
-      icon: <CircleDollarSign className="size-4 text-muted-foreground" />,
+      title: "Pending Payments",
+      amount: `${pendingPayments}`,
+      percentageChange: `${pendingChangeSign}${pendingPercentageChange}% from last month`,
+      icon: <Clock className="size-4 text-muted-foreground" />,
     },
     {
       id: "4",
@@ -141,7 +126,7 @@ const AdminDashboardClient = () => {
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7 mt-4">
           <div className="col-span-4">
-            <AppointmentsChart appointments={appointments} />
+            <ReportsChart payments={payments} appointments={appointments} />
           </div>
 
           <Card className="col-span-4 md:col-span-3">
