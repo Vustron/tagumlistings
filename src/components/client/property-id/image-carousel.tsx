@@ -106,6 +106,7 @@ const ImageCarousel = ({
         handleTouchStart={handleTouchStart}
         handleTouchEnd={handleTouchEnd}
         setIsFullscreen={setIsFullscreen}
+        isFullscreen={isFullscreen}
       />
 
       {showThumbnails && (
@@ -141,6 +142,7 @@ const ImageCarousel = ({
               handleTouchStart={handleTouchStart}
               handleTouchEnd={handleTouchEnd}
               setIsFullscreen={setIsFullscreen}
+              isFullscreen={isFullscreen}
             />
           </div>
         </DialogContent>

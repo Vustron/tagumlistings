@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 
 // hooks
 import { useRouter } from "next-nprogress-bar"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 // utils
 import { placeholderImage, formatPriceToPHP } from "@/lib/utils"
@@ -32,6 +32,7 @@ const PropertyCard = ({
   const router = useRouter()
   const [isImageLoaded, setIsImageLoaded] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [isImageLoading, setIsImageLoading] = useState(true)
 
   const imageUrl =
     propertyPics && propertyPics.length > 0
@@ -67,6 +68,10 @@ const PropertyCard = ({
     })
   }
 
+  useEffect(() => {
+    setIsImageLoading(true)
+  }, [currentImageIndex])
+
   return (
     <motion.div
       initial="rest"
@@ -83,47 +88,65 @@ const PropertyCard = ({
           }}
           transition={{ duration: 0.3 }}
         >
-          {!isImageLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700 animate-pulse">
-              <span className="text-gray-500 dark:text-gray-400">
-                Loading...
-              </span>
-            </div>
-          )}
-          <Image
-            src={imageUrl || placeholderImage(category || "Property")}
-            alt={`${category || "Property"} Image ${currentImageIndex + 1}`}
-            fill
-            className={`object-cover transition-opacity duration-300 ${
-              isImageLoaded ? "opacity-100" : "opacity-0"
-            }`}
-            loading="lazy"
-            quality={75}
-            onLoad={() => setIsImageLoaded(true)}
-          />
+          {!isImageLoaded ||
+            (isImageLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700 animate-pulse">
+                <span className="text-gray-500 dark:text-gray-400">
+                  Loading...
+                </span>
+              </div>
+            ))}
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isImageLoading ? 0 : 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Image
+              src={imageUrl || placeholderImage(category || "Property")}
+              alt={`${category || "Property"} Image ${currentImageIndex + 1}`}
+              fill
+              className="object-cover"
+              loading="lazy"
+              quality={80}
+              onLoad={() => {
+                setIsImageLoading(false)
+                setIsImageLoaded(true)
+              }}
+              onError={() => setIsImageLoading(false)}
+            />
+          </motion.div>
           {propertyPics && propertyPics.length > 1 && (
             <>
-              <button
+              <motion.button
                 type="button"
                 onClick={handlePrevImage}
                 className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 p-2 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
                 aria-label="Previous image"
               >
                 ←
-              </button>
-              <button
+              </motion.button>
+              <motion.button
                 type="button"
                 onClick={handleNextImage}
                 className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 p-2 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
                 aria-label="Next image"
               >
                 →
-              </button>
+              </motion.button>
             </>
           )}
-          <div className="absolute top-2 right-2 bg-white dark:bg-zinc-800 px-2 py-1 rounded-full text-xs font-semibold">
-            {propertyPics?.length || 0} photos
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="absolute top-2 right-2 bg-white dark:bg-zinc-800 px-2 py-1 rounded-full text-xs font-semibold"
+          >
+            {currentImageIndex + 1} / {propertyPics?.length || 0}
+          </motion.div>
         </motion.div>
 
         <CardHeader className="p-4 pb-0">

@@ -22,6 +22,7 @@ interface CarouselContentProps {
   handleTouchStart: (e: React.TouchEvent) => void
   handleTouchEnd: (e: React.TouchEvent) => void
   setIsFullscreen: React.Dispatch<React.SetStateAction<boolean>>
+  isFullscreen?: boolean
 }
 
 const CarouselContent = ({
@@ -37,6 +38,7 @@ const CarouselContent = ({
   handleTouchStart,
   handleTouchEnd,
   setIsFullscreen,
+  isFullscreen,
 }: CarouselContentProps) => {
   const aspectRatioClasses = {
     square: "aspect-square",
@@ -142,17 +144,19 @@ const CarouselContent = ({
         </>
       )}
 
-      <div className="absolute top-4 right-4 z-10 space-x-2">
-        <Button
-          onClick={() => setIsFullscreen(true)}
-          className="bg-black/50 hover:bg-black/75 text-white rounded-full transition-colors duration-200"
-          size="icon"
-          variant="ghost"
-          aria-label="View Fullscreen"
-        >
-          <ZoomIn className="size-5" />
-        </Button>
-      </div>
+      {!isFullscreen && (
+        <div className="absolute top-4 right-4 z-10 space-x-2">
+          <Button
+            onClick={() => setIsFullscreen(true)}
+            className="bg-black/50 hover:bg-black/75 text-white rounded-full transition-colors duration-200"
+            size="icon"
+            variant="ghost"
+            aria-label="View Fullscreen"
+          >
+            <ZoomIn className="size-5" />
+          </Button>
+        </div>
+      )}
 
       <div className="absolute bottom-4 right-4 z-10">
         <span className="bg-black/50 text-white px-3 py-1 rounded-full text-sm">
