@@ -22,19 +22,21 @@ interface AddPaymentFormProps {
   accounts: UserData[]
   appointments: Appointment[]
   properties: Property[]
+  property?: string
 }
 
 const NewPaymentForm = ({
   accounts,
   appointments,
   properties,
+  property,
 }: AddPaymentFormProps) => {
   const addPayment = useCreatePayment()
 
   const form = useForm<AddPaymentValues>({
     resolver: zodResolver(addPaymentSchema),
     defaultValues: {
-      property: properties.length > 0 ? properties[0]?.id : "",
+      property: property || (properties.length > 0 ? properties[0]?.id : ""),
       user: accounts.length > 0 ? accounts[0]?.id : "",
       appointment: appointments.length > 0 ? appointments[0]?.id : "",
       amount: "",
@@ -53,11 +55,18 @@ const NewPaymentForm = ({
     form.reset()
   }
 
+  const fields = addPaymentFields(
+    accounts,
+    appointments,
+    properties,
+    property,
+  ).filter((field) => !(property && field.name === "property"))
+
   return (
     <DynamicForm<AddPaymentValues>
       form={form}
       onSubmit={submitHandler}
-      fields={addPaymentFields(accounts, appointments, properties)}
+      fields={fields}
       submitButtonTitle="Create Payment"
       submitButtonClassname="bg-green-500 rounded-3xl hover:dark:text-black"
       submitButtonTitleClassname="text-md font-medium"

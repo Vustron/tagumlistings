@@ -1,8 +1,8 @@
 // components
 import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
-import AddPaymentClient from "@/components/admin/new-payment/client"
-import ContentLayout from "@/components/layouts/admin/content-layout"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
+import ContentLayout from "@/components/layouts/admin/content-layout"
+import AddPaymentClient from "@/components/admin/new-payment/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions
@@ -20,7 +20,11 @@ export const metadata: Metadata = {
   title: "Add Payment",
 }
 
-export default async function NewPaymentPage() {
+export default async function NewPaymentPage({
+  searchParams,
+}: {
+  searchParams: { property?: string }
+}) {
   // get session
   const session = await getSession()
 
@@ -33,7 +37,7 @@ export default async function NewPaymentPage() {
         <BounceWrapper>
           <DynamicBreadcrumb items={addPaymentItems} />
 
-          <AddPaymentClient />
+          <AddPaymentClient property={searchParams.property} />
         </BounceWrapper>
       </ContentLayout>
     </HydrationBoundaryWrapper>

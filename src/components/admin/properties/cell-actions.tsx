@@ -62,8 +62,16 @@ const CellActions = ({ data }: CellActionProps) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => router.push("/admin/payments/new")}>
-            <Coins className="mr-2 size-4" /> Add payments
+          <DropdownMenuItem
+            onClick={() =>
+              router.push(
+                `/admin/payments/new?property=${encodeURIComponent(
+                  data.location!,
+                )}`,
+              )
+            }
+          >
+            <Coins className="mr-2 size-4" /> Add payment
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => router.push(`/admin/properties/${data.id}`)}
