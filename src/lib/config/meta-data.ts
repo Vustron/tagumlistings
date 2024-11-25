@@ -22,7 +22,19 @@ export const siteConfig: SiteConfig = {
     applicationName: "TagumListings",
     description:
       "A web-based real estate brokenage appointment and reservation system for RME",
-    openGraph: { images: ["/og"] },
+    openGraph: {
+      title: "TagumListings",
+      description: "Find your perfect home with TagumListings",
+      url: "https://rmetagumlisting.vercel.app",
+      siteName: "TagumListings",
+      locale: "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "R Metagum Listing",
+      description: "Find your perfect home with R Metagum Listing",
+    },
     icons: [{ rel: "icon", url: "/icons/favicon.ico" }],
   },
   viewport: {
