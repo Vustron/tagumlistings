@@ -110,9 +110,10 @@ const PropertiesClient = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col sm:flex-row gap-4"
+            className="flex flex-col w-full sm:w-auto gap-4"
           >
-            <div className="flex items-center gap-2">
+            {/* Completely restructured inputs container */}
+            <div className="flex flex-col w-full gap-2">
               <Input
                 type="number"
                 placeholder="Min Price"
@@ -125,7 +126,7 @@ const PropertiesClient = () => {
                       : undefined,
                   )
                 }
-                className="w-30"
+                className="w-full"
               />
               <Input
                 type="number"
@@ -139,13 +140,13 @@ const PropertiesClient = () => {
                       : undefined,
                   )
                 }
-                className="w-30"
+                className="w-full"
               />
             </div>
             <Button
               onClick={() => setShowAllProperties(!showAllProperties)}
               variant={showAllProperties ? "default" : "outline"}
-              className="flex items-center gap-2 bg-green-500 hover:bg-green-400 dark:bg-black dark:hover:bg-green-400 text-white"
+              className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-400 dark:bg-black dark:hover:bg-green-400 text-white w-full"
             >
               <FilterX className="size-4" />
               {showAllProperties
