@@ -29,6 +29,14 @@ const protectedRoutes: string[] = [
   "/admin/account",
 ]
 
+const protectedClientRoutes: string[] = [
+  "/contact",
+  "/appointments",
+  "/new-payment",
+  "/reserved",
+  "/payments",
+]
+
 /**
  * An array of routes that are used for authentication
  * @type {string[]}
@@ -43,6 +51,7 @@ export default async function middleware(request: NextRequest) {
       path === route ||
       (route.endsWith("*") && path.startsWith(route.slice(0, -1))),
   )
+  const isProtectedClientRoute = protectedClientRoutes.includes(path)
   const isAuthRoute = authRoutes.includes(path)
   const isAdminRoute = path.startsWith("/admin")
 
@@ -54,7 +63,8 @@ export default async function middleware(request: NextRequest) {
       sessionOptions,
     )
 
-    if (!session.loggedIn && isProtectedRoute) {
+    // Check for protected routes and client routes
+    if (!session.loggedIn && (isProtectedRoute || isProtectedClientRoute)) {
       return NextResponse.redirect(new URL("/login", request.url))
     }
 

@@ -87,6 +87,7 @@ const PropertyIdClient = ({ id }: { id: string }) => {
         appointments={filteredAppointments}
         appointmentDates={dates}
         isOnClientAppointments
+        session={session}
       />
     </FallbackBoundary>
   )

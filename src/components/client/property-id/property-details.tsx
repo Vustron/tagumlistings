@@ -23,12 +23,15 @@ import {
   getRoleBadgeColor,
 } from "@/lib/utils"
 import { motion } from "framer-motion"
+import toast from "react-hot-toast"
 
 // hooks
+import { useRouter } from "next-nprogress-bar"
 import { useState } from "react"
 
 // types
 import type { Appointment, AppointmentDate, Property } from "@/lib/types"
+import type { SessionData } from "@/lib/config/session"
 
 interface PropertyDetailsProps {
   property: Property
@@ -40,6 +43,7 @@ interface PropertyDetailsProps {
   appointments?: Appointment[]
   appointmentDates?: AppointmentDate[]
   isOnClientAppointments?: boolean
+  session?: SessionData
 }
 
 const PropertyDetails = ({
@@ -51,10 +55,12 @@ const PropertyDetails = ({
   appointments,
   appointmentDates,
   isOnClientAppointments,
+  session,
 }: PropertyDetailsProps) => {
   const [createAppointmentDialogOpen, setIsCreateAppointmentDialogOpen] =
     useState(false)
   const [availableDates, setAvailableDates] = useState<Date[]>([])
+  const router = useRouter()
 
   const setAppointmentDates = (dates: Date[]) => {
     setAvailableDates(dates)
@@ -103,22 +109,34 @@ const PropertyDetails = ({
               </span>
             </div>
           </div>
-          {!hasBookedAppointment && (
+          {session?.loggedIn ? (
+            !hasBookedAppointment && (
+              <Button
+                onClick={() => setIsCreateAppointmentDialogOpen(true)}
+                disabled={
+                  property.status !== "available" ||
+                  updateAccount.isPending ||
+                  reservationStatus === "success" ||
+                  isPropertyReserved
+                }
+                className="dark:hover:bg-green-400 bg-green-600 dark:bg-green-600 text-white"
+              >
+                {updateAccount.isPending
+                  ? "Processing..."
+                  : reservationStatus === "success" || isPropertyReserved
+                    ? "Appointment sent"
+                    : "Book appointment"}
+              </Button>
+            )
+          ) : (
             <Button
-              onClick={() => setIsCreateAppointmentDialogOpen(true)}
-              disabled={
-                property.status !== "available" ||
-                updateAccount.isPending ||
-                reservationStatus === "success" ||
-                isPropertyReserved
-              }
-              className="dark:hover:bg-green-400 bg-green-600 dark:bg-green-600 text-white"
+              onClick={() => {
+                toast.error("Please login first to book an appointment")
+                router.push("/login")
+              }}
+              className="bg-green-500 hover:bg-green-400 text-white"
             >
-              {updateAccount.isPending
-                ? "Processing..."
-                : reservationStatus === "success" || isPropertyReserved
-                  ? "Appointment sent"
-                  : "Book appointment"}
+              Login to Book
             </Button>
           )}
         </div>
