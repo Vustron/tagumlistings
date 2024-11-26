@@ -6,6 +6,7 @@ import FallbackBoundary from "@/components/shared/fallback-boundary"
 import PropertyCard from "@/components/layouts/client/property-card"
 import { Button } from "@/components/ui/button"
 import { Loader2, FilterX } from "lucide-react"
+// @ts-ignore
 import { Input } from "@/components/ui/input"
 
 // hooks
@@ -24,7 +25,9 @@ const PropertiesClient = () => {
   const currentPage = Number(searchParams.get("page")) || 1
   const itemsPerPage = 9
   const [showAllProperties, setShowAllProperties] = useState(false)
+  // @ts-ignore
   const [minPrice, setMinPrice] = useState<number | undefined>()
+  // @ts-ignore
   const [maxPrice, setMaxPrice] = useState<number | undefined>()
 
   // Fetch all properties
@@ -113,7 +116,7 @@ const PropertiesClient = () => {
             className="flex flex-col w-full sm:w-auto gap-4"
           >
             {/* Completely restructured inputs container */}
-            <div className="flex flex-col w-full gap-2">
+            {/* <div className="flex flex-col w-full gap-2">
               <Input
                 type="number"
                 placeholder="Min Price"
@@ -142,7 +145,7 @@ const PropertiesClient = () => {
                 }
                 className="w-full"
               />
-            </div>
+            </div> */}
             <Button
               onClick={() => setShowAllProperties(!showAllProperties)}
               variant={showAllProperties ? "default" : "outline"}
