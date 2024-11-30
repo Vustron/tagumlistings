@@ -330,7 +330,7 @@ export const dataSerializer = <T>(data: T): T => {
 export const sanitizer = <T>(
   data: unknown,
   schema: z.ZodObject<z.ZodRawShape>,
-  purify: DOMPurify.DOMPurifyI,
+  purify: typeof DOMPurify,
 ): T => {
   // Sanitize each field of the object
   const sanitizeObject = (obj: unknown): unknown => {
@@ -338,7 +338,7 @@ export const sanitizer = <T>(
 
     switch (typeof obj) {
       case "string":
-        return purify.sanitize(obj)
+        return purify.sanitize(obj as string)
       case "object":
         if (Array.isArray(obj)) {
           return obj.map((item) => sanitizeObject(item))
@@ -351,14 +351,11 @@ export const sanitizer = <T>(
           {} as Record<string, unknown>,
         )
       default:
-        return obj // leave non-string fields unchanged
+        return obj
     }
   }
 
-  // Sanitize the data
   const sanitizedData = sanitizeObject(data)
-
-  // Validate and parse the object
   const parsedData = schema.safeParse(sanitizedData)
 
   if (!parsedData.success) {

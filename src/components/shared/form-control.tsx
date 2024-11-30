@@ -10,6 +10,7 @@ import { FloatingLabelInput } from "@/components/ui/floating-label-input"
 import AmountInput from "@/components/shared/amount-input"
 import ImageUpload from "@/components/shared/image-upload"
 import { InputPhone } from "@/components/ui/input-phone"
+import { FormLabel } from "@/components/ui/form"
 import { Switch } from "@/components/ui/switch"
 
 // utils
@@ -37,44 +38,50 @@ const FormControlRenderer = <TFieldValues extends FieldValues>({
   switch (field.type) {
     case "select":
       return (
-        <Select
-          onValueChange={formField.onChange}
-          defaultValue={formField.value}
-          disabled={mutation?.isPending || disabled}
-        >
-          <SelectTrigger
-            className={cn(
-              form.formState.errors[field.name]
-                ? "border-red-600 focus:ring-0"
-                : "",
-              field.className,
-            )}
+        <>
+          <FormLabel>{field.label}</FormLabel>
+          <Select
+            onValueChange={formField.onChange}
+            defaultValue={formField.value}
+            disabled={mutation?.isPending || disabled}
           >
-            <SelectValue placeholder={field.placeholder} />
-          </SelectTrigger>
-          <SelectContent>
-            {field.options?.map((option) => (
-              <SelectItem key={option.value} value={option.value!}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+            <SelectTrigger
+              className={cn(
+                form.formState.errors[field.name]
+                  ? "border-red-600 focus:ring-0"
+                  : "",
+                field.className,
+              )}
+            >
+              <SelectValue placeholder={field.placeholder} />
+            </SelectTrigger>
+            <SelectContent>
+              {field.options?.map((option) => (
+                <SelectItem key={option.value} value={option.value!}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </>
       )
 
     case "image":
       return (
-        <ImageUpload
-          value={formField.value.map((image: { url: string }) => image.url)}
-          onChange={(urls: string[]) => {
-            formField.onChange(urls.map((url: string) => ({ url })))
-          }}
-          onRemove={(url: string) => {
-            formField.onChange(
-              formField.value.filter((current: any) => current.url !== url),
-            )
-          }}
-        />
+        <>
+          <FormLabel>{field.label}</FormLabel>
+          <ImageUpload
+            value={formField.value.map((image: { url: string }) => image.url)}
+            onChange={(urls: string[]) => {
+              formField.onChange(urls.map((url: string) => ({ url })))
+            }}
+            onRemove={(url: string) => {
+              formField.onChange(
+                formField.value.filter((current: any) => current.url !== url),
+              )
+            }}
+          />
+        </>
       )
 
     case "switch":
@@ -99,29 +106,35 @@ const FormControlRenderer = <TFieldValues extends FieldValues>({
 
     case "phone":
       return (
-        <InputPhone
-          {...formField}
-          id={field.name}
-          placeholder={field.placeholder}
-          disabled={mutation?.isPending || disabled}
-          className={cn(
-            form.formState.errors[field.name]
-              ? "border-red-600 focus:ring-0"
-              : "",
-            field.className,
-          )}
-          onChange={(value) => formField.onChange(value?.toString() || "")}
-        />
+        <>
+          <FormLabel>{field.label}</FormLabel>
+          <InputPhone
+            {...formField}
+            id={field.name}
+            placeholder={field.placeholder}
+            disabled={mutation?.isPending || disabled}
+            className={cn(
+              form.formState.errors[field.name]
+                ? "border-red-600 focus:ring-0"
+                : "",
+              field.className,
+            )}
+            onChange={(value) => formField.onChange(value?.toString() || "")}
+          />
+        </>
       )
 
     case "currency":
       return (
-        <AmountInput
-          value={formField.value}
-          onChange={(value) => formField.onChange(value)}
-          placeholder={field.placeholder}
-          disabled={mutation?.isPending || disabled}
-        />
+        <>
+          <FormLabel>{field.label}</FormLabel>
+          <AmountInput
+            value={formField.value}
+            onChange={(value) => formField.onChange(value)}
+            placeholder={field.placeholder}
+            disabled={mutation?.isPending || disabled}
+          />
+        </>
       )
 
     case "text":

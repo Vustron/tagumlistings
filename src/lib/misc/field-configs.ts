@@ -403,7 +403,7 @@ export const addPaymentFields = (
     {
       name: "user",
       type: "select",
-      label: "Select a Client",
+      label: "Select a client",
       placeholder: "Select a client",
       options: accounts
         .filter((account) => account.id !== undefined)
@@ -421,12 +421,6 @@ export const addPaymentFields = (
         value: appointment.description,
         label: `${appointment.description.substring(0, 20)}`,
       })),
-    },
-    {
-      name: "amount",
-      type: "currency",
-      label: "Payment Amount",
-      placeholder: "Enter amount",
     },
     {
       name: "paid_date",

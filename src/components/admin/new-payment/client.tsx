@@ -13,9 +13,10 @@ import { useGetAccounts } from "@/lib/hooks/auth/get-all"
 
 interface AddPaymentClientProps {
   property?: string
+  price?: string
 }
 
-const AddPaymentClient = ({ property }: AddPaymentClientProps) => {
+const AddPaymentClient = ({ property, price }: AddPaymentClientProps) => {
   const { data: accountsData } = useGetAccounts()
   const { data: appointmentsData } = useGetAppointments()
   const { data: propertiesData } = useGetProperties()
@@ -37,6 +38,7 @@ const AddPaymentClient = ({ property }: AddPaymentClientProps) => {
           appointments={appointments}
           properties={properties}
           property={property}
+          price={price}
         />
       </div>
     </FallbackBoundary>

@@ -23,12 +23,10 @@ export const metadata: Metadata = {
 export default async function NewPaymentPage({
   searchParams,
 }: {
-  searchParams: { property?: string }
+  searchParams: { property?: string; price?: string }
 }) {
-  // get session
   const session = await getSession()
 
-  // session serialize
   const userData = dataSerializer(session)
 
   return (
@@ -37,7 +35,10 @@ export default async function NewPaymentPage({
         <BounceWrapper>
           <DynamicBreadcrumb items={addPaymentItems} />
 
-          <AddPaymentClient property={searchParams.property} />
+          <AddPaymentClient
+            property={searchParams.property}
+            price={searchParams.price}
+          />
         </BounceWrapper>
       </ContentLayout>
     </HydrationBoundaryWrapper>

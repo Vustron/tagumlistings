@@ -67,7 +67,7 @@ const CellActions = ({ data }: CellActionProps) => {
               router.push(
                 `/admin/payments/new?property=${encodeURIComponent(
                   data.location!,
-                )}`,
+                )}&price=${encodeURIComponent(data.price!)}`,
               )
             }
           >

@@ -23,6 +23,7 @@ interface AddPaymentFormProps {
   appointments: Appointment[]
   properties: Property[]
   property?: string
+  price?: string
 }
 
 const NewPaymentForm = ({
@@ -30,6 +31,7 @@ const NewPaymentForm = ({
   appointments,
   properties,
   property,
+  price,
 }: AddPaymentFormProps) => {
   const addPayment = useCreatePayment()
 
@@ -39,7 +41,7 @@ const NewPaymentForm = ({
       property: property || (properties.length > 0 ? properties[0]?.id : ""),
       user: accounts.length > 0 ? accounts[0]?.id : "",
       appointment: appointments.length > 0 ? appointments[0]?.id : "",
-      amount: "",
+      amount: price || "",
       paid_date: "",
     },
   })
