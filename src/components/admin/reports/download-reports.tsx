@@ -9,10 +9,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { Calendar, Calendar1, Clock, FileDown } from "lucide-react"
+import { generatePDF } from "@/components/admin/reports/pdf-generator"
 
-import { generatePDF } from "./report-utils"
-
-import type { DownloadReportsProps } from "./report-utils"
+// types
+import type { DownloadReportsProps } from "@/components/admin/reports/report-data"
 
 const DownloadReports = ({ payments, appointments }: DownloadReportsProps) => {
   return (
