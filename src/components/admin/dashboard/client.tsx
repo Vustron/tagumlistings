@@ -42,7 +42,7 @@ const AdminDashboardClient = () => {
 
   const payments = paymentsData?.payments ?? []
   const paymentsCount = payments.length
-  const pendingPayments = appointmentsCount - paymentsCount
+  const pendingPayments = Math.max(appointmentsCount - paymentsCount, 0)
 
   const lastMonth = new Date()
   lastMonth.setMonth(lastMonth.getMonth() - 1)

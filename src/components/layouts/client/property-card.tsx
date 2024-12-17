@@ -178,11 +178,11 @@ const PropertyCard = ({
               <div className="flex items-center gap-1">
                 <MapPinHouse className="size-4" />
                 <span>
-                  {location && location.length > 7
-                    ? `${location.substring(0, 7)}...`
-                    : location || "Location not available"}
+                  {location || "Location not available"}
                 </span>
               </div>
+            </div>
+            <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
               <div className="flex items-center gap-1">
                 <BedDouble className="size-4" />
                 <span>{no_of_bedrooms || "N/A"} beds</span>
