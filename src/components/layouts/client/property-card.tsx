@@ -177,9 +177,7 @@ const PropertyCard = ({
             <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
               <div className="flex items-center gap-1">
                 <MapPinHouse className="size-4" />
-                <span>
-                  {location || "Location not available"}
-                </span>
+                <span>{location || "Location not available"}</span>
               </div>
             </div>
             <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
