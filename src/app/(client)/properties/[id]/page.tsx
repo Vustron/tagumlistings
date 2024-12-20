@@ -10,15 +10,16 @@ export const metadata: Metadata = {
   title: "Property",
 }
 
-export default async function PropertyIdPage({
-  params,
-}: {
-  params: { id: string }
-}) {
+interface PageProps {
+  params: Promise<{ id: string }>
+}
+
+export default async function PropertyIdPage({ params }: PageProps) {
+  const { id } = await params
   return (
-    <HydrationBoundaryWrapper propertyId={params.id}>
+    <HydrationBoundaryWrapper propertyId={id}>
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <PropertyIdClient id={params.id} />
+        <PropertyIdClient id={id} />
       </div>
     </HydrationBoundaryWrapper>
   )

@@ -15,7 +15,6 @@ import { dataSerializer } from "@/lib/utils"
 // types
 import type { Metadata } from "next"
 
-// meta data
 export const metadata: Metadata = {
   title: "Property",
 }
@@ -36,7 +35,6 @@ export default async function PropertyIdPage({ params }: PageProps) {
       <ContentLayout title="Property">
         <BounceWrapper>
           <DynamicBreadcrumb items={propertyItems} />
-
           <PropertyClient id={id} />
         </BounceWrapper>
       </ContentLayout>

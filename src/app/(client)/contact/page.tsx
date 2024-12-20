@@ -14,7 +14,6 @@ export default function ClientMessagesPage() {
   return (
     <div className="container">
       <BounceWrapper>
-        {/* client */}
         <MessagesClient />
       </BounceWrapper>
     </div>

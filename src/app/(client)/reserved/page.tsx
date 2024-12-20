@@ -16,7 +16,6 @@ export default function ReservedPropertiesPage() {
   return (
     <div className="container p-5">
       <BounceWrapper>
-        {/* client */}
         <ReservedPropertiesClient />
       </BounceWrapper>
     </div>

@@ -17,10 +17,7 @@ export const metadata: Metadata = {
 export default function AddPaymentClientPage() {
   return (
     <BounceWrapper>
-      {/* breadcrumb */}
       <DynamicBreadcrumb items={addPaymentItems} />
-
-      {/* client */}
       <AddPropertyClient />
     </BounceWrapper>
   )

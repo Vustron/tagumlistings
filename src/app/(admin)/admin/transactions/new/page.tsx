@@ -20,22 +20,26 @@ export const metadata: Metadata = {
   title: "Add Transaction",
 }
 
-export default async function NewPaymentPage({
-  searchParams,
-}: {
-  searchParams: { property?: string; price?: string }
-}) {
-  const session = await getSession()
-  const userData = dataSerializer(session)
+interface PageProps {
+  searchParams: Promise<{
+    property?: string
+    price?: string
+  }>
+}
+
+export default async function NewPaymentPage({ searchParams }: PageProps) {
+  const [sessionData, resolvedSearchParams] = await Promise.all([
+    getSession(),
+    searchParams,
+  ])
+  const userData = dataSerializer(sessionData)
+  const { property, price } = resolvedSearchParams
   return (
     <HydrationBoundaryWrapper accountId={userData.id}>
       <ContentLayout title="Add Transaction">
         <BounceWrapper>
           <DynamicBreadcrumb items={addPaymentItems} />
-          <AddPaymentClient
-            property={searchParams.property}
-            price={searchParams.price}
-          />
+          <AddPaymentClient property={property} price={price} />
         </BounceWrapper>
       </ContentLayout>
     </HydrationBoundaryWrapper>
