@@ -1,7 +1,18 @@
 "use client"
 
 // components
-import { BathIcon, BedDouble, MapPinHouse, Square } from "lucide-react"
+import {
+  Square,
+  BathIcon,
+  BedDouble,
+  MapPinHouse,
+  SkipForward,
+} from "lucide-react"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
@@ -121,22 +132,22 @@ const PropertyCard = ({
               <motion.button
                 type="button"
                 onClick={handlePrevImage}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 p-2 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute left-2 top-1/2 bg-black/50 p-2 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 aria-label="Previous image"
               >
-                ←
+                <SkipForward className="rotate-180" />
               </motion.button>
               <motion.button
                 type="button"
                 onClick={handleNextImage}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 p-2 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute right-2 top-1/2 bg-black/50 p-2 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 aria-label="Next image"
               >
-                →
+                <SkipForward />
               </motion.button>
             </>
           )}
@@ -175,9 +186,22 @@ const PropertyCard = ({
         <CardContent className="p-4">
           <div className="space-y-4">
             <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
-              <div className="flex items-center gap-1">
-                <MapPinHouse className="size-4" />
-                <span>{location || "Location not available"}</span>
+              <div className="flex items-center gap-1 max-w-[200px]">
+                <MapPinHouse className="size-4 flex-shrink-0" />
+                <Tooltip>
+                  <TooltipTrigger>
+                    <span className="truncate">
+                      {(location?.length ?? 0) > 38
+                        ? `${(location ?? "").slice(0, 38)}...`
+                        : location || "Location not available"}
+                    </span>
+                  </TooltipTrigger>
+                  {(location?.length ?? 0) > 38 && (
+                    <TooltipContent>
+                      <p>{location}</p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
               </div>
             </div>
             <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">

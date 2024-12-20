@@ -32,7 +32,6 @@ export default async function AdminDashboardPage() {
       <ContentLayout title="Dashboard">
         <BounceWrapper>
           <DynamicBreadcrumb items={dashboardItems} />
-
           <AdminDashboardClient />
         </BounceWrapper>
       </ContentLayout>

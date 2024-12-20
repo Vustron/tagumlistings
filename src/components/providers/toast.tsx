@@ -1,15 +1,13 @@
 "use client"
 
-// components
 import { CircleAlert, CircleCheckBig, Loader2 } from "lucide-react"
 
-// utils
 import { Toaster, resolveValue } from "react-hot-toast"
 import { motion, AnimatePresence } from "framer-motion"
 
 // types
 import type { ToastType, Toast } from "react-hot-toast"
-import type { FC } from "react"
+import type { FC, JSX } from "react"
 
 // Define the colors for each toast type
 const colors: Record<ToastType, string> = {

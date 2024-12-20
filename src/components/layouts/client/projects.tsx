@@ -47,18 +47,19 @@ const Projects = () => {
 
         <div className="flex flex-col items-center justify-center w-full">
           <div className="w-full overflow-hidden">
-            <Marquee pauseOnHover className="h-[200px]" applyMask={false}>
+            <Marquee pauseOnHover className="h-[250px]" applyMask={false}>
               {projectsFirstRow.map((project) => (
                 <motion.div
                   key={project.id}
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ duration: 0.2 }}
-                  className="relative mx-4 h-[200px] w-[300px] overflow-hidden rounded-xl"
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="relative mx-4 h-[220px] w-[330px] overflow-hidden rounded-2xl shadow-lg border border-slate-200/10"
                 >
+                  <div className="absolute inset-0 z-10" />
                   <Image
                     src={project.image}
                     alt={project.alt}
-                    className="object-cover transition-all duration-700 hover:scale-110 h-[200px] w-[300px]"
+                    className="object-cover transition-all duration-500 hover:scale-110 h-full w-full"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 50vw"
                   />
                 </motion.div>

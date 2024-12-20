@@ -7,7 +7,6 @@
     "allowJs": true,
     "useDefineForClassFields": true,
     "lib": ["esnext", "dom", "dom.iterable"],
-    "typeRoots": ["./node_modules/@types", "./types"],
     "skipDefaultLibCheck": true,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -45,5 +44,5 @@
     ".next/types/**/*.ts",
     "tailwindcss-modules.d.ts"
   ],
-  "exclude": ["node_modules", "vendor", "backend"]
+  "exclude": ["node_modules"]
 }

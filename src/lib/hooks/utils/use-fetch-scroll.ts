@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, type RefObject } from "react"
 
 type FetchScrollProps = {
-  topRef: React.RefObject<HTMLDivElement>
-  bottomRef: React.RefObject<HTMLDivElement>
+  topRef: RefObject<HTMLDivElement | null>
+  bottomRef: RefObject<HTMLDivElement | null>
   shouldLoadMore?: boolean
   loadMore?: () => void
   count?: number
@@ -21,10 +21,11 @@ export const useFetchScroll = ({
     const topDiv = topRef?.current
 
     const handleScroll = () => {
-      const scrollTop = topDiv?.scrollTop
+      if (!topDiv) return
+      const scrollTop = topDiv.scrollTop
 
       if (scrollTop === 0 && shouldLoadMore) {
-        loadMore!()
+        loadMore?.()
       }
     }
 

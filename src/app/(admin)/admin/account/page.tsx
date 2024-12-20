@@ -22,15 +22,12 @@ export const metadata: Metadata = {
 
 export default async function AccountPage() {
   const session = await getSession()
-
   const userData = dataSerializer(session)
-
   return (
     <HydrationBoundaryWrapper accountId={userData.id}>
       <ContentLayout title="Account">
         <BounceWrapper>
           <DynamicBreadcrumb items={accountItems} />
-
           <AccountClient id={userData.id} />
         </BounceWrapper>
       </ContentLayout>

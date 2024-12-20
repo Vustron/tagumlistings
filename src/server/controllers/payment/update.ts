@@ -1,7 +1,7 @@
 // utils
-import { rateLimit, handleErrorResponse } from "@/server/helpers"
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore"
 import { checkRequiredFields, requestBodyHandler } from "@/lib/utils"
+import { rateLimit, handleErrorResponse } from "@/server/helpers"
 import { NextResponse } from "next/server"
 
 // configs
@@ -32,7 +32,7 @@ export async function updatePaymentController(request: NextRequest) {
     const updatePaymentBody =
       await requestBodyHandler<UpdatePaymentValues>(request)
 
-    const { id, property, user, appointment, amount, paid_date } =
+    const { id, property, user, appointment, amount, paid_date, status } =
       updatePaymentBody
 
     const requiredFields: (keyof typeof updatePaymentBody)[] = [
@@ -42,6 +42,7 @@ export async function updatePaymentController(request: NextRequest) {
       "appointment",
       "amount",
       "paid_date",
+      "status",
     ]
 
     const errorResponse = checkRequiredFields(updatePaymentBody, requiredFields)
@@ -55,6 +56,7 @@ export async function updatePaymentController(request: NextRequest) {
       appointment,
       amount,
       paid_date,
+      status,
       updatedAt: serverTimestamp(),
     })
 

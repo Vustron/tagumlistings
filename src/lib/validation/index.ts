@@ -191,6 +191,7 @@ export const addPaymentSchema = z.object({
   appointment: requiredString.optional(),
   amount: requiredString,
   paid_date: requiredString,
+  status: requiredString.nullish(),
 })
 
 /* AddAppointmentValues Type */
@@ -205,6 +206,7 @@ export const updatePaymentSchema = z.object({
   appointment: requiredString.optional(),
   amount: requiredString.optional(),
   paid_date: requiredString.optional(),
+  status: requiredString.nullish(),
 })
 
 /* UpdatePaymentValues Type */

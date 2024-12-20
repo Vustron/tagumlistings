@@ -18,15 +18,14 @@ import { columns } from "@/components/client/appointments/columns"
 
 // types
 import type { Appointment } from "@/lib/types"
-import type { ElementRef } from "react"
 
 const AppointmentsClient = () => {
   const { data: appointmentsData } = useGetAppointments()
   const { data: datesData } = useGetAppointmentDates()
   const session = useSession()
 
-  const topRef = useRef<ElementRef<"div">>(null)
-  const bottomRef = useRef<ElementRef<"div">>(null)
+  const topRef = useRef<HTMLDivElement>(null)
+  const bottomRef = useRef<HTMLDivElement>(null)
   useFetchScroll({
     topRef,
     bottomRef,

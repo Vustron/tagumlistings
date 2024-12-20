@@ -3,6 +3,9 @@ import {
   doc,
   addDoc,
   getDoc,
+  getDocs,
+  query,
+  where,
   updateDoc,
   collection,
   serverTimestamp,
@@ -67,6 +70,21 @@ export async function createPropertyController(request: NextRequest) {
     )
 
     if (errorResponse) return errorResponse
+
+    // Check for duplicate location
+    const locationQuery = query(
+      collection(firestore, "properties"),
+      where("location", "==", location),
+    )
+
+    const existingProperties = await getDocs(locationQuery)
+
+    if (!existingProperties.empty) {
+      return NextResponse.json(
+        { error: "A property with this location already exists" },
+        { status: 409 },
+      )
+    }
 
     const propertyData = {
       category,

@@ -32,7 +32,6 @@ export default async function PropertiesPage() {
       <ContentLayout title="Add Properties">
         <BounceWrapper>
           <DynamicBreadcrumb items={addPropertiesItems} />
-
           <AddPropertyClient />
         </BounceWrapper>
       </ContentLayout>

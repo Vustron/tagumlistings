@@ -20,22 +20,24 @@ export const metadata: Metadata = {
   title: "Property",
 }
 
-export default async function PropertyIdPage({
-  params,
-}: {
-  params: { id: string }
-}) {
-  const session = await getSession()
+interface PageProps {
+  params: Promise<{ id: string }>
+}
 
-  const userData = dataSerializer(session)
-
+export default async function PropertyIdPage({ params }: PageProps) {
+  const [sessionData, resolvedParams] = await Promise.all([
+    getSession(),
+    params,
+  ])
+  const userData = dataSerializer(sessionData)
+  const { id } = resolvedParams
   return (
-    <HydrationBoundaryWrapper accountId={userData.id} propertyId={params.id}>
+    <HydrationBoundaryWrapper accountId={userData.id} propertyId={id}>
       <ContentLayout title="Property">
         <BounceWrapper>
           <DynamicBreadcrumb items={propertyItems} />
 
-          <PropertyClient id={params.id} />
+          <PropertyClient id={id} />
         </BounceWrapper>
       </ContentLayout>
     </HydrationBoundaryWrapper>

@@ -20,7 +20,6 @@ export default function MessagesPage() {
     <ContentLayout title="Messages">
       <BounceWrapper>
         <DynamicBreadcrumb items={messagesItems} />
-
         <MessagesClient isAdmin />
       </BounceWrapper>
     </ContentLayout>

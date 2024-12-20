@@ -1,11 +1,11 @@
 // utils
-import crypto from "node:crypto"
 import { handleErrorResponse } from "@/server/helpers"
 import { createUniqueId } from "@/lib/utils"
 import { NextResponse } from "next/server"
+import crypto from "node:crypto"
 
 // configs
-import { env } from "@/lib/config/env.mjs"
+import { env } from "@/lib/config/env"
 
 // types
 import type { NextRequest } from "next/server"

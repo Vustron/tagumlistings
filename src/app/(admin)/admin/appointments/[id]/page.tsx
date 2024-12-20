@@ -20,22 +20,23 @@ export const metadata: Metadata = {
   title: "Appointments",
 }
 
-export default async function AppointmentIDPage({
-  params,
-}: { params: { id: string } }) {
-  // get session
-  const session = await getSession()
+interface PageProps {
+  params: Promise<{ id: string }>
+}
 
-  // session serialize
-  const userData = dataSerializer(session)
-
+export default async function AppointmentIDPage({ params }: PageProps) {
+  const [sessionData, resolvedParams] = await Promise.all([
+    getSession(),
+    params,
+  ])
+  const userData = dataSerializer(sessionData)
+  const { id } = resolvedParams
   return (
-    <HydrationBoundaryWrapper accountId={userData.id} appointmentId={params.id}>
+    <HydrationBoundaryWrapper accountId={userData.id} appointmentId={id}>
       <ContentLayout title="Appointment">
         <BounceWrapper>
           <DynamicBreadcrumb items={appointmentItems} />
-
-          <AppointmentClient id={params.id} />
+          <AppointmentClient id={id} />
         </BounceWrapper>
       </ContentLayout>
     </HydrationBoundaryWrapper>

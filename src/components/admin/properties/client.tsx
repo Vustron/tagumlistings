@@ -20,11 +20,10 @@ import toast from "react-hot-toast"
 // types
 import type { Row } from "@tanstack/react-table"
 import type { Property } from "@/lib/types"
-import type { ElementRef } from "react"
 
 const PropertiesClient = () => {
-  const topRef = useRef<ElementRef<"div">>(null)
-  const bottomRef = useRef<ElementRef<"div">>(null)
+  const topRef = useRef<HTMLDivElement>(null)
+  const bottomRef = useRef<HTMLDivElement>(null)
   const { data } = useGetProperties()
   const deleteProperties = useDeleteProperties()
 

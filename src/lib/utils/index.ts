@@ -4,6 +4,7 @@ import { format, isValid, parseISO } from "date-fns"
 import { NextResponse } from "next/server"
 import { twMerge } from "tailwind-merge"
 import toast from "react-hot-toast"
+import superjson from "superjson"
 import { ZodError } from "zod"
 import { clsx } from "clsx"
 
@@ -300,32 +301,9 @@ export function checkRequiredFields<T>(
 
 // response stringify parser
 export const dataSerializer = <T>(data: T): T => {
-  const convertDateToISOString = (obj: any): any => {
-    if (obj === null || typeof obj !== "object") {
-      return obj
-    }
-
-    if (obj instanceof Date) {
-      return obj.toISOString()
-    }
-
-    if (Array.isArray(obj)) {
-      return obj.map(convertDateToISOString)
-    }
-
-    return Object.fromEntries(
-      Object.entries(obj).map(([key, value]) => [
-        key,
-        convertDateToISOString(value),
-      ]),
-    )
-  }
-
-  const convertedData = convertDateToISOString(data)
-  const serializedData = JSON.stringify(convertedData)
-  return JSON.parse(serializedData) as T
+  const serialized = superjson.stringify(data)
+  return superjson.parse(serialized)
 }
-
 // data sanitizer
 export const sanitizer = <T>(
   data: unknown,

@@ -32,7 +32,9 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
   const [selectedImages, setSelectedImages] = useState<File[]>([])
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const scrollAreaRef = useRef<HTMLDivElement>(null)
+  const scrollAreaRef = useRef<HTMLDivElement>(
+    null as unknown as HTMLDivElement,
+  )
 
   // Data fetching
   const { data: accountsData } = useGetAccounts()

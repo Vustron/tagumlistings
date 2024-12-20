@@ -165,6 +165,7 @@ export interface Payment {
   appointment: string
   amount: string
   paid_date: string
+  status?: string | null
 }
 
 /* Payments Type */

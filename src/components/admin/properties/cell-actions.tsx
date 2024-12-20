@@ -65,7 +65,7 @@ const CellActions = ({ data }: CellActionProps) => {
           <DropdownMenuItem
             onClick={() =>
               router.push(
-                `/admin/payments/new?property=${encodeURIComponent(
+                `/admin/transactions/new?property=${encodeURIComponent(
                   data.location!,
                 )}&price=${encodeURIComponent(data.price!)}`,
               )

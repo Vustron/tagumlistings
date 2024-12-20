@@ -4,7 +4,7 @@ import { getFirestore } from "firebase/firestore"
 import { getStorage } from "firebase/storage"
 
 // configs
-import { env } from "@/lib/config/env.mjs"
+import { env } from "@/lib/config/env"
 
 // firebase config
 const firebaseConfig = {

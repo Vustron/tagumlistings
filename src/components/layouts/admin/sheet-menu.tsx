@@ -1,10 +1,13 @@
 // components
 import {
   Sheet,
+  SheetTitle,
   SheetHeader,
   SheetTrigger,
   SheetContent,
+  SheetDescription,
 } from "@/components/ui/sheet"
+import VisuallyHiddenComponent from "@/components/ui/visually-hidden"
 import Menu from "@/components/layouts/admin/menu"
 import { Button } from "@/components/ui/button"
 import { MenuIcon } from "lucide-react"
@@ -19,6 +22,10 @@ import Link from "next/link"
 const SheetMenu = () => {
   return (
     <Sheet>
+      <VisuallyHiddenComponent>
+        <SheetTitle>Menu</SheetTitle>
+        <SheetDescription />
+      </VisuallyHiddenComponent>
       <SheetTrigger className="lg:hidden" asChild>
         <Button className="h-8" variant="outline" size="icon">
           <MenuIcon size={20} />

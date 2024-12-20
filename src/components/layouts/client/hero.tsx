@@ -22,14 +22,17 @@ import { useRouter } from "next-nprogress-bar"
 // ImageWithWave Component
 function ImageWithWave() {
   return (
-    <div className="relative inline-block self-center md:self-start">
-      <Image
-        width={100}
-        height={100}
-        src={logo}
-        className="-top-6 h-10 w-10 translate-y-5 animate-fadeIn fade-in-0 md:-top-10 md:h-16 md:w-16 md:translate-y-0"
-        alt="Hero icon"
-      />
+    <div className="relative self-center md:self-start w-full flex flex-col items-center md:items-start">
+      <div className="flex justify-center w-full md:justify-start">
+        <Image
+          width={100}
+          height={100}
+          src={logo}
+          className="h-10 w-auto translate-y-5 animate-fadeIn fade-in-0 md:-top-10 md:h-16 md:translate-y-0"
+          alt="Hero icon"
+          priority
+        />
+      </div>
       <WaveReveal
         className="my-4 pl-[0px] text-green-500 dark:text-white sm:text-[60px] md:px-0 md:text-[70px] lg:text-[80px]"
         text="TagumListings"
@@ -68,8 +71,8 @@ function Card({
               src={image1}
               alt=""
               fill
+              sizes="(max-width: 768px) 280px, 300px"
               className="object-cover rounded-2xl"
-              priority
             />
             <CardLabel text="Beautiful" />
           </div>
@@ -81,8 +84,8 @@ function Card({
               src={image2}
               alt=""
               fill
+              sizes="(max-width: 768px) 280px, 300px"
               className="object-cover rounded-2xl"
-              priority
             />
             <CardLabel text="Designed" />
           </div>
@@ -94,8 +97,8 @@ function Card({
               src={image3}
               alt=""
               fill
+              sizes="(max-width: 768px) 280px, 300px"
               className="object-cover rounded-2xl"
-              priority
             />
             <CardLabel text="Homes" />
           </div>

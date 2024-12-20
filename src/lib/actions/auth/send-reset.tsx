@@ -1,7 +1,7 @@
 "use server"
 
 // config
-import { env } from "@/lib/config/env.mjs"
+import { env } from "@/lib/config/env"
 import redis from "@/lib/config/redis"
 
 // utils

@@ -81,7 +81,7 @@ export const columns: ColumnDef<Property>[] = [
   },
   {
     accessorKey: "user",
-    header: () => <div className="whitespace-nowrap">Reserved user</div>,
+    header: () => <div className="whitespace-nowrap">Reserved client</div>,
     cell: ({ row }) => truncateText(row.getValue("user") || "N/A", 20),
   },
   {

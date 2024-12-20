@@ -257,8 +257,8 @@ export const updatePropertyFields = (
   {
     name: "user",
     type: "select",
-    label: "Select a user",
-    placeholder: "Select a user",
+    label: "Select a client",
+    placeholder: "Select a client",
     options: [
       { value: "N/A", label: "N/A" },
       ...accounts
@@ -482,6 +482,17 @@ export const updatePaymentFields = (
     type: "date",
     label: "Payment Date",
     placeholder: "Select payment date",
+  },
+  {
+    name: "status",
+    type: "select",
+    label: "Status",
+    placeholder: "Select a status",
+    options: [
+      { value: "paid", label: "Paid" },
+      { value: "pending", label: "Pending" },
+      { value: "failed", label: "Failed" },
+    ],
   },
 ]
 

@@ -3,6 +3,9 @@ import {
   doc,
   getDoc,
   addDoc,
+  getDocs,
+  query,
+  where,
   updateDoc,
   collection,
   serverTimestamp,
@@ -54,6 +57,21 @@ export async function createAppointmentController(request: NextRequest) {
     )
 
     if (errorResponse) return errorResponse
+
+    // Check for duplicate description
+    const descriptionQuery = query(
+      collection(firestore, "appointments"),
+      where("description", "==", description),
+    )
+
+    const existingAppointments = await getDocs(descriptionQuery)
+
+    if (!existingAppointments.empty) {
+      return NextResponse.json(
+        { error: "An appointment with this description already exists" },
+        { status: 409 },
+      )
+    }
 
     const appointmentData = {
       user,

@@ -59,6 +59,7 @@ export async function createPaymentController(request: NextRequest) {
       appointment,
       amount,
       paid_date,
+      status: "pending",
       created_at: serverTimestamp(),
     }
 

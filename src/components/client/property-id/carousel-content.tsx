@@ -1,7 +1,7 @@
 "use client"
 
 // components
-import { ChevronLeft, ChevronRight, ZoomIn } from "lucide-react"
+import { SkipForward, ZoomIn } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 // utils
@@ -112,7 +112,7 @@ const CarouselContent = ({
       {validImages.length > 1 && (
         <>
           <motion.div
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10"
+            className="absolute left-4 top-1/2 transform z-10"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
           >
@@ -123,11 +123,11 @@ const CarouselContent = ({
               variant="ghost"
               aria-label="Previous Image"
             >
-              <ChevronLeft className="size-6" />
+              <SkipForward className="size-6 rotate-180" />
             </Button>
           </motion.div>
           <motion.div
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10"
+            className="absolute right-4 top-1/2 transform z-10"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
           >
@@ -138,7 +138,7 @@ const CarouselContent = ({
               variant="ghost"
               aria-label="Next Image"
             >
-              <ChevronRight className="size-6" />
+              <SkipForward className="size-6" />
             </Button>
           </motion.div>
         </>

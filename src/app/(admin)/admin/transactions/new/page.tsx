@@ -17,7 +17,7 @@ import type { Metadata } from "next"
 
 // meta data
 export const metadata: Metadata = {
-  title: "Add Payment",
+  title: "Add Transaction",
 }
 
 export default async function NewPaymentPage({
@@ -26,15 +26,12 @@ export default async function NewPaymentPage({
   searchParams: { property?: string; price?: string }
 }) {
   const session = await getSession()
-
   const userData = dataSerializer(session)
-
   return (
     <HydrationBoundaryWrapper accountId={userData.id}>
-      <ContentLayout title="Add Payment">
+      <ContentLayout title="Add Transaction">
         <BounceWrapper>
           <DynamicBreadcrumb items={addPaymentItems} />
-
           <AddPaymentClient
             property={searchParams.property}
             price={searchParams.price}

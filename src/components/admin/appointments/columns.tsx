@@ -13,7 +13,7 @@ import type { Appointment } from "@/lib/types"
 export const columns: ColumnDef<Appointment>[] = [
   {
     accessorKey: "user",
-    header: "User",
+    header: "Client",
     cell: ({ row }) => row.original.user,
   },
   {

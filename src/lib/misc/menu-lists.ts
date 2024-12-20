@@ -59,9 +59,9 @@ export function getMenuList(pathname: string): Group[] {
           submenus: [],
         },
         {
-          href: "/admin/payments",
-          label: "Payments",
-          active: pathname.includes("/admin/payments"),
+          href: "/admin/transactions",
+          label: "Transactions",
+          active: pathname.includes("/admin/transactions"),
           icon: HandCoins,
           submenus: [],
         },
@@ -72,13 +72,6 @@ export function getMenuList(pathname: string): Group[] {
           icon: MessageSquareText,
           submenus: [],
         },
-        // {
-        //   href: "/admin/reports",
-        //   label: "Reports",
-        //   active: pathname.includes("/admin/reports"),
-        //   icon: ClipboardPlus,
-        //   submenus: [],
-        // },
       ],
     },
     {

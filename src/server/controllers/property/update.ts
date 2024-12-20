@@ -1,10 +1,19 @@
 // utils
 import { rateLimit, handleErrorResponse } from "@/server/helpers"
-import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore"
+import {
+  doc,
+  query,
+  where,
+  getDoc,
+  getDocs,
+  updateDoc,
+  collection,
+  serverTimestamp,
+} from "firebase/firestore"
 import {
   checkRequiredFields,
-  convertTimestampToDateString,
   requestBodyHandler,
+  convertTimestampToDateString,
 } from "@/lib/utils"
 import { NextResponse } from "next/server"
 
@@ -58,6 +67,29 @@ export async function updatePropertyController(request: NextRequest) {
     )
 
     if (errorResponse) return errorResponse
+
+    if (location) {
+      // Check if location is being changed
+      const currentProperty = await getDoc(doc(firestore, "properties", id!))
+      const currentData = currentProperty.data()
+
+      if (currentData?.location !== location) {
+        // Check for duplicate location
+        const locationQuery = query(
+          collection(firestore, "properties"),
+          where("location", "==", location),
+        )
+
+        const existingProperties = await getDocs(locationQuery)
+
+        if (!existingProperties.empty) {
+          return NextResponse.json(
+            { error: "A property with this location already exists" },
+            { status: 409 },
+          )
+        }
+      }
+    }
 
     const propertyRef = doc(firestore, "properties", id!)
 

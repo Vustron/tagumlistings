@@ -1,5 +1,14 @@
 // utils
-import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore"
+import {
+  doc,
+  query,
+  where,
+  getDoc,
+  getDocs,
+  collection,
+  updateDoc,
+  serverTimestamp,
+} from "firebase/firestore"
 import { checkRequiredFields, requestBodyHandler } from "@/lib/utils"
 import { rateLimit, handleErrorResponse } from "@/server/helpers"
 import { NextResponse } from "next/server"
@@ -50,6 +59,31 @@ export async function updateAppointmentController(request: NextRequest) {
     )
 
     if (errorResponse) return errorResponse
+
+    if (description) {
+      // Check if description is being changed
+      const currentAppointment = await getDoc(
+        doc(firestore, "appointments", id!),
+      )
+      const currentData = currentAppointment.data()
+
+      if (currentData?.description !== description) {
+        // Check for duplicate description
+        const descriptionQuery = query(
+          collection(firestore, "appointments"),
+          where("description", "==", description),
+        )
+
+        const existingAppointments = await getDocs(descriptionQuery)
+
+        if (!existingAppointments.empty) {
+          return NextResponse.json(
+            { error: "An appointment with this description already exists" },
+            { status: 409 },
+          )
+        }
+      }
+    }
 
     const appointmentRef = doc(firestore, "appointments", id!)
     await updateDoc(appointmentRef, {

@@ -20,11 +20,10 @@ import toast from "react-hot-toast"
 // types
 import type { Row } from "@tanstack/react-table"
 import type { Payment } from "@/lib/types"
-import type { ElementRef } from "react"
 
 const PaymentsClient = () => {
-  const topRef = useRef<ElementRef<"div">>(null)
-  const bottomRef = useRef<ElementRef<"div">>(null)
+  const topRef = useRef<HTMLDivElement>(null)
+  const bottomRef = useRef<HTMLDivElement>(null)
   const { data: paymentsData } = useGetPayments()
   const deletePayments = useDeletePayments()
 
@@ -36,7 +35,7 @@ const PaymentsClient = () => {
   const handleDelete = async (rows: Row<Payment>[]) => {
     const ids = rows.map((r) => r.original.id)
     await toast.promise(deletePayments.mutateAsync({ ids }), {
-      loading: <span className="animate-pulse">Deleting payments...</span>,
+      loading: <span className="animate-pulse">Deleting transactions...</span>,
       success: "Payments deleted",
       error: (error: unknown) => clientErrorHandler(error),
     })
@@ -49,8 +48,8 @@ const PaymentsClient = () => {
     <FallbackBoundary>
       <div className="flex items-start justify-between">
         <Heading
-          title={`Payments (${paymentsCount})`}
-          description="Manage payment informations"
+          title={`Transactions (${paymentsCount})`}
+          description="Manage transactions"
         />
       </div>
       <Separator className="mt-2" />

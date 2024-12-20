@@ -55,6 +55,8 @@ import type {
 } from "@tanstack/react-table"
 
 import type { Appointment, AppointmentDate } from "@/lib/types"
+import { useState } from "react"
+import CreateAppointmentDialog from "../admin/appointments/create"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -79,8 +81,11 @@ export default function DataTable<TData, TValue>({
   disabled,
   isOnUsers,
   isOnProperties,
-  // isOnPayments,
+  isOnClientAppointments,
+  isOnPayments,
   noBulkDelete,
+  appointment,
+  appointmentDates,
   isOnClient,
   placeholder,
 }: DataTableProps<TData, TValue>) {
@@ -101,14 +106,14 @@ export default function DataTable<TData, TValue>({
     () => data.filter((item) => deepSearch(item, filterValue)),
     [data, filterValue],
   )
-  // const [createAppointmentDialogOpen, setIsCreateAppointmentDialogOpen] =
-  //   useState(false)
-  // const [availableDates, setAvailableDates] = useState<Date[]>([])
+  const [createAppointmentDialogOpen, setIsCreateAppointmentDialogOpen] =
+    useState(false)
+  const [availableDates, setAvailableDates] = useState<Date[]>([])
 
-  // const setAppointmentDates = (dates: Date[]) => {
-  //   setAvailableDates(dates)
-  //   setIsCreateAppointmentDialogOpen(false)
-  // }
+  const setAppointmentDates = (dates: Date[]) => {
+    setAvailableDates(dates)
+    setIsCreateAppointmentDialogOpen(false)
+  }
 
   // init table
   const table = useReactTable({
@@ -178,7 +183,7 @@ export default function DataTable<TData, TValue>({
             {/* create new user */}
             {isOnUsers && !isOnClient && <CreateUserModal />}
 
-            {/* {isOnClientAppointments && (
+            {isOnClientAppointments && !isOnPayments && (
               <>
                 <CreateAppointmentDialog
                   isOpen={createAppointmentDialogOpen}
@@ -199,7 +204,7 @@ export default function DataTable<TData, TValue>({
                   New Appointment
                 </Button>
               </>
-            )} */}
+            )}
 
             {/* create new property */}
             {isOnProperties && !isOnClient && (

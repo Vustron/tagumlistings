@@ -32,7 +32,6 @@ export default async function AppointmentsPage() {
       <ContentLayout title="Appointments">
         <BounceWrapper>
           <DynamicBreadcrumb items={appointmentsItems} />
-
           <AppointmentsClient />
         </BounceWrapper>
       </ContentLayout>

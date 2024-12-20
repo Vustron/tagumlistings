@@ -32,7 +32,6 @@ export default async function ReportsPage() {
       <ContentLayout title="Reports">
         <BounceWrapper>
           <DynamicBreadcrumb items={reportItems} />
-
           <ReportsClient />
         </BounceWrapper>
       </ContentLayout>

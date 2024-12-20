@@ -2,7 +2,7 @@
 import type { SessionOptions } from "iron-session"
 
 // configs
-import { env } from "@/lib/config/env.mjs"
+import { env } from "@/lib/config/env"
 
 // types
 import type { Property } from "@/lib/types"

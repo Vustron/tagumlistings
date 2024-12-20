@@ -9,7 +9,7 @@ import BounceWrapper from "@/components/shared/bounce"
 import { getSession } from "@/lib/actions/session/get"
 
 // utils
-import { paymentsItems } from "@/lib/misc/breadcrumb-lists"
+import { transactionsItems } from "@/lib/misc/breadcrumb-lists"
 import { dataSerializer } from "@/lib/utils"
 
 // types
@@ -17,7 +17,7 @@ import type { Metadata } from "next"
 
 // meta data
 export const metadata: Metadata = {
-  title: "Payments",
+  title: "Transactions",
 }
 
 export default async function PaymentsPage() {
@@ -29,10 +29,9 @@ export default async function PaymentsPage() {
 
   return (
     <HydrationBoundaryWrapper accountId={userData.id}>
-      <ContentLayout title="Payments">
+      <ContentLayout title="Transactions">
         <BounceWrapper>
-          <DynamicBreadcrumb items={paymentsItems} />
-
+          <DynamicBreadcrumb items={transactionsItems} />
           <PaymentsClient />
         </BounceWrapper>
       </ContentLayout>

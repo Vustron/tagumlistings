@@ -42,14 +42,15 @@ const UpdatePaymentForm = ({
       appointment: payment.appointment,
       amount: payment.amount,
       paid_date: payment.paid_date,
+      status: payment.status,
     },
   })
 
   // submit handler
   const submitHandler = async (values: UpdatePaymentValues) => {
     await toast.promise(updatePayment.mutateAsync(values), {
-      loading: <span className="animate-pulse">Updating payment...</span>,
-      success: "Payment updated",
+      loading: <span className="animate-pulse">Updating transaction...</span>,
+      success: "Transaction updated",
       error: (error: unknown) => clientErrorHandler(error),
     })
 

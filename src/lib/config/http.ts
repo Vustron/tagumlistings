@@ -1,5 +1,5 @@
 // configs
-import { env } from "@/lib/config/env.mjs"
+import { env } from "@/lib/config/env"
 
 // utils
 import { HttpError, buildQueryString, dataSerializer } from "@/lib/utils"

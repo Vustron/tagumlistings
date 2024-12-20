@@ -25,10 +25,7 @@ const PaymentClient = ({ id }: { id: string }) => {
   return (
     <>
       <div className="flex items-start justify-between">
-        <Heading
-          title="Update Payment"
-          description="Manage payment information"
-        />
+        <Heading title="Update Transaction" description="Manage transaction" />
       </div>
       <Separator className="mt-2" />
 

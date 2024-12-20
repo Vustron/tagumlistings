@@ -7,7 +7,7 @@ import { imageKitAuth } from "@/lib/actions/imagekit/auth"
 import { ImageKitProvider } from "imagekitio-next"
 
 // configs
-import { env } from "@/lib/config/env.mjs"
+import { env } from "@/lib/config/env"
 
 const ImagekitProvider = ({ children }: React.PropsWithChildren) => {
   return (

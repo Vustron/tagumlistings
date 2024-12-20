@@ -1,5 +1,5 @@
 // utils
-import { env } from "@/lib/config/env.mjs"
+import { env } from "@/lib/config/env"
 
 // types
 import type { SiteConfig } from "@/lib/types"
