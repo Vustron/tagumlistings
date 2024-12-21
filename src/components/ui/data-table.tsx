@@ -268,7 +268,7 @@ export default function DataTable<TData, TValue>({
         </div>
       </ScrollArea>
 
-      <ScrollArea className="h-[calc(80vh-220px)] rounded-md border md:h-[calc(80dvh-200px)]">
+      <ScrollArea className="h-[calc(100vh-220px)] rounded-md border md:h-[calc(100vh-200px)]">
         <Table className="relative">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

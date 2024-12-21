@@ -59,7 +59,7 @@ export const updateAccountSchema = z
     },
     {
       message: "Passwords do not match",
-      path: ["confirmPassword"],
+      path: [ "confirmPassword" ],
     },
   )
 
@@ -77,20 +77,20 @@ export type LoginValues = z.infer<typeof loginSchema>
 
 // addPropertySchema
 export const addPropertySchema = z.object({
-  category: requiredString,
-  location: requiredString,
-  status: requiredString,
+  category: requiredString.optional(),
+  location: requiredString.optional(),
+  status: requiredString.optional(),
   propertyPics: z
     .array(z.object({ url: z.string().url("Invalid URL") }))
     .optional(),
-  price: requiredString,
-  no_of_bedrooms: requiredString,
-  no_of_bathrooms: requiredString,
-  square_meter: requiredString,
-  payment: requiredString,
+  price: requiredString.optional(),
+  no_of_bedrooms: requiredString.optional(),
+  no_of_bathrooms: requiredString.optional(),
+  square_meter: requiredString.optional(),
+  payment: requiredString.optional(),
   user: requiredString.optional(),
   appointment: requiredString.optional(),
-  paidAmount: requiredString.optional(),
+  amount: requiredString.optional(),
   paid_date: requiredString.optional(),
 })
 
@@ -123,6 +123,7 @@ export const updatePropertySchema = z.object({
   appointment: requiredString.optional(),
   amount: requiredString.optional(),
   paid_date: requiredString.optional(),
+  agent: requiredString.optional(),
 })
 
 /* UpdatePropertyValues Type */

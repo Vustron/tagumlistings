@@ -40,6 +40,7 @@ const UpdatePropertyForm = ({ data, accounts }: UpdatePropertyFormProps) => {
       no_of_bathrooms: data.no_of_bathrooms,
       square_meter: data.square_meter,
       user: data.user ?? "N/A",
+      agent: data.user ?? "N/A",
     },
   })
 

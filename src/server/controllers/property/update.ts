@@ -57,9 +57,10 @@ export async function updatePropertyController(request: NextRequest) {
       square_meter,
       user,
       appointment_id,
+      agent,
     } = updatePropertyBody
 
-    const requiredFields: (keyof typeof updatePropertyBody)[] = ["id"]
+    const requiredFields: (keyof typeof updatePropertyBody)[] = [ "id" ]
 
     const errorResponse = checkRequiredFields(
       updatePropertyBody,
@@ -105,12 +106,13 @@ export async function updatePropertyController(request: NextRequest) {
       square_meter,
       user,
       appointment_id,
+      agent,
       updated_at: serverTimestamp(),
     }
 
     for (const key of Object.keys(updateData)) {
-      if (updateData[key as keyof Property] === undefined) {
-        delete updateData[key as keyof Property]
+      if (updateData[ key as keyof Property ] === undefined) {
+        delete updateData[ key as keyof Property ]
       }
     }
 
@@ -122,12 +124,12 @@ export async function updatePropertyController(request: NextRequest) {
       ...updatedProperty,
       created_at:
         updatedProperty?.created_at &&
-        typeof updatedProperty.created_at === "object"
+          typeof updatedProperty.created_at === "object"
           ? convertTimestampToDateString(updatedProperty.created_at)
           : null,
       updated_at:
         updatedProperty?.updated_at &&
-        typeof updatedProperty.updated_at === "object"
+          typeof updatedProperty.updated_at === "object"
           ? convertTimestampToDateString(updatedProperty.updated_at)
           : null,
     }

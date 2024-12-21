@@ -85,6 +85,11 @@ export const columns: ColumnDef<Property>[] = [
     cell: ({ row }) => truncateText(row.getValue("user") || "N/A", 20),
   },
   {
+    accessorKey: "agent",
+    header: () => <div className="whitespace-nowrap">Commissioned by</div>,
+    cell: ({ row }) => truncateText(row.getValue("agent") || "N/A", 20),
+  },
+  {
     id: "actions",
     header: () => <div className="whitespace-nowrap">Actions</div>,
     cell: ({ row }) => <CellActions data={row.original} />,

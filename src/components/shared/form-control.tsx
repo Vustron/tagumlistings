@@ -137,11 +137,38 @@ const FormControlRenderer = <TFieldValues extends FieldValues>({
         </>
       )
 
+      case "number":
+      return (
+        <FloatingLabelInput
+          {...formField}
+          id={field.name}
+          type="number"
+          label={field.label}
+          placeholder={field.placeholder}
+          disabled={mutation?.isPending}
+          hasErrors={!!form.formState.errors[field.name]}
+          value={formField.value ?? ''}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (value === '' || (Number.parseFloat(value) >= 0 && Number.parseFloat(value) <= 999999999)) {
+              formField.onChange(value);
+            }
+          }}
+          min={0}
+          max={999999999}
+          className={cn(
+            form.formState.errors[field.name]
+              ? "border-red-600 focus:ring-0"
+              : "",
+            field.className,
+          )}
+        />
+      )
+
     case "text":
     case "color":
     case "password":
     case "email":
-    case "number":
     case "date":
       return (
         <FloatingLabelInput
@@ -152,13 +179,14 @@ const FormControlRenderer = <TFieldValues extends FieldValues>({
           placeholder={field.placeholder}
           disabled={mutation?.isPending}
           hasErrors={!!form.formState.errors[field.name]}
+          value={formField.value ?? ''}
+          maxLength={255}
           className={cn(
             form.formState.errors[field.name]
               ? "border-red-600 focus:ring-0"
               : "",
             field.className,
           )}
-          isPassword={field.type === "password"}
         />
       )
 

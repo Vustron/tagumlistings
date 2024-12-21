@@ -55,17 +55,17 @@ interface SelectOption<T = string> {
 interface FieldConfig<TFieldValues> {
   name: Path<TFieldValues>
   type:
-    | "text"
-    | "password"
-    | "email"
-    | "number"
-    | "select"
-    | "image"
-    | "switch"
-    | "date"
-    | "color"
-    | "currency"
-    | "phone"
+  | "text"
+  | "password"
+  | "email"
+  | "number"
+  | "select"
+  | "image"
+  | "switch"
+  | "date"
+  | "color"
+  | "currency"
+  | "phone"
   label: string
   placeholder?: string
   className?: string
@@ -187,6 +187,7 @@ export interface Property {
   no_of_bathrooms?: string
   square_meter?: string
   payments?: Payment[]
+  agent?: string
   created_at?: string
   updated_at?: string | FieldValue
 }
@@ -274,16 +275,16 @@ export interface ErrorDetail {
 
 /* QueryKeys Type */
 export type QueryKeys = {
-  account: (id: string) => ["account", string]
-  accounts: () => ["accounts"]
-  properties: () => ["properties"]
-  property: (id: string) => ["property", string]
-  appointments: () => ["appointments"]
-  appointmentDates: () => ["appointment-dates"]
-  appointment: (id: string) => ["appointment", string]
-  payments: () => ["payments"]
-  payment: (id: string) => ["payment", string]
-  messages: () => ["messages"]
+  account: (id: string) => [ "account", string ]
+  accounts: () => [ "accounts" ]
+  properties: () => [ "properties" ]
+  property: (id: string) => [ "property", string ]
+  appointments: () => [ "appointments" ]
+  appointmentDates: () => [ "appointment-dates" ]
+  appointment: (id: string) => [ "appointment", string ]
+  payments: () => [ "payments" ]
+  payment: (id: string) => [ "payment", string ]
+  messages: () => [ "messages" ]
 }
 
 /* RouteConfig Type */
