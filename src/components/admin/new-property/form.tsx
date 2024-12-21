@@ -33,13 +33,12 @@ const NewPropertyForm = () => {
 
   // submit handler
   const submitHandler = async (values: AddPropertyValues) => {
-    
-      await toast.promise(newProperty.mutateAsync(values), {
-        loading: <span className="animate-pulse">Adding property...</span>,
-        success: "Property added successfully",
-        error: (error: unknown) => clientErrorHandler(error),
-      })
-      form.reset()
+    await toast.promise(newProperty.mutateAsync(values), {
+      loading: <span className="animate-pulse">Adding property...</span>,
+      success: "Property added successfully",
+      error: (error: unknown) => clientErrorHandler(error),
+    })
+    form.reset()
   }
 
   return (

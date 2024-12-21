@@ -137,7 +137,7 @@ const FormControlRenderer = <TFieldValues extends FieldValues>({
         </>
       )
 
-      case "number":
+    case "number":
       return (
         <FloatingLabelInput
           {...formField}
@@ -147,11 +147,15 @@ const FormControlRenderer = <TFieldValues extends FieldValues>({
           placeholder={field.placeholder}
           disabled={mutation?.isPending}
           hasErrors={!!form.formState.errors[field.name]}
-          value={formField.value ?? ''}
+          value={formField.value ?? ""}
           onChange={(e) => {
-            const value = e.target.value;
-            if (value === '' || (Number.parseFloat(value) >= 0 && Number.parseFloat(value) <= 999999999)) {
-              formField.onChange(value);
+            const value = e.target.value
+            if (
+              value === "" ||
+              (Number.parseFloat(value) >= 0 &&
+                Number.parseFloat(value) <= 999999999)
+            ) {
+              formField.onChange(value)
             }
           }}
           min={0}
@@ -179,7 +183,7 @@ const FormControlRenderer = <TFieldValues extends FieldValues>({
           placeholder={field.placeholder}
           disabled={mutation?.isPending}
           hasErrors={!!form.formState.errors[field.name]}
-          value={formField.value ?? ''}
+          value={formField.value ?? ""}
           maxLength={255}
           className={cn(
             form.formState.errors[field.name]
