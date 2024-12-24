@@ -22,7 +22,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react"
-// import CreateAppointmentDialog from "@/components/admin/appointments/create"
+import CreateAppointmentDialog from "@/components/admin/appointments/create"
 import { FloatingLabelInput } from "@/components/ui/floating-label-input"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import CreateUserModal from "@/components/admin/users/create-user"
@@ -32,7 +32,7 @@ import { Button } from "@/components/ui/button"
 import { useConfirm } from "@/lib/hooks/utils/use-confirm"
 import { useReactTable } from "@tanstack/react-table"
 import { useRouter } from "next-nprogress-bar"
-// import { useState } from "react"
+import { useMemo, useState } from "react"
 
 // utils
 import {
@@ -42,6 +42,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
 } from "@tanstack/react-table"
+import { AnimatePresence, motion } from "framer-motion"
 import { deepSearch } from "@/lib/utils"
 import * as React from "react"
 
@@ -55,8 +56,6 @@ import type {
 } from "@tanstack/react-table"
 
 import type { Appointment, AppointmentDate } from "@/lib/types"
-import { useState } from "react"
-import CreateAppointmentDialog from "../admin/appointments/create"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -94,15 +93,13 @@ export default function DataTable<TData, TValue>({
     "Are you sure?",
     "You are about to perform a bulk delete.",
   )
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [rowSelection, setRowSelection] = React.useState({})
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  )
-  const [filterValue, setFilterValue] = React.useState<string>("")
-  const filteredData = React.useMemo(
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [filterValue, setFilterValue] = useState<string>("")
+  const filteredData = useMemo(
     () => data.filter((item) => deepSearch(item, filterValue)),
     [data, filterValue],
   )
@@ -135,6 +132,12 @@ export default function DataTable<TData, TValue>({
     onColumnVisibilityChange: setColumnVisibility,
   })
 
+  const selectedRowsCount = table.getFilteredSelectedRowModel().rows.length
+  const memoizedRows = useMemo(
+    () => table.getRowModel().rows,
+    [table.getRowModel().rows],
+  )
+
   return (
     <div>
       <ConfirmDialog />
@@ -157,54 +160,62 @@ export default function DataTable<TData, TValue>({
             />
           </div>
 
-          <div className="flex items-center gap-2">
-            {/* delete */}
-            {!noBulkDelete &&
-              table.getFilteredSelectedRowModel().rows.length > 0 && (
-                <Button
-                  disabled={disabled}
-                  size="sm"
-                  variant="outline"
-                  className=" text-xs font-normal shadow-sm"
-                  onClick={async () => {
-                    const ok = await confirm()
-
-                    if (ok) {
-                      onDelete?.(table.getFilteredSelectedRowModel().rows)
-                      table.resetRowSelection()
-                    }
-                  }}
+          <div className="flex flex-wrap items-center gap-2">
+            <AnimatePresence>
+              {/* delete */}
+              {!noBulkDelete && selectedRowsCount > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  <Trash className="mr-2 size-4" />
-                  Delete ({table.getFilteredSelectedRowModel().rows.length})
-                </Button>
+                  <Button
+                    disabled={disabled}
+                    size="sm"
+                    variant="outline"
+                    className=" text-xs font-normal shadow-sm"
+                    onClick={async () => {
+                      const ok = await confirm()
+
+                      if (ok) {
+                        onDelete?.(table.getFilteredSelectedRowModel().rows)
+                        table.resetRowSelection()
+                      }
+                    }}
+                  >
+                    <Trash className="mr-2 size-4" />
+                    Delete ({table.getFilteredSelectedRowModel().rows.length})
+                  </Button>
+                </motion.div>
               )}
 
-            {/* create new user */}
-            {isOnUsers && !isOnClient && <CreateUserModal />}
+              {/* create new user */}
+              {isOnUsers && !isOnClient && <CreateUserModal />}
 
-            {isOnClientAppointments && !isOnPayments && (
-              <>
-                <CreateAppointmentDialog
-                  isOpen={createAppointmentDialogOpen}
-                  onOpenChange={setIsCreateAppointmentDialogOpen}
-                  setAvailableDates={setAppointmentDates}
-                  initialDates={availableDates}
-                  appointments={appointment!}
-                  appointmentDates={appointmentDates!}
-                  isOnClient={isOnClientAppointments}
-                />
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="shadow-sm"
-                  onClick={() => setIsCreateAppointmentDialogOpen(true)}
-                >
-                  <PlusIcon className="mr-2 size-4" aria-hidden="true" />
-                  New Appointment
-                </Button>
-              </>
-            )}
+              {isOnClientAppointments && !isOnPayments && (
+                <>
+                  <CreateAppointmentDialog
+                    isOpen={createAppointmentDialogOpen}
+                    onOpenChange={setIsCreateAppointmentDialogOpen}
+                    setAvailableDates={setAppointmentDates}
+                    initialDates={availableDates}
+                    appointments={appointment!}
+                    appointmentDates={appointmentDates!}
+                    isOnClient={isOnClientAppointments}
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="shadow-sm"
+                    onClick={() => setIsCreateAppointmentDialogOpen(true)}
+                  >
+                    <PlusIcon className="mr-2 size-4" aria-hidden="true" />
+                    New Appointment
+                  </Button>
+                </>
+              )}
+            </AnimatePresence>
 
             {/* create new property */}
             {isOnProperties && !isOnClient && (
@@ -218,19 +229,6 @@ export default function DataTable<TData, TValue>({
                 New Property
               </Button>
             )}
-
-            {/* create new payment */}
-            {/* {isOnPayments && !isOnClient && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="shadow-sm"
-                onClick={() => router.push("/admin/payments/new")}
-              >
-                <PlusIcon className="mr-2 size-4" aria-hidden="true" />
-                New Payment
-              </Button>
-            )} */}
 
             {/* visibility */}
             <DropdownMenu>
@@ -289,11 +287,15 @@ export default function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
+            <AnimatePresence>
+              {memoizedRows.map((row) => (
+                <motion.tr
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.2 }}
+                  className={row.getIsSelected() ? "bg-muted/50" : ""}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -303,9 +305,10 @@ export default function DataTable<TData, TValue>({
                       )}
                     </TableCell>
                   ))}
-                </TableRow>
-              ))
-            ) : (
+                </motion.tr>
+              ))}
+            </AnimatePresence>
+            {table.getRowModel().rows.length === 0 && (
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
