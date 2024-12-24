@@ -51,7 +51,7 @@ export const uploadImageToFirebase = async (
 ): Promise<string> => {
   try {
     // Check if the file type is allowed
-    const allowedExtensions = [ "png", "jpg", "jpeg" ]
+    const allowedExtensions = ["png", "jpg", "jpeg"]
     const fileExtension = file.name.split(".").pop()?.toLowerCase()
 
     if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
@@ -88,7 +88,7 @@ export const uploadMultipleImages = async (
   userId: string,
 ): Promise<string[]> => {
   try {
-    const allowedExtensions = [ "png", "jpg", "jpeg" ]
+    const allowedExtensions = ["png", "jpg", "jpeg"]
     const maxSize = 1048576 // 1 MB in bytes
 
     const validatedFiles = files.filter((file) => {
@@ -159,7 +159,6 @@ export const deepSearch = (obj: any, searchTerm: string): boolean => {
   })
 }
 
-
 // convert timestamp to date string
 export function convertTimestampToDateString(timestamp: {
   seconds: number
@@ -186,8 +185,8 @@ export const isValidSessionData = (user: any): user is SessionData => {
 // get initials
 export const getInitials = (name: string) => {
   if (!name) return ""
-  const [ firstName, lastName ] = name.split(" ")
-  const firstLetter = firstName ? firstName[ 0 ] : ""
+  const [firstName, lastName] = name.split(" ")
+  const firstLetter = firstName ? firstName[0] : ""
   const lastLetter = lastName ? lastName.slice(-1) : firstName?.slice(-1)
   return `${firstLetter}${lastLetter}`.toUpperCase()
 }
@@ -252,7 +251,7 @@ export function buildQueryString(
   if (!params) return ""
   return `?${Object.entries(params)
     .map(
-      ([ key, value ]) =>
+      ([key, value]) =>
         `${encodeURIComponent(key)}=${encodeURIComponent(value!)}`,
     )
     .join("&")}`
@@ -290,7 +289,7 @@ export function checkRequiredFields<T>(
   requiredFields: (keyof T)[],
 ): NextResponse | null {
   for (const field of requiredFields) {
-    if (!body[ field ]) {
+    if (!body[field]) {
       return NextResponse.json(
         { error: `${String(field)} is missing` },
         { status: 400 },
@@ -324,7 +323,7 @@ export const sanitizer = <T>(
         }
         return Object.keys(obj).reduce(
           (acc, key) => {
-            acc[ key ] = sanitizeObject((obj as Record<string, unknown>)[ key ])
+            acc[key] = sanitizeObject((obj as Record<string, unknown>)[key])
             return acc
           },
           {} as Record<string, unknown>,
@@ -359,14 +358,15 @@ export function formatBytes(
 ) {
   const { decimals = 0, sizeType = "normal" } = opts
 
-  const sizes = [ "Bytes", "KB", "MB", "GB", "TB" ]
-  const accurateSizes = [ "Bytes", "KiB", "MiB", "GiB", "TiB" ]
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"]
+  const accurateSizes = ["Bytes", "KiB", "MiB", "GiB", "TiB"]
   if (bytes === 0) return "0 Byte"
   const i = Math.floor(Math.log(bytes) / Math.log(1024))
-  return `${(bytes / 1024 ** i).toFixed(decimals)} ${sizeType === "accurate"
-    ? (accurateSizes[ i ] ?? "Bytes")
-    : (sizes[ i ] ?? "Bytes")
-    }`
+  return `${(bytes / 1024 ** i).toFixed(decimals)} ${
+    sizeType === "accurate"
+      ? (accurateSizes[i] ?? "Bytes")
+      : (sizes[i] ?? "Bytes")
+  }`
 }
 
 // http error
