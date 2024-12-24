@@ -22,7 +22,6 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react"
-import CreateAppointmentDialog from "@/components/admin/appointments/create"
 import { FloatingLabelInput } from "@/components/ui/floating-label-input"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import CreateUserModal from "@/components/admin/users/create-user"
@@ -80,11 +79,7 @@ export default function DataTable<TData, TValue>({
   disabled,
   isOnUsers,
   isOnProperties,
-  isOnClientAppointments,
-  isOnPayments,
   noBulkDelete,
-  appointment,
-  appointmentDates,
   isOnClient,
   placeholder,
 }: DataTableProps<TData, TValue>) {
@@ -103,14 +98,6 @@ export default function DataTable<TData, TValue>({
     () => data.filter((item) => deepSearch(item, filterValue)),
     [data, filterValue],
   )
-  const [createAppointmentDialogOpen, setIsCreateAppointmentDialogOpen] =
-    useState(false)
-  const [availableDates, setAvailableDates] = useState<Date[]>([])
-
-  const setAppointmentDates = (dates: Date[]) => {
-    setAvailableDates(dates)
-    setIsCreateAppointmentDialogOpen(false)
-  }
 
   // init table
   const table = useReactTable({
@@ -192,29 +179,6 @@ export default function DataTable<TData, TValue>({
 
               {/* create new user */}
               {isOnUsers && !isOnClient && <CreateUserModal />}
-
-              {isOnClientAppointments && !isOnPayments && (
-                <>
-                  <CreateAppointmentDialog
-                    isOpen={createAppointmentDialogOpen}
-                    onOpenChange={setIsCreateAppointmentDialogOpen}
-                    setAvailableDates={setAppointmentDates}
-                    initialDates={availableDates}
-                    appointments={appointment!}
-                    appointmentDates={appointmentDates!}
-                    isOnClient={isOnClientAppointments}
-                  />
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="shadow-sm"
-                    onClick={() => setIsCreateAppointmentDialogOpen(true)}
-                  >
-                    <PlusIcon className="mr-2 size-4" aria-hidden="true" />
-                    New Appointment
-                  </Button>
-                </>
-              )}
             </AnimatePresence>
 
             {/* create new property */}

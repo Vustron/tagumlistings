@@ -180,7 +180,7 @@ const CreateAppointmentDialog = ({
 
     if (!isOnClient) {
       const isUserAvailable = availableAccounts.some(
-        (account) => account.id === values.user,
+        (account) => account.name === values.user,
       )
       if (!isUserAvailable) {
         toast.error("This user is not available for appointments")

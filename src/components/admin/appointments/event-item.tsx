@@ -9,6 +9,8 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog"
 import { Calendar, AlignLeft } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 
 // utils
 import { motion, AnimatePresence } from "framer-motion"
@@ -29,62 +31,88 @@ interface EventItemProps {
 
 const EventItem: React.FC<EventItemProps> = ({ event, compact = false }) => {
   const [isOpen, setIsOpen] = useState(false)
-
-  const dialogVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: { opacity: 1, scale: 1 },
-  }
+  const users = event.user.split(", ")
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <motion.div
-          whileHover={{ scale: 1.05, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
-          whileTap={{ scale: 0.95 }}
-          className={`p-3 rounded-xl cursor-pointer text-left text-white overflow-hidden transition-all duration-300 ease-in-out ${
-            compact ? "h-12 flex items-center justify-between" : "h-auto"
-          }`}
-          style={{ backgroundColor: event.color || "#3EF63BFF" }}
-        >
-          <div className="flex items-center">
-            <div className="font-bold truncate text-sm mr-4">{event.user}</div>
-          </div>
-          {!compact && (
-            <div className="text-xs truncate flex items-center">
-              <Calendar className="size-3 mr-1" />
-              {format(event.date, "MMM d")}
-            </div>
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className={cn(
+            "rounded-lg cursor-pointer",
+            "transition-all duration-200 ease-in-out",
+            "text-white flex flex-col items-center justify-center",
           )}
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 flex-grow min-w-0">
+              <div className="flex flex-wrap gap-1">
+                {users.slice(0, 3).map((user, index) => (
+                  <Badge
+                    key={index}
+                    variant="outline"
+                    className={cn(
+                      "bg-white/20 hover:bg-white/30 border-white/50",
+                      "text-xs px-2 py-0.5",
+                      "transition-all duration-200",
+                    )}
+                  >
+                    <span className="truncate max-w-[100px]">{user}</span>
+                  </Badge>
+                ))}
+                {users.length > 3 && (
+                  <Badge
+                    variant="outline"
+                    className={cn(
+                      "bg-black/20 hover:bg-black/30 border-white/50",
+                      "text-xs px-2 py-0.5",
+                    )}
+                  >
+                    +{users.length - 3}
+                  </Badge>
+                )}
+              </div>
+              {!compact && (
+                <div className="flex items-center gap-2 text-sm sm:text-base truncate ml-2">
+                  <Calendar className="size-4 shrink-0" />
+                  <span className="truncate">
+                    {format(event.date, "MMM d, yyyy")}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
         </motion.div>
       </DialogTrigger>
+
       <AnimatePresence>
         {isOpen && (
-          <DialogContent
-            forceMount
-            className="w-[90vw] max-w-lg md:max-w-2xl lg:max-w-4xl rounded-2xl overflow-hidden"
-          >
+          <DialogContent className="sm:max-w-[425px] md:max-w-[600px] lg:max-w-[800px]">
             <motion.div
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              variants={dialogVariants}
-              transition={{ duration: 0.2 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className="rounded-lg overflow-hidden"
             >
-              <DialogHeader className="bg-gradient-to-r from-green-500 to-blue-600 p-4 md:p-6 rounded-t-2xl text-white">
-                <DialogTitle className="text-xl md:text-2xl font-bold">
+              <DialogHeader className={cn("p-6", "bg-background")}>
+                <DialogTitle className="text-xl md:text-2xl font-bold dark:text-white">
                   {event.user}
                 </DialogTitle>
-                <DialogDescription className="text-blue-100 mt-2 flex items-center">
-                  <Calendar className="size-4 mr-2" />
+                <DialogDescription className="dark:text-blue-50 mt-2 flex items-center gap-2">
+                  <Calendar className="size-4" />
                   {format(event.date, "MMMM d, yyyy")}
                 </DialogDescription>
               </DialogHeader>
-              <div className="p-4 md:p-6 space-y-4">
-                <div className="flex items-start">
-                  <AlignLeft className="size-5 mr-3 text-gray-500 mt-1" />
-                  <div>
-                    <p className="text-gray-700 font-medium">Description</p>
-                    <p className="text-gray-600 leading-relaxed">
+
+              <div className="p-6 space-y-6 bg-white dark:bg-gray-900">
+                <div className="flex items-start gap-4">
+                  <AlignLeft className="size-5 text-gray-500 mt-1" />
+                  <div className="space-y-2 flex-1">
+                    <h4 className="font-semibold text-gray-900 dark:text-gray-100">
+                      Description
+                    </h4>
+                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                       {event.description}
                     </p>
                   </div>

@@ -1,7 +1,6 @@
 "use client"
 
 // components
-// import CreateAppointmentDialog from "@/components/admin/appointments/create"
 import CalendarControls from "@/components/admin/appointments/controls"
 import AppointmentsView from "@/components/admin/appointments/view"
 import EventItem from "@/components/admin/appointments/event-item"
@@ -36,8 +35,6 @@ const AppointmentCalendar = ({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [view, setView] = useState<CalendarView>("month")
   const [searchQuery, setSearchQuery] = useState("")
-  // const [createAppointmentDialogOpen, setIsCreateAppointmentDialogOpen] =
-  //   useState(false)
   const [currentDate, setCurrentDate] = useState(new Date())
   const [events, setEvents] = useState(
     initialEvents.map((event) => ({
@@ -45,7 +42,6 @@ const AppointmentCalendar = ({
       description: event.description || "",
     })),
   )
-  // const [availableDates, setAvailableDates] = useState<Date[]>([])
 
   useEffect(() => {
     if (searchQuery) {
@@ -84,11 +80,6 @@ const AppointmentCalendar = ({
     }
   }
 
-  // const setAppointmentDates = (dates: Date[]) => {
-  //   setAvailableDates(dates)
-  //   setIsCreateAppointmentDialogOpen(false)
-  // }
-
   const upcomingEvents = useMemo(() => {
     return events
       .filter((event) => event.date >= new Date())
@@ -108,7 +99,6 @@ const AppointmentCalendar = ({
             setView={setView}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
-            // setIsCreateAppointmentDialogOpen={setIsCreateAppointmentDialogOpen}
           />
         </div>
       </div>
@@ -157,15 +147,6 @@ const AppointmentCalendar = ({
           </AnimatePresence>
         </div>
       </div>
-
-      {/* <CreateAppointmentDialog
-        isOpen={createAppointmentDialogOpen}
-        onOpenChange={setIsCreateAppointmentDialogOpen}
-        setAvailableDates={setAppointmentDates}
-        initialDates={availableDates}
-        appointments={events}
-        appointmentDates={appointmentDates}
-      /> */}
     </Card>
   )
 }

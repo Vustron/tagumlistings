@@ -8,13 +8,17 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu"
-import { Coins, Edit, MoreHorizontal, Trash } from "lucide-react"
+import CreateAppointmentDialog from "@/components/admin/appointments/create"
+import { Coins, Edit, MoreHorizontal, PlusIcon, Trash } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 // hooks
+import { useGetAppointmentDates } from "@/lib/hooks/appointment/get-dates"
+import { useGetAppointments } from "@/lib/hooks/appointment/get-all"
 import { useDeleteProperty } from "@/lib/hooks/property/delete"
 import { useConfirm } from "@/lib/hooks/utils/use-confirm"
 import { useRouter } from "next-nprogress-bar"
+import { useState } from "react"
 
 // utils
 import { clientErrorHandler } from "@/lib/utils"
@@ -30,6 +34,8 @@ interface CellActionProps {
 const CellActions = ({ data }: CellActionProps) => {
   const router = useRouter()
   const deleteMutation = useDeleteProperty(data?.id!)
+  const { data: appointmentsData } = useGetAppointments()
+  const { data: datesData } = useGetAppointmentDates()
 
   const isPending = deleteMutation.isPending
 
@@ -50,9 +56,28 @@ const CellActions = ({ data }: CellActionProps) => {
     }
   }
 
+  const [createAppointmentDialogOpen, setIsCreateAppointmentDialogOpen] =
+    useState(false)
+  const [availableDates, setAvailableDates] = useState<Date[]>([])
+
+  const setAppointmentDates = (dates: Date[]) => {
+    setAvailableDates(dates)
+    setIsCreateAppointmentDialogOpen(false)
+  }
+
   return (
     <>
       <ConfirmDialog />
+      <CreateAppointmentDialog
+        isOpen={createAppointmentDialogOpen}
+        onOpenChange={setIsCreateAppointmentDialogOpen}
+        setAvailableDates={setAppointmentDates}
+        initialDates={availableDates}
+        appointments={appointmentsData.appointments}
+        appointmentDates={datesData.dates}
+        propertyId={data.id}
+      />
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="size-8 p-0">
@@ -73,6 +98,13 @@ const CellActions = ({ data }: CellActionProps) => {
           >
             <Coins className="mr-2 size-4" /> Add payment
           </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => setIsCreateAppointmentDialogOpen(true)}
+          >
+            <PlusIcon className="mr-2 size-4" aria-hidden="true" />
+            Add Appointment
+          </DropdownMenuItem>
+
           <DropdownMenuItem
             onClick={() => router.push(`/admin/properties/${data.id}`)}
           >

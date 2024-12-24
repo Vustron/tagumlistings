@@ -26,7 +26,7 @@ export const useCreateAppointment = () => {
   const session = useSession()
 
   return useMutation({
-    mutationKey: ["create-appointment"],
+    mutationKey: [ "create-appointment" ],
     mutationFn: async (values: AddAppointmentValues) => {
       const sanitizedData = sanitizer<AddAppointmentValues>(
         values,
@@ -37,17 +37,17 @@ export const useCreateAppointment = () => {
     },
     onSuccess: async (newAppointment) => {
       const queryFilter: QueryFilters = {
-        queryKey: ["appointments"],
+        queryKey: [ "appointments" ],
       }
 
       await queryClient.cancelQueries(queryFilter)
-      queryClient.setQueryData<Appointments>(["appointments"], (oldData) => {
+      queryClient.setQueryData<Appointments>([ "appointments" ], (oldData) => {
         if (!oldData) {
-          return { appointments: [newAppointment] }
+          return { appointments: [ newAppointment ] }
         }
         return {
           ...oldData,
-          appointments: [...oldData.appointments, newAppointment],
+          appointments: [ ...oldData.appointments, newAppointment ],
         }
       })
     },
@@ -55,7 +55,7 @@ export const useCreateAppointment = () => {
       if (session.role !== "admin") {
         return router.push("/contact")
       }
-      router.push("/admin/appointments")
+      router.push("/admin/properties")
       // router.refresh()
     },
     onError: (error) => clientErrorHandler(error),
