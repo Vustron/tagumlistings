@@ -20,7 +20,7 @@ export async function getMessage(id: string): Promise<Message> {
 export async function preFetchAppointment(id: string) {
   return queryOptions<Message, Error>({
     enabled: !!id,
-    queryKey: [ "message", id ],
+    queryKey: ["message", id],
     queryFn: () => getMessage(id),
   })
 }

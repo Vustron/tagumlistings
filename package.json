@@ -1,6 +1,6 @@
 {
   "name": "tagum_listings",
-  "version": "1.3.61",
+  "version": "1.3.62",
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",

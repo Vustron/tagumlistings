@@ -5,11 +5,11 @@ import { getMessage } from "@/lib/actions/messages/get"
 
 export const useGetMessage = (id: string) => {
   const { data } = useSuspenseQuery({
-    queryKey: [ "message", id ],
-    queryFn: () => getMessage(id)
+    queryKey: ["message", id],
+    queryFn: () => getMessage(id),
   })
 
   return {
-    message: data
+    message: data,
   }
 }

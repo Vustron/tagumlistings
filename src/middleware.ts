@@ -42,7 +42,7 @@ const protectedClientRoutes: string[] = [
  * @type {string[]}
  */
 
-const authRoutes: string[] = [ "/login", "/register" ]
+const authRoutes: string[] = ["/login", "/register"]
 
 export default async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
@@ -57,7 +57,11 @@ export default async function middleware(request: NextRequest) {
 
   try {
     const response = NextResponse.next()
-    const session = await getIronSession<SessionData>(request, response, sessionOptions)
+    const session = await getIronSession<SessionData>(
+      request,
+      response,
+      sessionOptions,
+    )
 
     if (!session.loggedIn && (isProtectedRoute || isProtectedClientRoute)) {
       return NextResponse.redirect(new URL("/login", request.url))
@@ -71,7 +75,10 @@ export default async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL("/", request.url))
       }
 
-      if (isAdminRoute && !(session.role === "admin" || session.role === "agent")) {
+      if (
+        isAdminRoute &&
+        !(session.role === "admin" || session.role === "agent")
+      ) {
         return NextResponse.redirect(new URL("/", request.url))
       }
     }
@@ -85,5 +92,5 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [ "/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)" ],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 }

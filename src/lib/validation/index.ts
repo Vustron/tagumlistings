@@ -59,7 +59,7 @@ export const updateAccountSchema = z
     },
     {
       message: "Passwords do not match",
-      path: [ "confirmPassword" ],
+      path: ["confirmPassword"],
     },
   )
 

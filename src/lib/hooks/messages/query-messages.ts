@@ -12,47 +12,51 @@ export const useQueryMessagesData = () => {
   const queryClient = useQueryClient()
 
   const { data } = useSuspenseQuery({
-    queryKey: [ "messages-data" ],
+    queryKey: ["messages-data"],
     queryFn: () =>
-      getAccounts().then(accounts => {
-        return new Promise<{ accounts: Accounts, messages: Message[] }>((resolve, reject) => {
-          const messagesRef = collection(firestore, "messages")
-          const unsubscribe = onSnapshot(
-            messagesRef,
-            (snapshot) => {
-              const messages: Message[] = []
+      getAccounts()
+        .then((accounts) => {
+          return new Promise<{ accounts: Accounts; messages: Message[] }>(
+            (resolve, reject) => {
+              const messagesRef = collection(firestore, "messages")
+              const unsubscribe = onSnapshot(
+                messagesRef,
+                (snapshot) => {
+                  const messages: Message[] = []
 
-              for (const doc of snapshot.docs) {
-                const data = doc.data() as Message
-                messages.push({
-                  ...data,
-                  id: doc.id,
-                  createdAt: data.createdAt ?? new Date().toISOString(),
-                  updatedAt: data.updatedAt ? data.updatedAt : undefined,
-                })
-              }
+                  for (const doc of snapshot.docs) {
+                    const data = doc.data() as Message
+                    messages.push({
+                      ...data,
+                      id: doc.id,
+                      createdAt: data.createdAt ?? new Date().toISOString(),
+                      updatedAt: data.updatedAt ? data.updatedAt : undefined,
+                    })
+                  }
 
-              queryClient.setQueryData([ "messages-data" ], {
-                accounts,
-                messages
-              })
+                  queryClient.setQueryData(["messages-data"], {
+                    accounts,
+                    messages,
+                  })
 
-              resolve({ accounts, messages })
+                  resolve({ accounts, messages })
+                },
+                (error: unknown) => {
+                  reject(clientErrorHandler(error))
+                },
+              )
+
+              return () => unsubscribe()
             },
-            (error: unknown) => {
-              reject(clientErrorHandler(error))
-            }
           )
-
-          return () => unsubscribe()
         })
-      }).catch(error => {
-        throw clientErrorHandler(error)
-      })
+        .catch((error) => {
+          throw clientErrorHandler(error)
+        }),
   })
 
   return {
     accounts: data?.accounts?.accounts ?? [],
-    messages: data?.messages ?? []
+    messages: data?.messages ?? [],
   }
 }

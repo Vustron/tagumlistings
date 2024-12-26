@@ -83,7 +83,7 @@ export const routes: Record<HttpMethod, Route[]> = {
     {
       path: "/api/v1/messages/get",
       handler: getMessageController,
-    }
+    },
   ],
   POST: [
     { path: "/api/v1/auth/register", handler: registerAccountController },
