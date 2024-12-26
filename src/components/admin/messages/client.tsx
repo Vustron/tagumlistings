@@ -7,11 +7,8 @@ import { Card, CardContent } from "@/components/ui/card"
 
 // hooks
 import { useCreateMessage } from "@/lib/hooks/messages/create"
-import { useGetMessages } from "@/lib/hooks/messages/get-all"
-
 import { useEffect, useState, useRef, useMemo } from "react"
 import { useSession } from "@/components/providers/session"
-import { useGetAccounts } from "@/lib/hooks/auth/get-all"
 
 // utils
 import { clientErrorHandler, uploadMultipleImages } from "@/lib/utils"
@@ -19,6 +16,7 @@ import toast from "react-hot-toast"
 
 // types
 import type { UserData } from "@/lib/types"
+import { useQueryMessagesData } from "@/lib/hooks/messages/query-messages"
 
 interface MessagesClientProps {
   isAdmin?: boolean
@@ -30,35 +28,42 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
   const [searchQuery, setSearchQuery] = useState<string>("")
   const [message, setMessage] = useState<string>("")
   const [selectedImages, setSelectedImages] = useState<File[]>([])
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
   const scrollAreaRef = useRef<HTMLDivElement>(
     null as unknown as HTMLDivElement,
   )
 
   // Data fetching
-  const { data: accountsData } = useGetAccounts()
-  const { data: messagesData } = useGetMessages()
+  const { accounts, messages } = useQueryMessagesData()
   const createMessageMutation = useCreateMessage()
   const session = useSession()
-  const accounts = accountsData?.accounts ?? []
-  const messages = messagesData?.messages ?? []
 
   // Set default user if not admin and no user is selected
   useEffect(() => {
     if (!isAdmin && accounts.length > 0 && !selectedUser) {
-      const adminAccount = accounts.find((account) => account.role === "admin")
-      if (adminAccount) {
-        setSelectedUser(adminAccount)
+      const defaultAccount = accounts.find((account) =>
+        session.role === "client"
+          ? account.role === "agent"
+          : account.role === "client",
+      )
+      if (defaultAccount) {
+        setSelectedUser(defaultAccount)
       }
     }
-  }, [isAdmin, accounts, selectedUser])
+  }, [isAdmin, accounts, selectedUser, session.role])
 
   const filteredAccounts = useMemo(() => {
-    if (session.role === "admin") {
-      return accounts.filter((account) => account.role !== "admin")
+    switch (session.role) {
+      case "admin":
+        return accounts.filter((account) => account.role !== "admin")
+      case "agent":
+        return accounts.filter((account) => account.role === "client")
+      case "client":
+        return accounts.filter((account) => account.role === "agent")
+      default:
+        return []
     }
-    return accounts.filter((account) => account.role === "admin")
   }, [accounts, session.role])
 
   // Filter messages for selected user
@@ -81,8 +86,9 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768)
-      setIsSidebarOpen(window.innerWidth >= 768)
+      const width = window.innerWidth
+      setIsMobile(width < 768)
+      setIsSidebarOpen(width >= 768)
     }
 
     handleResize()
@@ -135,28 +141,24 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
     setSelectedImages([])
   }
 
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev)
+  }
 
   return (
-    <Card
-      className={`rounded-lg border-none h-[calc(100vh+200px)] ${
-        session.role === "admin" ? "p-5" : "p-20"
-      } mt-5`}
-    >
-      <CardContent className={"p-0 h-full w-auto container"}>
-        <div className="flex h-full bg-background">
-          {session.role === "admin" && (
-            <Sidebar
-              users={filteredAccounts}
-              isSidebarOpen={isSidebarOpen}
-              isMobile={isMobile}
-              toggleSidebar={toggleSidebar}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              setSelectedUser={setSelectedUser}
-              selectedUser={selectedUser}
-            />
-          )}
+    <Card className="rounded-lg border-none h-[calc(100vh-4rem)] mt-5">
+      <CardContent className="p-0 h-full relative">
+        <div className="flex h-full relative">
+          <Sidebar
+            users={filteredAccounts}
+            isSidebarOpen={isSidebarOpen}
+            isMobile={isMobile}
+            toggleSidebar={toggleSidebar}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            setSelectedUser={setSelectedUser}
+            selectedUser={selectedUser}
+          />
           <ChatWindow
             selectedUser={selectedUser}
             message={message}

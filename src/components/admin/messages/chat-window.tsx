@@ -4,7 +4,8 @@
 import ChatMessages from "@/components/admin/messages/chat-messages"
 import ChatHeader from "@/components/admin/messages/chat-header"
 import ChatFooter from "@/components/admin/messages/chat-footer"
-import { User } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Menu, User } from "lucide-react"
 
 // hooks
 import { useRef, useEffect } from "react"
@@ -38,7 +39,6 @@ const ChatWindow = ({
   messages = [],
   selectedImages,
   setSelectedImages,
-  isAdmin,
   isMobile,
   toggleSidebar,
   scrollAreaRef,
@@ -64,7 +64,6 @@ const ChatWindow = ({
         <>
           <ChatHeader
             selectedUser={selectedUser}
-            isAdmin={isAdmin}
             isMobile={isMobile}
             toggleSidebar={toggleSidebar}
           />
@@ -83,11 +82,32 @@ const ChatWindow = ({
           />
         </>
       ) : (
-        <div className="flex flex-col items-center justify-center h-full text-muted-foreground space-y-4">
-          <User className="h-16 w-16 text-muted-foreground/50" />
-          <p className="text-lg">
-            {isAdmin ? "Select a user to start messaging" : "Loading chat..."}
-          </p>
+        <div className="flex flex-col h-full">
+          {isMobile && (
+            <div className="p-4 border-b">
+              <Button
+                variant="outline"
+                onClick={toggleSidebar}
+                className="w-full py-6 text-base font-medium hover:bg-accent/80 transition-colors"
+              >
+                <Menu className="mr-2 size-5" />
+                Select a User to Message
+              </Button>
+            </div>
+          )}
+          <div className="flex-1 flex flex-col items-center justify-center space-y-4 p-8">
+            <div className="rounded-full bg-muted p-4">
+              <User className="h-12 w-12 text-muted-foreground" />
+            </div>
+            <div className="text-center space-y-2">
+              <h3 className="font-semibold text-xl">
+                No Conversation Selected
+              </h3>
+              <p className="text-muted-foreground">
+                Choose a user from the sidebar to start messaging
+              </p>
+            </div>
+          </div>
         </div>
       )}
     </motion.div>

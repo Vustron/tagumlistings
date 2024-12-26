@@ -4,7 +4,7 @@ interface BreadcrumbItemProps {
 }
 
 // dashboard
-export const dashboardItems: BreadcrumbItemProps[] = [{ label: "Dashboard" }]
+export const dashboardItems: BreadcrumbItemProps[] = [ { label: "Dashboard" } ]
 
 // account
 export const accountItems: BreadcrumbItemProps[] = [
@@ -82,6 +82,13 @@ export const propertyItems: BreadcrumbItemProps[] = [
 export const messagesItems: BreadcrumbItemProps[] = [
   { label: "Dashboard", href: "/admin" },
   { label: "Messages" },
+]
+
+// message
+export const messageItems: BreadcrumbItemProps[] = [
+  { label: "Dashboard", href: "/admin" },
+  { label: "Messages", href: "/admin/messages" },
+  { label: "Message" },
 ]
 
 // reports

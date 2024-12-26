@@ -1,7 +1,13 @@
 "use client"
 
 // components
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { PencilIcon } from "lucide-react"
 
@@ -10,6 +16,7 @@ import { useState } from "react"
 
 // types
 import type { Message } from "@/lib/types"
+import VisuallyHiddenComponent from "@/components/ui/visually-hidden"
 
 interface EditMessageDialogProps {
   msg: Message
@@ -28,6 +35,12 @@ export default function EditMessageDialog({
 
   return (
     <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+      <VisuallyHiddenComponent>
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-bold">Edit Message</DialogTitle>
+        </DialogHeader>
+      </VisuallyHiddenComponent>
+
       <DialogTrigger asChild>
         <Button
           variant="ghost"

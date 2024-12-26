@@ -41,6 +41,7 @@ import { getPaymentController } from "@/server/controllers/payment/get"
 import { createMessageControl } from "@/server/controllers/messages/create"
 import { updateMessageControl } from "@/server/controllers/messages/update"
 import { deleteMessageControl } from "@/server/controllers/messages/delete"
+import { getMessageController } from "@/server/controllers/messages/get"
 
 // types
 import type { NextRequest, NextResponse } from "next/server"
@@ -79,6 +80,10 @@ export const routes: Record<HttpMethod, Route[]> = {
       path: "/api/v1/payment/get",
       handler: getPaymentController,
     },
+    {
+      path: "/api/v1/messages/get",
+      handler: getMessageController,
+    }
   ],
   POST: [
     { path: "/api/v1/auth/register", handler: registerAccountController },
