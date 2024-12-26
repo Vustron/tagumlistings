@@ -2,14 +2,14 @@
 import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
 import ContentLayout from "@/components/layouts/admin/content-layout"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
-import PaymentClient from "@/components/admin/payment/client"
+import RecordClient from "@/components/admin/record/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions
 import { getSession } from "@/lib/actions/session/get"
 
 // utils
-import { transactionItems } from "@/lib/misc/breadcrumb-lists"
+import { recordItems } from "@/lib/misc/breadcrumb-lists"
 import { dataSerializer } from "@/lib/utils"
 
 // types
@@ -24,7 +24,7 @@ interface PageProps {
   params: Promise<{ id: string }>
 }
 
-export default async function PaymentIDPage({ params }: PageProps) {
+export default async function RecordIdPage({ params }: PageProps) {
   const [sessionData, resolvedParams] = await Promise.all([
     getSession(),
     params,
@@ -33,11 +33,10 @@ export default async function PaymentIDPage({ params }: PageProps) {
   const { id } = resolvedParams
   return (
     <HydrationBoundaryWrapper accountId={userData.id} paymentId={id}>
-      <ContentLayout title="Appointment">
+      <ContentLayout title="Record">
         <BounceWrapper>
-          <DynamicBreadcrumb items={transactionItems} />
-
-          <PaymentClient id={id} />
+          <DynamicBreadcrumb items={recordItems} />
+          <RecordClient id={id} />
         </BounceWrapper>
       </ContentLayout>
     </HydrationBoundaryWrapper>

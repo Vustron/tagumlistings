@@ -11,7 +11,7 @@ import { clientErrorHandler } from "@/lib/utils"
 import toast from "react-hot-toast"
 
 // hooks
-import { useCreatePayment } from "@/lib/hooks/payment/create"
+import { useCreatePayment } from "@/lib/hooks/payments/create"
 import { useForm } from "react-hook-form"
 
 // types

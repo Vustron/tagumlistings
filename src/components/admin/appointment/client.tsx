@@ -7,17 +7,10 @@ import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
 
 // hooks
-import { useGetAppointmentDates } from "@/lib/hooks/appointment/get-dates"
-import { useGetAppointment } from "@/lib/hooks/appointment/get"
-import { useGetAccounts } from "@/lib/hooks/auth/get-all"
+import { useQueryAppointment } from "@/lib/hooks/appointment/query-appointment"
 
 const AppointmentClient = ({ id }: { id: string }) => {
-  const { data: appointmentsDatesData } = useGetAppointmentDates()
-  const { data: appointmentData } = useGetAppointment(id)
-  const { data: accountsData } = useGetAccounts()
-
-  const accounts = accountsData?.accounts ?? []
-  const appointmentDates = appointmentsDatesData?.dates ?? []
+  const { accounts, appointment, appointmentDates } = useQueryAppointment(id)
 
   return (
     <FallbackBoundary>
@@ -32,7 +25,7 @@ const AppointmentClient = ({ id }: { id: string }) => {
       <div className="container flex flex-col justify-center items-center lg:w-[400px] sm:w-[300px] h-auto p-5 mt-5">
         <UpdateAppointmentForm
           accounts={accounts}
-          appointment={appointmentData}
+          appointment={appointment}
           appointmentDates={appointmentDates}
         />
       </div>

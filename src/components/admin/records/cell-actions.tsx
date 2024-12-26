@@ -1,7 +1,6 @@
 "use client"
 
 // components
-
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -13,7 +12,7 @@ import { Edit, MoreHorizontal, Trash } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 // hooks
-import { useDeletePayment } from "@/lib/hooks/payment/delete"
+import { useDeletePayment } from "@/lib/hooks/payments/delete"
 import { useConfirm } from "@/lib/hooks/utils/use-confirm"
 import { useRouter } from "next-nprogress-bar"
 
@@ -65,7 +64,7 @@ const CellActions = ({ data }: CellActionProps) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/admin/transactions/${data.id}`)}
+            onClick={() => router.push(`/admin/records/${data.id}`)}
           >
             <Edit className="mr-2 size-4" /> Update
           </DropdownMenuItem>

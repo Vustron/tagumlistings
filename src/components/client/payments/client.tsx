@@ -8,9 +8,9 @@ import DataTable from "@/components/ui/data-table"
 import { Heading } from "@/components/ui/heading"
 
 // hooks
-import { useDeletePayments } from "@/lib/hooks/payment/bulk-delete"
+import { useDeletePayments } from "@/lib/hooks/payments/bulk-delete"
 import { useFetchScroll } from "@/lib/hooks/utils/use-fetch-scroll"
-import { useGetPayments } from "@/lib/hooks/payment/get-all"
+import { useGetPayments } from "@/lib/hooks/payments/get-all"
 import { useSession } from "@/components/providers/session"
 import { useRef, useMemo } from "react"
 

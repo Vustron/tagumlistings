@@ -47,7 +47,7 @@ export const useSaveAppointmentDate = () => {
       if (session.role !== "admin") {
         return router.push("/appointments")
       }
-      router.push("/admin/appointments")
+      router.push("/admin/properties")
       router.refresh()
     },
     onError: (error) => clientErrorHandler(error),

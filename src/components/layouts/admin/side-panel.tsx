@@ -25,7 +25,7 @@ const SidePanel = ({ children }: { children: React.ReactNode }) => {
       <main
         className={cn(
           "min-h-[calc(100vh-56px)] bg-zinc-50 dark:bg-zinc-900 transition-[margin-left] ease-in-out duration-300 z-20",
-          sidebar?.isOpen === false ? "lg:ml-[90px]" : "lg:ml-72",
+          sidebar?.isOpen === false ? "lg:ml-[90px]" : "lg:ml-[220px]",
         )}
       >
         {children}
@@ -35,7 +35,7 @@ const SidePanel = ({ children }: { children: React.ReactNode }) => {
       <footer
         className={cn(
           "transition-[margin-left] ease-in-out duration-300",
-          sidebar?.isOpen === false ? "lg:ml-[90px]" : "lg:ml-72",
+          sidebar?.isOpen === false ? "lg:ml-[90px]" : "lg:ml-[220px]",
         )}
       >
         <Footer />

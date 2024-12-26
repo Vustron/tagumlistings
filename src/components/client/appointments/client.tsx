@@ -7,8 +7,7 @@ import DataTable from "@/components/ui/data-table"
 import { Heading } from "@/components/ui/heading"
 
 // hooks
-import { useGetAppointmentDates } from "@/lib/hooks/appointment/get-dates"
-import { useGetAppointments } from "@/lib/hooks/appointment/get-all"
+import { useQueryAppointments } from "@/lib/hooks/appointment/query-appointments"
 import { useFetchScroll } from "@/lib/hooks/utils/use-fetch-scroll"
 import { useSession } from "@/components/providers/session"
 import { useRef, useMemo } from "react"
@@ -20,8 +19,7 @@ import { columns } from "@/components/client/appointments/columns"
 import type { Appointment } from "@/lib/types"
 
 const AppointmentsClient = () => {
-  const { data: appointmentsData } = useGetAppointments()
-  const { data: datesData } = useGetAppointmentDates()
+  const { appointments, appointmentDates } = useQueryAppointments()
   const session = useSession()
 
   const topRef = useRef<HTMLDivElement>(null)
@@ -32,13 +30,13 @@ const AppointmentsClient = () => {
   })
 
   const filteredAppointments = useMemo(() => {
-    return appointmentsData.appointments.filter((appointment: Appointment) => {
+    return appointments.filter((appointment: Appointment) => {
       return appointment.user === session.name
     })
-  }, [appointmentsData.appointments, session.name])
+  }, [appointments, session.name])
 
   const appointmentsCount = filteredAppointments.length
-  const dates = datesData?.dates ?? []
+  const dates = appointmentDates ?? []
 
   return (
     <FallbackBoundary>

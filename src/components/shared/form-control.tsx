@@ -120,6 +120,8 @@ const FormControlRenderer = <TFieldValues extends FieldValues>({
               field.className,
             )}
             onChange={(value) => formField.onChange(value?.toString() || "")}
+            minLength={0}
+            maxLength={16}
           />
         </>
       )
@@ -191,6 +193,7 @@ const FormControlRenderer = <TFieldValues extends FieldValues>({
               : "",
             field.className,
           )}
+          isPassword={field.type === "password"}
         />
       )
 

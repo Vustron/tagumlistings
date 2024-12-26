@@ -162,6 +162,7 @@ export interface Payment {
   id: string
   property: string
   user: string
+  agent?: string | null
   appointment: string
   amount: string
   paid_date: string

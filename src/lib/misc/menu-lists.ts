@@ -3,10 +3,9 @@ import {
   Users,
   LandPlot,
   Settings,
-  HandCoins,
   LayoutGrid,
+  LibraryBig,
   ClipboardPen,
-  // ClipboardPlus,
   MessageSquareText,
 } from "lucide-react"
 
@@ -32,66 +31,74 @@ type Group = {
   menus: Menu[]
 }
 
-export function getMenuList(pathname: string): Group[] {
+export function getMenuList(pathname: string, role?: string): Group[] {
+  const contentMenus: Menu[] = [
+    {
+      href: "/admin",
+      label: "Dashboard",
+      active: pathname === "/admin",
+      icon: LayoutGrid,
+      submenus: [],
+    },
+    {
+      href: "/admin/appointments",
+      label: "Appointments",
+      active: pathname.includes("/admin/appointments"),
+      icon: ClipboardPen,
+      submenus: [],
+    },
+    {
+      href: "/admin/properties",
+      label: "Properties",
+      active: pathname.includes("/admin/properties"),
+      icon: LandPlot,
+      submenus: [],
+    },
+    {
+      href: "/admin/records",
+      label: "Records",
+      active: pathname.includes("/admin/records"),
+      icon: LibraryBig,
+      submenus: [],
+    },
+    {
+      href: "/admin/messages",
+      label: "Messages",
+      active: pathname.includes("/admin/messages"),
+      icon: MessageSquareText,
+      submenus: [],
+    },
+  ]
+
+  const settingsMenus: Menu[] = [
+    {
+      href: "/admin/account",
+      label: "Account",
+      active: pathname.includes("/admin/account"),
+      icon: Settings,
+      submenus: [],
+    },
+  ]
+
+  // Only add Users menu for admin role
+  if (role === "admin") {
+    settingsMenus.unshift({
+      href: "/admin/users",
+      label: "Users",
+      active: pathname.includes("/admin/users"),
+      icon: Users,
+      submenus: [],
+    })
+  }
+
   return [
     {
       groupLabel: "Contents",
-      menus: [
-        {
-          href: "/admin",
-          label: "Dashboard",
-          active: pathname === "/admin",
-          icon: LayoutGrid,
-          submenus: [],
-        },
-        {
-          href: "/admin/appointments",
-          label: "Appointments",
-          active: pathname.includes("/admin/appointments"),
-          icon: ClipboardPen,
-          submenus: [],
-        },
-        {
-          href: "/admin/properties",
-          label: "Properties",
-          active: pathname.includes("/admin/properties"),
-          icon: LandPlot,
-          submenus: [],
-        },
-        {
-          href: "/admin/transactions",
-          label: "Transactions",
-          active: pathname.includes("/admin/transactions"),
-          icon: HandCoins,
-          submenus: [],
-        },
-        {
-          href: "/admin/messages",
-          label: "Messages",
-          active: pathname.includes("/admin/messages"),
-          icon: MessageSquareText,
-          submenus: [],
-        },
-      ],
+      menus: contentMenus,
     },
     {
       groupLabel: "Settings",
-      menus: [
-        {
-          href: "/admin/users",
-          label: "Users",
-          active: pathname.includes("/admin/users"),
-          icon: Users,
-          submenus: [],
-        },
-        {
-          href: "/admin/account",
-          label: "Account",
-          active: pathname.includes("/admin/account"),
-          icon: Settings,
-          submenus: [],
-        },
-      ],
+      menus: settingsMenus,
     },
   ]
 }

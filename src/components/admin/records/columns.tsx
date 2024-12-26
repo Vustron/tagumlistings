@@ -6,7 +6,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import CellActions from "@/components/admin/payments/cell-actions"
+import CellActions from "@/components/admin/records/cell-actions"
 
 // utils
 import { formatPriceToPHP } from "@/lib/utils"
@@ -62,6 +62,18 @@ export const columns: ColumnDef<Payment>[] = [
       return (
         <div className="flex flex-col">
           <span className="font-medium">{user}</span>
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: "agent",
+    header: "Agent",
+    cell: ({ row }) => {
+      const agent = row.original.agent
+      return (
+        <div className="flex flex-col">
+          <span className="font-medium">{agent || "N/A"}</span>
         </div>
       )
     },

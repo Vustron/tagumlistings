@@ -26,7 +26,11 @@ import { useForm } from "react-hook-form"
 
 // utils
 import { addAppointmentFields } from "@/lib/misc/field-configs"
-import { clientErrorHandler, formatDate } from "@/lib/utils"
+import {
+  clientErrorHandler,
+  filterAvailableDates,
+  formatDate,
+} from "@/lib/utils"
 import { addAppointmentSchema } from "@/lib/validation"
 import { motion, AnimatePresence } from "framer-motion"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -84,22 +88,32 @@ const CreateAppointmentDialog = ({
     if (isOnClient) {
       return userHasAppointment
         ? []
-        : allAccounts.filter((account: UserData) => account.id === session.id)
+        : allAccounts.filter(
+            (account: UserData) =>
+              account.id === session.id && account.role === "client",
+          )
     }
+
     const usersWithAppointments = appointments.map((apt) => apt.user)
     return allAccounts.filter(
-      (account: UserData) => !usersWithAppointments.includes(account.id!),
+      (account: UserData) =>
+        !usersWithAppointments.includes(account.id!) &&
+        account.role === "client",
     )
   }, [allAccounts, appointments, isOnClient, session.id, userHasAppointment])
 
   // Check if there are any available dates for appointments
-  const hasAvailableDates = useMemo(
-    () =>
-      appointmentDates.some(
-        (appointmentDate) => appointmentDate.dates.length > 0,
-      ),
-    [appointmentDates],
-  )
+  const hasAvailableDates = useMemo(() => {
+    const filteredAppointments = appointments.filter(
+      (apt) => apt.status !== "confirmed",
+    )
+    const filteredDates = filterAvailableDates(
+      appointmentDates,
+      filteredAppointments,
+      propertyId,
+    )
+    return filteredDates.length > 0
+  }, [appointmentDates, appointments, propertyId])
 
   const saveAppointmentDateMutation = useSaveAppointmentDate()
   const deleteAppointmentDateMutation = useDeleteAppointmentDate()
@@ -151,14 +165,78 @@ const CreateAppointmentDialog = ({
   }, [])
 
   const handleSubmitDates = useCallback(async () => {
+    // Helper functions
+    const getDateWithoutTime = (date: Date) =>
+      new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
+
+    const isCurrentOrFutureDate = (date: Date) => {
+      const today = new Date()
+      const currentMonth = today.getMonth()
+      const currentYear = today.getFullYear()
+
+      const dateMonth = date.getMonth()
+      const dateYear = date.getFullYear()
+
+      return (
+        dateYear > currentYear ||
+        (dateYear === currentYear && dateMonth >= currentMonth)
+      )
+    }
+
     const parsedDates = dates
       .filter((date) => date.trim() !== "")
       .map((date) => parseISO(date))
       .filter(isValid)
+      .filter(isCurrentOrFutureDate)
 
-    toast.promise(
+    if (parsedDates.length === 0) {
+      toast.error(
+        "Please select valid dates from current or future months only.",
+      )
+      return
+    }
+
+    // Check for duplicates
+    const uniqueDates = parsedDates.filter((newDate) => {
+      const newDateTimestamp = getDateWithoutTime(newDate)
+
+      // Check duplicates in existing appointment dates
+      const isDuplicateInAppointmentDates = appointmentDates.some(
+        (appointmentDate) =>
+          appointmentDate.dates.some(
+            (existingDate) =>
+              getDateWithoutTime(new Date(existingDate)) === newDateTimestamp,
+          ),
+      )
+
+      // Check duplicates in current appointments
+      const isDuplicateInAppointments = appointments.some(
+        (appointment) =>
+          getDateWithoutTime(new Date(appointment.date)) === newDateTimestamp,
+      )
+
+      // Check duplicates within current selection
+      const isDuplicateInCurrentSelection = parsedDates
+        .filter((d) => d !== newDate)
+        .some((d) => getDateWithoutTime(d) === newDateTimestamp)
+
+      return !(
+        isDuplicateInAppointmentDates ||
+        isDuplicateInAppointments ||
+        isDuplicateInCurrentSelection
+      )
+    })
+
+    if (uniqueDates.length === 0) {
+      toast.error(
+        "Selected dates are already taken or invalid. Please select different dates.",
+      )
+      return
+    }
+
+    await toast.promise(
       saveAppointmentDateMutation.mutateAsync({
-        dates: parsedDates,
+        dates: uniqueDates,
         id: "",
       }),
       {
@@ -169,7 +247,7 @@ const CreateAppointmentDialog = ({
     )
 
     setDates([])
-  }, [dates, saveAppointmentDateMutation])
+  }, [dates, appointments, appointmentDates, saveAppointmentDateMutation])
 
   // New appointment handler with improved validation
   const handleSubmitAppointment = async (values: AddAppointmentValues) => {
@@ -342,7 +420,11 @@ const CreateAppointmentDialog = ({
                         </div>
                       ) : (
                         <div className="space-y-2">
-                          {appointmentDates.map((appointmentDate) => (
+                          {filterAvailableDates(
+                            appointmentDates,
+                            appointments,
+                            propertyId,
+                          ).map((appointmentDate) => (
                             <motion.div
                               key={appointmentDate.id}
                               initial={{ opacity: 0, y: -10 }}

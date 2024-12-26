@@ -12,13 +12,40 @@ import { clsx } from "clsx"
 import { firebaseStorage } from "@/lib/config/firebase"
 
 // types
-import type { ErrorResponseData, UniqueId } from "@/lib/types"
+import type { AppointmentDate, ErrorResponseData, UniqueId } from "@/lib/types"
 import type { SessionData } from "@/lib/config/session"
 import type { NextRequest } from "next/server"
 import type { Appointment } from "@/lib/types"
 import type { ClassValue } from "clsx"
 import type DOMPurify from "dompurify"
 import type { z } from "zod"
+
+export const filterAvailableDates = (
+  dates: AppointmentDate[],
+  appointments: Appointment[],
+  propertyId?: string,
+) => {
+  return dates.filter((appointmentDate) => {
+    return (
+      appointmentDate.dates.filter((date) => {
+        const dateMonth = new Date(date).getMonth()
+        const dateYear = new Date(date).getFullYear()
+
+        // Check if date is already taken in appointments
+        const isDateTaken = appointments.some((appointment) => {
+          const appointmentDate = new Date(appointment.date)
+          return (
+            appointment.propertyId === propertyId &&
+            appointmentDate.getMonth() === dateMonth &&
+            appointmentDate.getFullYear() === dateYear
+          )
+        })
+
+        return !isDateTaken
+      }).length > 0
+    )
+  })
+}
 
 export const formatDateLocal = (dateString?: string) => {
   if (!dateString) return "N/A"
@@ -221,6 +248,8 @@ export const getRoleBadgeColor = (role: string) => {
       return "bg-blue-100 text-blue-800 hover:text-white dark:hover:text-black"
     case "admin":
       return "bg-yellow-100 text-yellow-800 hover:text-white dark:hover:text-black"
+    case "agent":
+      return "bg-green-100 text-green-800 hover:text-white dark:hover:text-black"
     case "available":
       return "bg-green-100 text-green-800 hover:text-white dark:hover:text-black"
     case "sold":

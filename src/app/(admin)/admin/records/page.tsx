@@ -2,14 +2,14 @@
 import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
 import ContentLayout from "@/components/layouts/admin/content-layout"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
-import PaymentsClient from "@/components/admin/payments/client"
+import RecordsClient from "@/components/admin/records/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions
 import { getSession } from "@/lib/actions/session/get"
 
 // utils
-import { transactionsItems } from "@/lib/misc/breadcrumb-lists"
+import { recordsItems } from "@/lib/misc/breadcrumb-lists"
 import { dataSerializer } from "@/lib/utils"
 
 // types
@@ -17,10 +17,10 @@ import type { Metadata } from "next"
 
 // meta data
 export const metadata: Metadata = {
-  title: "Transactions",
+  title: "Records",
 }
 
-export default async function PaymentsPage() {
+export default async function RecordsPage() {
   // get session
   const session = await getSession()
 
@@ -29,10 +29,10 @@ export default async function PaymentsPage() {
 
   return (
     <HydrationBoundaryWrapper accountId={userData.id}>
-      <ContentLayout title="Transactions">
+      <ContentLayout title="Records">
         <BounceWrapper>
-          <DynamicBreadcrumb items={transactionsItems} />
-          <PaymentsClient />
+          <DynamicBreadcrumb items={recordsItems} />
+          <RecordsClient />
         </BounceWrapper>
       </ContentLayout>
     </HydrationBoundaryWrapper>

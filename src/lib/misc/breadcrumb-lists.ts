@@ -38,17 +38,17 @@ export const appointmentItems: BreadcrumbItemProps[] = [
   { label: "Appointment" },
 ]
 
-// transactions
-export const transactionsItems: BreadcrumbItemProps[] = [
+// records
+export const recordsItems: BreadcrumbItemProps[] = [
   { label: "Dashboard", href: "/admin" },
-  { label: "Transactions" },
+  { label: "Records" },
 ]
 
-// transaction
-export const transactionItems: BreadcrumbItemProps[] = [
+// record
+export const recordItems: BreadcrumbItemProps[] = [
   { label: "Dashboard", href: "/admin" },
-  { label: "Transactions", href: "/admin/transactions" },
-  { label: "Transaction" },
+  { label: "Records", href: "/admin/records" },
+  { label: "Record" },
 ]
 
 // add payment

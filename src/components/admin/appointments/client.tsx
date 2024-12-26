@@ -5,19 +5,16 @@ import AppointmentCalendar from "@/components/admin/appointments/calendar"
 import FallbackBoundary from "@/components/shared/fallback-boundary"
 
 // hooks
-import { useGetAppointmentDates } from "@/lib/hooks/appointment/get-dates"
-import { useGetAppointments } from "@/lib/hooks/appointment/get-all"
+import { useQueryAppointments } from "@/lib/hooks/appointment/query-appointments"
 
 const AppointmentsClient = () => {
-  const { data: appointmentsData } = useGetAppointments()
-  const { data: datesData } = useGetAppointmentDates()
-
+  const { appointments, appointmentDates } = useQueryAppointments()
   return (
     <div className="mt-6 mb-2">
       <FallbackBoundary>
         <AppointmentCalendar
-          events={appointmentsData.appointments}
-          appointmentDates={datesData.dates}
+          events={appointments}
+          appointmentDates={appointmentDates}
         />
       </FallbackBoundary>
     </div>

@@ -1,4 +1,3 @@
-// sidebar.tsx
 "use client"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -7,13 +6,15 @@ import { Button } from "@/components/ui/button"
 import { Menu, Search, X } from "lucide-react"
 import { Input } from "@/components/ui/input"
 
-import { useEffect, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { updateMessagesSeenStatus } from "@/lib/actions/messages/status"
+
 import { useSession } from "@/components/providers/session"
 import { useGetMessages } from "@/lib/hooks/messages/get-all"
+import { useEffect, useRef } from "react"
+
+import { motion, AnimatePresence } from "framer-motion"
 
 import type { UserData } from "@/lib/types"
-import { updateMessagesSeenStatus } from "@/lib/actions/messages/status"
 
 interface SidebarProps {
   users: UserData[]

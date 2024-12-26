@@ -11,6 +11,7 @@ import { clientErrorHandler } from "@/lib/utils"
 import toast from "react-hot-toast"
 
 // hooks
+import { useSession } from "@/components/providers/session"
 import { useUpdateAccount } from "@/lib/hooks/auth/update"
 import { useForm } from "react-hook-form"
 
@@ -26,6 +27,7 @@ interface AccountFormProps {
 
 const AccountForm = ({ id, data, isOnClient }: AccountFormProps) => {
   const updateAccountMutation = useUpdateAccount(id)
+  const session = useSession()
 
   const form = useForm<UpdateAccountValues>({
     resolver: zodResolver(updateAccountSchema),
@@ -56,7 +58,7 @@ const AccountForm = ({ id, data, isOnClient }: AccountFormProps) => {
       <DynamicForm<UpdateAccountValues>
         form={form}
         onSubmit={onSubmit}
-        fields={updateAccountFields(isOnClient)}
+        fields={updateAccountFields(isOnClient, session.role)}
         submitButtonTitle="Update"
         submitButtonClassname="bg-green-500 rounded-3xl"
         submitButtonTitleClassname="text-md font-medium"

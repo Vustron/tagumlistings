@@ -15,9 +15,7 @@ import AppointmentsList from "@/components/admin/appointments/list"
 import DashboardCard from "@/components/admin/dashboard/card"
 
 // hooks
-import { useGetAppointments } from "@/lib/hooks/appointment/get-all"
-import { useGetProperties } from "@/lib/hooks/property/get-all"
-import { useGetPayments } from "@/lib/hooks/payment/get-all"
+import { useQueryDashboardData } from "@/lib/hooks/dashboard/query-dashboard"
 
 // utils
 import {
@@ -26,21 +24,17 @@ import {
 } from "@/lib/utils"
 
 const AdminDashboardClient = () => {
-  const { data: appointmentsData } = useGetAppointments()
-  const { data: propertiesData } = useGetProperties()
-  const { data: paymentsData } = useGetPayments()
+  const { appointments, properties, payments } = useQueryDashboardData()
 
-  const appointments = appointmentsData?.appointments ?? []
+  const totalAppointments = appointments.length
   const currentMonthAppointments =
     filterAppointmentsForCurrentMonth(appointments)
   const lastHourAppointments = filterAppointmentsForLastHour(appointments)
-  const appointmentsCount = currentMonthAppointments.length
+
+  const currentAppointmentsCount = currentMonthAppointments.length
   const lastHourAppointmentsCount = lastHourAppointments.length
 
-  const properties = propertiesData?.properties ?? []
   const propertiesCount = properties.length
-
-  const payments = paymentsData?.payments ?? []
   const paymentsCount = payments.length
   const pendingPayments = payments.filter(
     (payment) => payment.status === "pending",
@@ -84,7 +78,7 @@ const AdminDashboardClient = () => {
   const pendingChangeSign = pendingChange >= 0 ? "+" : ""
 
   const percentageChange = (
-    (lastHourAppointmentsCount / (appointmentsCount || 1)) *
+    (lastHourAppointmentsCount / (currentAppointmentsCount || 1)) *
     100
   ).toFixed(2)
 
@@ -112,9 +106,9 @@ const AdminDashboardClient = () => {
     },
     {
       id: "4",
-      title: "Appointments",
-      amount: `${appointmentsCount}`,
-      percentageChange: `+${percentageChange}% since last hour`,
+      title: "Total Appointments",
+      amount: `${totalAppointments}`,
+      percentageChange: `+${percentageChange}% per year`,
       icon: <BellPlus className="size-4 text-muted-foreground" />,
     },
   ]
@@ -122,7 +116,7 @@ const AdminDashboardClient = () => {
   return (
     <FallbackBoundary>
       <div className="p-5">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
           <DashboardCard items={dashboardItems} />
         </div>
 
@@ -137,7 +131,8 @@ const AdminDashboardClient = () => {
                 Recent Appointments
               </CardTitle>
               <CardDescription>
-                There are {appointmentsCount} appointments for this month.
+                There are {currentAppointmentsCount} appointments for this
+                month.
               </CardDescription>
             </CardHeader>
             <CardContent>

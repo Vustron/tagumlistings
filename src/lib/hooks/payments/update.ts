@@ -59,7 +59,7 @@ export const useUpdatePayment = (id?: string) => {
           ),
         }
       })
-      router.push("/admin/transactions")
+      router.push("/admin/records")
       router.refresh()
     },
     onSettled: () => {

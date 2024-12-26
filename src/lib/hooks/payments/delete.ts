@@ -19,7 +19,7 @@ export const useDeletePayment = (id: string | undefined) => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationKey: ["delete-payment"],
+    mutationKey: ["delete-payment", id],
     mutationFn: async () => await deletePayment(id!),
     onSuccess: async (deletedId: string) => {
       const queryFilter: QueryFilters = {
@@ -39,7 +39,7 @@ export const useDeletePayment = (id: string | undefined) => {
       })
     },
     onSettled: async () => {
-      router.push("/admin/transactions")
+      router.push("/admin/records")
       router.refresh()
     },
     onError: (error) => clientErrorHandler(error),

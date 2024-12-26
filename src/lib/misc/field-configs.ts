@@ -59,6 +59,7 @@ export const registerFields: FieldConfig<RegisterValues>[] = [
 // update account form fields
 export const updateAccountFields = (
   isOnClient?: boolean,
+  userRole?: string,
 ): FieldConfig<UpdateAccountValues>[] => [
   {
     name: "name",
@@ -86,8 +87,14 @@ export const updateAccountFields = (
   },
   {
     name: "role",
-    type: "switch",
+    type: "select",
     label: "Role",
+    placeholder: "Select role",
+    options: [
+      { value: "client", label: "Client" },
+      { value: "agent", label: "Agent" },
+      ...(userRole === "admin" ? [{ value: "admin", label: "Admin" }] : []),
+    ],
     isOnClient,
   },
   {
@@ -473,6 +480,18 @@ export const updatePaymentFields = (
     placeholder: "Select a client",
     options: accounts
       .filter((account) => account.id !== undefined)
+      .map((account) => ({
+        value: account.name,
+        label: account.name,
+      })),
+  },
+  {
+    name: "agent",
+    type: "select",
+    label: "Select an Agent",
+    placeholder: "Select an Agent",
+    options: accounts
+      .filter((account) => account.id !== undefined && account.role === "agent")
       .map((account) => ({
         value: account.name,
         label: account.name,

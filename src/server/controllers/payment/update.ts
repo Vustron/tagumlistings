@@ -32,13 +32,22 @@ export async function updatePaymentController(request: NextRequest) {
     const updatePaymentBody =
       await requestBodyHandler<UpdatePaymentValues>(request)
 
-    const { id, property, user, appointment, amount, paid_date, status } =
-      updatePaymentBody
+    const {
+      id,
+      property,
+      user,
+      agent,
+      appointment,
+      amount,
+      paid_date,
+      status,
+    } = updatePaymentBody
 
     const requiredFields: (keyof typeof updatePaymentBody)[] = [
       "id",
       "property",
       "user",
+      "agent",
       "appointment",
       "amount",
       "paid_date",
@@ -53,6 +62,7 @@ export async function updatePaymentController(request: NextRequest) {
     await updateDoc(paymentRef, {
       property,
       user,
+      agent,
       appointment,
       amount,
       paid_date,

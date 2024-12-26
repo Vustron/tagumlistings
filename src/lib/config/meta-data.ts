@@ -16,24 +16,24 @@ export const siteConfig: SiteConfig = {
   meta: {
     metadataBase: new URL(getBaseUrl()),
     title: {
-      template: "%s | TagumListings",
-      default: "TagumListings",
+      template: "%s | RMETagumListings",
+      default: "RMETagumListings",
     },
-    applicationName: "TagumListings",
+    applicationName: "RMETagumListings",
     description:
       "A web-based real estate brokenage appointment and reservation system for RME",
     openGraph: {
-      title: "TagumListings",
-      description: "Find your perfect home with TagumListings",
+      title: "RMETagumListings",
+      description: "Find your perfect home with RMETagumListings",
       url: "https://rmetagumlisting.vercel.app",
-      siteName: "TagumListings",
+      siteName: "RMETagumListings",
       locale: "en_US",
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: "R Metagum Listing",
-      description: "Find your perfect home with R Metagum Listing",
+      title: "RMETagumListings",
+      description: "Find your perfect home with RMETagumListings",
     },
     icons: [{ rel: "icon", url: "/icons/favicon.ico" }],
   },

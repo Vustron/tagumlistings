@@ -11,7 +11,7 @@ import { clientErrorHandler } from "@/lib/utils"
 import toast from "react-hot-toast"
 
 // hooks
-import { useUpdatePayment } from "@/lib/hooks/payment/update"
+import { useUpdatePayment } from "@/lib/hooks/payments/update"
 import { useForm } from "react-hook-form"
 
 // types
@@ -39,6 +39,7 @@ const UpdatePaymentForm = ({
       id: payment.id,
       property: payment.property,
       user: payment.user,
+      agent: payment?.agent!,
       appointment: payment.appointment,
       amount: payment.amount,
       paid_date: payment.paid_date,
@@ -49,8 +50,8 @@ const UpdatePaymentForm = ({
   // submit handler
   const submitHandler = async (values: UpdatePaymentValues) => {
     await toast.promise(updatePayment.mutateAsync(values), {
-      loading: <span className="animate-pulse">Updating transaction...</span>,
-      success: "Transaction updated",
+      loading: <span className="animate-pulse">Updating record...</span>,
+      success: "Record updated",
       error: (error: unknown) => clientErrorHandler(error),
     })
 

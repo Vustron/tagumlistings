@@ -7,18 +7,10 @@ import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
 
 // hooks
-import { useGetAppointments } from "@/lib/hooks/appointment/get-all"
-import { useGetPayments } from "@/lib/hooks/payment/get-all"
+import { useQueryReportData } from "@/lib/hooks/report/query-report"
 
 const ReportsClient = () => {
-  const { data: paymentsData } = useGetPayments()
-  const paymentsCount = paymentsData?.payments?.length || 0
-  const payments = paymentsData?.payments ?? []
-
-  const { data: appointmentsData } = useGetAppointments()
-  const appointmentsCount = appointmentsData?.appointments?.length || 0
-  const appointments = appointmentsData?.appointments ?? []
-  const totalReports = paymentsCount + appointmentsCount
+  const { payments, appointments, totalReports } = useQueryReportData()
 
   return (
     <FallbackBoundary>

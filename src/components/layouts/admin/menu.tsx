@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button"
 import { logout } from "@/lib/actions/auth/logout"
 
 // hooks
+import { useSession } from "@/components/providers/session"
 import { useRouter } from "next-nprogress-bar"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -34,7 +35,8 @@ interface MenuProps {
 const Menu = ({ isOpen }: MenuProps) => {
   const router = useRouter()
   const pathname = usePathname()
-  const menuList = getMenuList(pathname)
+  const session = useSession()
+  const menuList = getMenuList(pathname, session?.role)
   const [signOut, setIsSignOut] = useState(false)
 
   const handleLogout = async () => {
