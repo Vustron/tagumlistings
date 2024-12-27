@@ -1,8 +1,8 @@
 "use client"
 
 // components
-import Footer from "@/components/layouts/admin/footer"
-import Sidebar from "@/components/layouts/admin/sidebar"
+import Footer from "@/components/layouts/agent/footer"
+import Sidebar from "@/components/layouts/agent/sidebar"
 
 // utils
 import { cn } from "@/lib/utils"

@@ -2,7 +2,9 @@
 
 import { Button } from "@/components/ui/button"
 import { Bell } from "lucide-react"
+
 import { updateMessagesSeenStatus } from "@/lib/actions/messages/status"
+
 import { useMessageNotifications } from "@/lib/hooks/messages/notification"
 import { useSession } from "@/components/providers/session"
 import { useRouter } from "next-nprogress-bar"

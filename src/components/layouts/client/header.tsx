@@ -69,7 +69,9 @@ const ClientHeader = () => {
   }, [])
 
   const filteredNavLinks = navLinks.filter(
-    (link) => !link.requiresAuth || session?.loggedIn,
+    (link) =>
+      (!link.requiresAuth || session?.loggedIn) &&
+      (!link.requiresAuth || session?.role === "client"),
   )
 
   const handleContactClick = async () => {

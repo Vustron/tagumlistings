@@ -24,17 +24,17 @@ export default function MessageNotification() {
     if (unseenMessages.length > 0) {
       await updateMessagesSeenStatus(unseenMessages)
     }
-    if (session?.role === "admin") {
-      router.push("/admin/messages")
-      return
-    }
-    if (session?.role === "agent") {
-      router.push("/agent/messages")
-      return
-    }
-    router.push("/contact")
-  }
 
+    const routes = {
+      admin: "/admin/messages",
+      agent: "/agent/messages",
+      client: "/contact",
+    }
+
+    const redirectPath =
+      routes[session.role as keyof typeof routes] || "/contact"
+    router.push(redirectPath)
+  }
   return (
     <Button
       variant="ghost"

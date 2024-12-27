@@ -1,8 +1,8 @@
 // components
 import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
-import ContentLayout from "@/components/layouts/admin/content-layout"
-import ReportsClient from "@/components/admin/reports/client"
+import ContentLayout from "@/components/layouts/agent/content-layout"
+import ReportsClient from "@/components/agent/reports/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions

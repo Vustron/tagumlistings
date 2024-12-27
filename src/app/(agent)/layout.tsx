@@ -2,7 +2,7 @@
 import SessionProvider from "@/components/providers/session"
 
 // utils
-import SidePanel from "@/components/layouts/admin/side-panel"
+import SidePanel from "@/components/layouts/agent/side-panel"
 import { dataSerializer } from "@/lib/utils"
 
 // actions

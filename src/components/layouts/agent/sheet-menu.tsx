@@ -8,7 +8,7 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet"
 import VisuallyHiddenComponent from "@/components/ui/visually-hidden"
-import Menu from "@/components/layouts/admin/menu"
+import Menu from "@/components/layouts/agent/menu"
 import { Button } from "@/components/ui/button"
 import { MenuIcon } from "lucide-react"
 

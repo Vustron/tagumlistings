@@ -29,6 +29,8 @@ export const useLoginAccount = () => {
     onSuccess: (data) => {
       if (data.role === "admin") {
         router.push("/admin")
+      } else if (data.role === "agent") {
+        router.push("/agent")
       } else {
         router.push("/")
       }

@@ -1,6 +1,6 @@
 // components
 import SidebarToggle from "@/components/ui/sidebar-toggle"
-import Menu from "@/components/layouts/admin/menu"
+import Menu from "@/components/layouts/agent/menu"
 import { Button } from "@/components/ui/button"
 
 // assets

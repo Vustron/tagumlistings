@@ -2,7 +2,7 @@
 import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
 import AgentDashboardClient from "@/components/agent/dashboard/client"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
-import ContentLayout from "@/components/layouts/admin/content-layout"
+import ContentLayout from "@/components/layouts/agent/content-layout"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions

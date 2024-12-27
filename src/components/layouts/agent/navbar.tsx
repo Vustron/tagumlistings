@@ -1,8 +1,8 @@
 "use client"
 
 // components
-import MessageNotification from "@/components/layouts/admin/message-notification"
-import SheetMenu from "@/components/layouts/admin/sheet-menu"
+import MessageNotification from "@/components/layouts/agent/message-notification"
+import SheetMenu from "@/components/layouts/agent/sheet-menu"
 import UserButton from "@/components/shared/user-button"
 import ThemeToggle from "@/components/ui/theme-toggle"
 

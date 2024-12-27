@@ -1,7 +1,7 @@
 // components
-import AddPropertyClient from "@/components/admin/new-property/client"
 import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
-import ContentLayout from "@/components/layouts/admin/content-layout"
+import AddPropertyClient from "@/components/agent/new-property/client"
+import ContentLayout from "@/components/layouts/agent/content-layout"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 import BounceWrapper from "@/components/shared/bounce"
 

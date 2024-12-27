@@ -91,16 +91,13 @@ export default async function middleware(request: NextRequest) {
         }
       }
 
-      // Admin can access both admin and agent routes
       if (isAdminRoute && session.role !== "admin") {
-        return NextResponse.redirect(new URL("/", request.url))
+        return NextResponse.redirect(new URL("/agent", request.url))
       }
 
-      // Only agents can access agent routes (and admin from above condition)
       if (
         isAgentRoute &&
-        session.role !== "agent" &&
-        session.role !== "admin"
+        !(session.role === "agent" || session.role === "admin")
       ) {
         return NextResponse.redirect(new URL("/", request.url))
       }

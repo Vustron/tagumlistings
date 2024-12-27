@@ -1,7 +1,7 @@
 // components
 import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
-import AppointmentClient from "@/components/admin/appointment/client"
-import ContentLayout from "@/components/layouts/admin/content-layout"
+import AppointmentClient from "@/components/agent/appointment/client"
+import ContentLayout from "@/components/layouts/agent/content-layout"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 import BounceWrapper from "@/components/shared/bounce"
 
