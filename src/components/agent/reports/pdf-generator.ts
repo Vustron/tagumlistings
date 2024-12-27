@@ -8,8 +8,8 @@ import jsPDF from "jspdf"
 import type { ReportSummary } from "@/components/agent/reports/report-data"
 import type { Appointment, Payment } from "@/lib/types"
 
-const PRIMARY_COLOR: [ number, number, number ] = [ 34, 197, 94 ]
-const ACCENT_COLOR: [ number, number, number ] = [ 239, 246, 255 ]
+const PRIMARY_COLOR: [number, number, number] = [34, 197, 94]
+const ACCENT_COLOR: [number, number, number] = [239, 246, 255]
 
 const addSummarySection = (
   doc: jsPDF,
@@ -62,16 +62,16 @@ const addAppointmentsSection = (
   appointments: any[],
   title: string,
   yPos: number,
-  PRIMARY_COLOR: [ number, number, number ],
-  ACCENT_COLOR: [ number, number, number ],
+  PRIMARY_COLOR: [number, number, number],
+  ACCENT_COLOR: [number, number, number],
 ) => {
   doc.setFontSize(11)
   doc.setTextColor(...PRIMARY_COLOR)
   doc.text(title, 20, yPos)
 
   autoTable(doc, {
-    head: [ [ "User", "Description", "Status", "Date" ] ],
-    body: appointments.map((a) => [ a.user, a.description, a.status, a.date ]),
+    head: [["User", "Description", "Status", "Date"]],
+    body: appointments.map((a) => [a.user, a.description, a.status, a.date]),
     startY: yPos + 2,
     margin: { left: 25, right: 25 },
     styles: { fontSize: 10, cellPadding: 4 },
@@ -108,7 +108,7 @@ const addPaymentsSection = (
   doc.text("Payments", 20, yPos)
 
   autoTable(doc, {
-    head: [ [ "User", "Amount", "Date" ] ],
+    head: [["User", "Amount", "Date"]],
     body: payments.map((p) => [
       p.user,
       typeof p.amount === "string" ? p.amount : p.amount.toFixed(2),
