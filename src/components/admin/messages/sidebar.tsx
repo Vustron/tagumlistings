@@ -7,8 +7,11 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Search, X } from "lucide-react"
 
+import { updateMessagesSeenStatus } from "@/lib/actions/messages/status"
+
+import { useMessageNotifications } from "@/lib/hooks/messages/notification"
 import { useSession } from "@/components/providers/session"
-import { useRef, useMemo } from "react"
+import { useRef, useMemo, useCallback } from "react"
 
 import { motion, AnimatePresence } from "framer-motion"
 import { getInitials } from "@/lib/utils"
@@ -58,7 +61,15 @@ const Sidebar = ({
     )
   }, [filteredUsersByRole, searchQuery])
 
-  const handleUserSelect = (user: UserData) => {
+  const handleUserSelect = async (user: UserData) => {
+    const userUnseenMessages = unseenMessages.filter(
+      (msg) => msg.senderId === user.id,
+    )
+
+    if (userUnseenMessages.length > 0) {
+      await updateMessagesSeenStatus(userUnseenMessages)
+    }
+
     setSelectedUser(user)
     if (isMobile) {
       toggleSidebar()
@@ -82,6 +93,15 @@ const Sidebar = ({
         return "outline"
     }
   }
+
+  const { unseenMessages } = useMessageNotifications(session.id)
+
+  const getUnseenCount = useCallback(
+    (userId: string) => {
+      return unseenMessages.filter((msg) => msg.senderId === userId).length
+    },
+    [unseenMessages],
+  )
 
   return (
     <motion.aside
@@ -145,21 +165,28 @@ const Sidebar = ({
                   selectedUser?.id === user.id
                     ? "bg-accent/60 dark:text-white"
                     : "hover:bg-accent/30"
-                }`}
+                } relative`}
                 onClick={() => handleUserSelect(user)}
               >
-                <Avatar className="size-10 flex-shrink-0 truncate">
+                <Avatar className="size-10 flex-shrink-0">
                   <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
                 </Avatar>
                 <div className="ml-3 overflow-hidden flex-1">
                   <div className="flex items-center justify-between gap-2">
                     <p className="font-medium truncate">{user.name}</p>
-                    <Badge
-                      variant={getRoleBadgeVariant(user.role)}
-                      className="capitalize shrink-0"
-                    >
-                      {user.role}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      {getUnseenCount(user.id!) > 0 && (
+                        <span className="h-5 w-5 rounded-full bg-green-500 text-xs text-white flex items-center justify-center">
+                          {getUnseenCount(user.id!)}
+                        </span>
+                      )}
+                      <Badge
+                        variant={getRoleBadgeVariant(user.role)}
+                        className="capitalize shrink-0"
+                      >
+                        {user.role}
+                      </Badge>
+                    </div>
                   </div>
                   <p className="text-sm text-muted-foreground truncate">
                     {user.email}
