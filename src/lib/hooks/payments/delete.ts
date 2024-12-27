@@ -5,6 +5,7 @@ import { deletePayment } from "@/lib/actions/payment/delete"
 
 // hooks
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useSession } from "@/components/providers/session"
 import { useRouter } from "next-nprogress-bar"
 
 // utils
@@ -17,17 +18,18 @@ import type { Payments } from "@/lib/types"
 export const useDeletePayment = (id: string | undefined) => {
   const router = useRouter()
   const queryClient = useQueryClient()
+  const session = useSession()
 
   return useMutation({
-    mutationKey: ["delete-payment", id],
+    mutationKey: [ "delete-payment", id ],
     mutationFn: async () => await deletePayment(id!),
     onSuccess: async (deletedId: string) => {
       const queryFilter: QueryFilters = {
-        queryKey: ["payments"],
+        queryKey: [ "payments" ],
       }
 
       await queryClient.cancelQueries(queryFilter)
-      queryClient.setQueryData<Payments>(["payments"], (oldData) => {
+      queryClient.setQueryData<Payments>([ "payments" ], (oldData) => {
         if (!oldData) return undefined
 
         return {
@@ -39,6 +41,10 @@ export const useDeletePayment = (id: string | undefined) => {
       })
     },
     onSettled: async () => {
+      if (session.role === "agent") {
+        router.push("/agent/records")
+        router.refresh()
+      }
       router.push("/admin/records")
       router.refresh()
     },

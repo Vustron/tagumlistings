@@ -64,7 +64,7 @@ const CellActions = ({ data }: CellActionProps) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/admin/records/${data.id}`)}
+            onClick={() => router.push(`/agent/records/${data.id}`)}
           >
             <Edit className="mr-2 size-4" /> Update
           </DropdownMenuItem>

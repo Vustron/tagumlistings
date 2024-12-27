@@ -5,6 +5,7 @@ import { deleteProperty } from "@/lib/actions/property/delete"
 
 // hooks
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useSession } from "@/components/providers/session"
 import { useRouter } from "next-nprogress-bar"
 
 // utils
@@ -16,20 +17,19 @@ import type { Properties } from "@/lib/types"
 
 export const useDeleteProperty = (id: string | undefined) => {
   const router = useRouter()
-
-  // init query client
+  const session = useSession()
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationKey: ["delete-property", id],
+    mutationKey: [ "delete-property", id ],
     mutationFn: async () => await deleteProperty(id!),
     onSuccess: async () => {
       const queryFilter: QueryFilters = {
-        queryKey: ["properties"],
+        queryKey: [ "properties" ],
       }
 
       await queryClient.cancelQueries(queryFilter)
-      queryClient.setQueryData<Properties>(["properties"], (oldData) => {
+      queryClient.setQueryData<Properties>([ "properties" ], (oldData) => {
         if (!oldData) return undefined
 
         return {
@@ -41,6 +41,10 @@ export const useDeleteProperty = (id: string | undefined) => {
       })
     },
     onSettled: async () => {
+      if (session.role === "agent") {
+        router.push("/agent/properties")
+        router.refresh()
+      }
       router.push("/admin/properties")
       router.refresh()
     },

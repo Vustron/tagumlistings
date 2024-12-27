@@ -2,6 +2,7 @@
 
 // hooks
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useSession } from "@/components/providers/session"
 import { useRouter } from "next-nprogress-bar"
 
 // actions
@@ -22,9 +23,10 @@ const purify = DOMPurify
 export const useCreateProperty = () => {
   const queryClient = useQueryClient()
   const router = useRouter()
+  const session = useSession()
 
   return useMutation({
-    mutationKey: ["create-property"],
+    mutationKey: [ "create-property" ],
     mutationFn: async (values: AddPropertyValues) => {
       const sanitizedData = sanitizer<AddPropertyValues>(
         values,
@@ -35,21 +37,25 @@ export const useCreateProperty = () => {
     },
     onSuccess: async (newProperty) => {
       const queryFilter: QueryFilters = {
-        queryKey: ["properties"],
+        queryKey: [ "properties" ],
       }
 
       await queryClient.cancelQueries(queryFilter)
-      queryClient.setQueryData<Properties>(["properties"], (oldData) => {
+      queryClient.setQueryData<Properties>([ "properties" ], (oldData) => {
         if (!oldData) {
-          return { properties: [newProperty] }
+          return { properties: [ newProperty ] }
         }
         return {
           ...oldData,
-          properties: [...oldData.properties, newProperty],
+          properties: [ ...oldData.properties, newProperty ],
         }
       })
     },
     onSettled: () => {
+      if (session.role === "agent") {
+        router.push("/agent/properties")
+        router.refresh()
+      }
       router.push("/admin/properties")
       router.refresh()
     },

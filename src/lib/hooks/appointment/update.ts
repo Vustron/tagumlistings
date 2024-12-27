@@ -2,6 +2,7 @@
 
 // hooks
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useSession } from '@/components/providers/session'
 import { useRouter } from "next-nprogress-bar"
 
 // actions
@@ -17,14 +18,16 @@ import type { UpdateAppointmentValues } from "@/lib/validation"
 import type { Appointments, Appointment } from "@/lib/types"
 import type { QueryFilters } from "@tanstack/react-query"
 
+
 const purify = DOMPurify
 
 export const useUpdateAppointment = (id?: string) => {
   const queryClient = useQueryClient()
   const router = useRouter()
+  const session = useSession()
 
   return useMutation({
-    mutationKey: ["update-appointment", id],
+    mutationKey: [ "update-appointment", id ],
     mutationFn: async (values: UpdateAppointmentValues) => {
       const sanitizedData = sanitizer<UpdateAppointmentValues>(
         values,
@@ -35,26 +38,26 @@ export const useUpdateAppointment = (id?: string) => {
     },
     onSuccess: async (updatedAppointment) => {
       const appointmentQueryFilter: QueryFilters = {
-        queryKey: ["appointments", id],
+        queryKey: [ "appointments", id ],
       }
 
       const appointmentsQueryFilter: QueryFilters = {
-        queryKey: ["appointments"],
+        queryKey: [ "appointments" ],
       }
 
       await queryClient.cancelQueries(appointmentsQueryFilter)
       await queryClient.cancelQueries(appointmentQueryFilter)
 
       queryClient.setQueryData<Appointment>(
-        ["appointments", id],
+        [ "appointments", id ],
         (oldData) => ({
           ...oldData,
           ...updatedAppointment,
         }),
       )
 
-      queryClient.setQueryData<Appointments>(["appointments"], (oldData) => {
-        if (!oldData) return { appointments: [updatedAppointment] }
+      queryClient.setQueryData<Appointments>([ "appointments" ], (oldData) => {
+        if (!oldData) return { appointments: [ updatedAppointment ] }
         return {
           ...oldData,
           appointments: oldData.appointments.map((appointment) =>
@@ -62,6 +65,9 @@ export const useUpdateAppointment = (id?: string) => {
           ),
         }
       })
+      if (session.role === "agent") {
+        router.push("/agent/appointments")
+      }
       router.push("/admin/appointments")
     },
     onSettled: () => {
