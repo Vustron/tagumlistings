@@ -8,20 +8,18 @@ import { useCallback, useEffect, useState } from "react"
 // types
 import type { Message } from "@/lib/types"
 
-
-
 export function useMessageNotifications(userId: string) {
-  const [ unseenMessages, setUnseenMessages ] = useState<Message[]>([])
-  const [ unseenCount, setUnseenCount ] = useState(0)
+  const [unseenMessages, setUnseenMessages] = useState<Message[]>([])
+  const [unseenCount, setUnseenCount] = useState(0)
 
   const startListening = useCallback(() => {
     if (!userId) return
 
-    const messagesRef = collection(firestore, 'messages')
+    const messagesRef = collection(firestore, "messages")
     const unseenQuery = query(
       messagesRef,
-      where('receiverId', '==', userId),
-      where('seen', '==', false)
+      where("receiverId", "==", userId),
+      where("seen", "==", false),
     )
 
     const unsubscribe = onSnapshot(unseenQuery, (snapshot) => {
@@ -34,7 +32,7 @@ export function useMessageNotifications(userId: string) {
     })
 
     return unsubscribe
-  }, [ userId ])
+  }, [userId])
 
   useEffect(() => {
     const unsubscribe = startListening()
@@ -43,11 +41,11 @@ export function useMessageNotifications(userId: string) {
         unsubscribe()
       }
     }
-  }, [ startListening ])
+  }, [startListening])
 
   return {
     unseenMessages,
     unseenCount,
-    startListening
+    startListening,
   }
 }
