@@ -21,15 +21,15 @@ export const useDeletePayment = (id: string | undefined) => {
   const session = useSession()
 
   return useMutation({
-    mutationKey: [ "delete-payment", id ],
+    mutationKey: ["delete-payment", id],
     mutationFn: async () => await deletePayment(id!),
     onSuccess: async (deletedId: string) => {
       const queryFilter: QueryFilters = {
-        queryKey: [ "payments" ],
+        queryKey: ["payments"],
       }
 
       await queryClient.cancelQueries(queryFilter)
-      queryClient.setQueryData<Payments>([ "payments" ], (oldData) => {
+      queryClient.setQueryData<Payments>(["payments"], (oldData) => {
         if (!oldData) return undefined
 
         return {

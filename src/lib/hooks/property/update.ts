@@ -26,7 +26,7 @@ export const useUpdateProperty = (idOrIds?: string | string[]) => {
   const session = useSession()
 
   return useMutation({
-    mutationKey: [ "update-property", idOrIds ],
+    mutationKey: ["update-property", idOrIds],
     mutationFn: async (
       values: UpdatePropertyValues | UpdatePropertyValues[],
     ) => {
@@ -37,11 +37,11 @@ export const useUpdateProperty = (idOrIds?: string | string[]) => {
     },
     onSuccess: async (updatedProperty) => {
       const propertyQueryFilter: QueryFilters = {
-        queryKey: [ "property", idOrIds ],
+        queryKey: ["property", idOrIds],
       }
 
       const accountsQueryFilter: QueryFilters = {
-        queryKey: [ "properties" ],
+        queryKey: ["properties"],
       }
 
       await queryClient.cancelQueries(accountsQueryFilter)
@@ -50,7 +50,7 @@ export const useUpdateProperty = (idOrIds?: string | string[]) => {
       if (Array.isArray(updatedProperty)) {
         for (const property of updatedProperty) {
           queryClient.setQueryData<Property>(
-            [ "property", property.id ],
+            ["property", property.id],
             (oldData) => ({
               ...oldData,
               ...property,
@@ -58,7 +58,7 @@ export const useUpdateProperty = (idOrIds?: string | string[]) => {
           )
         }
 
-        queryClient.setQueryData<Properties>([ "properties" ], (oldData) => {
+        queryClient.setQueryData<Properties>(["properties"], (oldData) => {
           if (!oldData) return { properties: updatedProperty }
           return {
             ...oldData,
@@ -71,15 +71,15 @@ export const useUpdateProperty = (idOrIds?: string | string[]) => {
       } else {
         // Single update
         queryClient.setQueryData<Property>(
-          [ "property", idOrIds ],
+          ["property", idOrIds],
           (oldData) => ({
             ...oldData,
             ...updatedProperty,
           }),
         )
 
-        queryClient.setQueryData<Properties>([ "properties" ], (oldData) => {
-          if (!oldData) return { properties: [ updatedProperty ] }
+        queryClient.setQueryData<Properties>(["properties"], (oldData) => {
+          if (!oldData) return { properties: [updatedProperty] }
           return {
             ...oldData,
             properties: oldData.properties.map((property) =>

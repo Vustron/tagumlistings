@@ -28,7 +28,7 @@ export const useUpdateAccount = (id?: string) => {
   const pathname = usePathname()
 
   return useMutation({
-    mutationKey: [ "update-account", id ],
+    mutationKey: ["update-account", id],
     mutationFn: async (values: UpdateAccountValues) => {
       const sanitizedData = sanitizer<UpdateAccountValues>(
         values,
@@ -41,12 +41,12 @@ export const useUpdateAccount = (id?: string) => {
       const session = await getSession()
 
       const accountQueryFilter: QueryFilters = {
-        queryKey: [ "account", id ],
+        queryKey: ["account", id],
       }
 
       if (id !== session.id) {
         const accountsQueryFilter: QueryFilters = {
-          queryKey: [ "accounts" ],
+          queryKey: ["accounts"],
         }
         await queryClient.cancelQueries(accountsQueryFilter)
 
@@ -58,14 +58,14 @@ export const useUpdateAccount = (id?: string) => {
       }
 
       await queryClient.cancelQueries(accountQueryFilter)
-      queryClient.setQueryData<SessionData>([ "account", id ], (oldData) => ({
+      queryClient.setQueryData<SessionData>(["account", id], (oldData) => ({
         ...oldData,
         ...updatedUser,
       }))
 
       if (id !== session.id) {
-        queryClient.setQueryData<Accounts>([ "accounts" ], (oldData) => {
-          if (!oldData) return { accounts: [ updatedUser ] }
+        queryClient.setQueryData<Accounts>(["accounts"], (oldData) => {
+          if (!oldData) return { accounts: [updatedUser] }
           return {
             ...oldData,
             accounts: oldData.accounts.map((account) =>

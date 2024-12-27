@@ -18,7 +18,6 @@ import type { UpdatePaymentValues } from "@/lib/validation"
 import type { QueryFilters } from "@tanstack/react-query"
 import type { Payment, Payments } from "@/lib/types"
 
-
 const purify = DOMPurify
 
 export const useUpdatePayment = (id?: string) => {
@@ -27,7 +26,7 @@ export const useUpdatePayment = (id?: string) => {
   const session = useSession()
 
   return useMutation({
-    mutationKey: [ "update-payment", id ],
+    mutationKey: ["update-payment", id],
     mutationFn: async (values: UpdatePaymentValues) => {
       const sanitizedData = sanitizer<UpdatePaymentValues>(
         values,
@@ -38,23 +37,23 @@ export const useUpdatePayment = (id?: string) => {
     },
     onSuccess: async (updatedPayment) => {
       const paymentQueryFilter: QueryFilters = {
-        queryKey: [ "payment", id ],
+        queryKey: ["payment", id],
       }
 
       const paymentsQueryFilter: QueryFilters = {
-        queryKey: [ "payments" ],
+        queryKey: ["payments"],
       }
 
       await queryClient.cancelQueries(paymentsQueryFilter)
       await queryClient.cancelQueries(paymentQueryFilter)
 
-      queryClient.setQueryData<Payment>([ "payment", id ], (oldData) => ({
+      queryClient.setQueryData<Payment>(["payment", id], (oldData) => ({
         ...oldData,
         ...updatedPayment,
       }))
 
-      queryClient.setQueryData<Payments>([ "payments" ], (oldData) => {
-        if (!oldData) return { payments: [ updatedPayment ] }
+      queryClient.setQueryData<Payments>(["payments"], (oldData) => {
+        if (!oldData) return { payments: [updatedPayment] }
         return {
           ...oldData,
           payments: oldData.payments.map((payment) =>

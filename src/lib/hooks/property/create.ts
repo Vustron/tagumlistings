@@ -26,7 +26,7 @@ export const useCreateProperty = () => {
   const session = useSession()
 
   return useMutation({
-    mutationKey: [ "create-property" ],
+    mutationKey: ["create-property"],
     mutationFn: async (values: AddPropertyValues) => {
       const sanitizedData = sanitizer<AddPropertyValues>(
         values,
@@ -37,17 +37,17 @@ export const useCreateProperty = () => {
     },
     onSuccess: async (newProperty) => {
       const queryFilter: QueryFilters = {
-        queryKey: [ "properties" ],
+        queryKey: ["properties"],
       }
 
       await queryClient.cancelQueries(queryFilter)
-      queryClient.setQueryData<Properties>([ "properties" ], (oldData) => {
+      queryClient.setQueryData<Properties>(["properties"], (oldData) => {
         if (!oldData) {
-          return { properties: [ newProperty ] }
+          return { properties: [newProperty] }
         }
         return {
           ...oldData,
-          properties: [ ...oldData.properties, newProperty ],
+          properties: [...oldData.properties, newProperty],
         }
       })
     },

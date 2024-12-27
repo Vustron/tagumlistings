@@ -26,7 +26,7 @@ export const useCreatePayment = () => {
   const session = useSession()
 
   return useMutation({
-    mutationKey: [ "create-payment" ],
+    mutationKey: ["create-payment"],
     mutationFn: async (values: AddPaymentValues) => {
       const sanitizedData = sanitizer<AddPaymentValues>(
         values,
@@ -37,17 +37,17 @@ export const useCreatePayment = () => {
     },
     onSuccess: async (newPayment) => {
       const queryFilter: QueryFilters = {
-        queryKey: [ "payments" ],
+        queryKey: ["payments"],
       }
 
       await queryClient.cancelQueries(queryFilter)
-      queryClient.setQueryData<Payments>([ "payments" ], (oldData) => {
+      queryClient.setQueryData<Payments>(["payments"], (oldData) => {
         if (!oldData) {
-          return { payments: [ newPayment ] }
+          return { payments: [newPayment] }
         }
         return {
           ...oldData,
-          payments: [ ...oldData.payments, newPayment ],
+          payments: [...oldData.payments, newPayment],
         }
       })
     },

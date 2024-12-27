@@ -21,15 +21,15 @@ export const useDeleteProperty = (id: string | undefined) => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationKey: [ "delete-property", id ],
+    mutationKey: ["delete-property", id],
     mutationFn: async () => await deleteProperty(id!),
     onSuccess: async () => {
       const queryFilter: QueryFilters = {
-        queryKey: [ "properties" ],
+        queryKey: ["properties"],
       }
 
       await queryClient.cancelQueries(queryFilter)
-      queryClient.setQueryData<Properties>([ "properties" ], (oldData) => {
+      queryClient.setQueryData<Properties>(["properties"], (oldData) => {
         if (!oldData) return undefined
 
         return {
