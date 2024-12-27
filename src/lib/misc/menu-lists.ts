@@ -32,39 +32,41 @@ type Group = {
 }
 
 export function getMenuList(pathname: string, role?: string): Group[] {
+  const baseRoute = role === "agent" ? "/agent" : "/admin"
+
   const contentMenus: Menu[] = [
     {
-      href: "/admin",
+      href: baseRoute,
       label: "Dashboard",
-      active: pathname === "/admin",
+      active: pathname === baseRoute,
       icon: LayoutGrid,
       submenus: [],
     },
     {
-      href: "/admin/appointments",
+      href: `${baseRoute}/appointments`,
       label: "Appointments",
-      active: pathname.includes("/admin/appointments"),
+      active: pathname.includes(`${baseRoute}/appointments`),
       icon: ClipboardPen,
       submenus: [],
     },
     {
-      href: "/admin/properties",
+      href: `${baseRoute}/properties`,
       label: "Properties",
-      active: pathname.includes("/admin/properties"),
+      active: pathname.includes(`${baseRoute}/properties`),
       icon: LandPlot,
       submenus: [],
     },
     {
-      href: "/admin/records",
+      href: `${baseRoute}/records`,
       label: "Records",
-      active: pathname.includes("/admin/records"),
+      active: pathname.includes(`${baseRoute}/records`),
       icon: LibraryBig,
       submenus: [],
     },
     {
-      href: "/admin/messages",
+      href: `${baseRoute}/messages`,
       label: "Messages",
-      active: pathname.includes("/admin/messages"),
+      active: pathname.includes(`${baseRoute}/messages`),
       icon: MessageSquareText,
       submenus: [],
     },
@@ -72,20 +74,19 @@ export function getMenuList(pathname: string, role?: string): Group[] {
 
   const settingsMenus: Menu[] = [
     {
-      href: "/admin/account",
+      href: `${baseRoute}/account`,
       label: "Account",
-      active: pathname.includes("/admin/account"),
+      active: pathname.includes(`${baseRoute}/account`),
       icon: Settings,
       submenus: [],
     },
   ]
 
-  // Only add Users menu for admin role
   if (role === "admin") {
     settingsMenus.unshift({
-      href: "/admin/users",
+      href: `${baseRoute}/users`,
       label: "Users",
-      active: pathname.includes("/admin/users"),
+      active: pathname.includes(`${baseRoute}/users`),
       icon: Users,
       submenus: [],
     })

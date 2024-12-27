@@ -1,12 +1,12 @@
 "use client"
 
 // components
-import CalendarControls from "@/components/admin/appointments/controls"
-import AppointmentsView from "@/components/admin/appointments/view"
-import EventItem from "@/components/admin/appointments/event-item"
-import MonthView from "@/components/admin/appointments/month"
-import WeekView from "@/components/admin/appointments/week"
-import DayView from "@/components/admin/appointments/day"
+import CalendarControls from "@/components/agent/appointments/controls"
+import AppointmentsView from "@/components/agent/appointments/view"
+import EventItem from "@/components/agent/appointments/event-item"
+import MonthView from "@/components/agent/appointments/month"
+import WeekView from "@/components/agent/appointments/week"
+import DayView from "@/components/agent/appointments/day"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Card } from "@/components/ui/card"
 

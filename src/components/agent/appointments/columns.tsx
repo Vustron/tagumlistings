@@ -1,7 +1,7 @@
 "use client"
 
 // components
-import CellActions from "@/components/admin/appointments/cell-actions"
+import CellActions from "@/components/agent/appointments/cell-actions"
 
 // utils
 import { format } from "date-fns/format"

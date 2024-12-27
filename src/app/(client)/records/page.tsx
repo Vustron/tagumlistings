@@ -1,5 +1,5 @@
 // components
-import PaymentsClient from "@/components/client/payments/client"
+import RecordsClient from "@/components/client/records/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // types
@@ -7,14 +7,14 @@ import type { Metadata } from "next"
 
 // meta data
 export const metadata: Metadata = {
-  title: "Payments",
+  title: "Records",
 }
 
-export default function ClientPaymentsPage() {
+export default function ClientRecordsPage() {
   return (
     <div className="container p-10">
       <BounceWrapper>
-        <PaymentsClient />
+        <RecordsClient />
       </BounceWrapper>
     </div>
   )

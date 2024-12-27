@@ -21,20 +21,31 @@ const protectedRoutes: string[] = [
   "/admin/appointments/*",
   "/admin/properties",
   "/admin/properties/*",
-  "/admin/payments",
-  "/admin/payments/*",
+  "/admin/records",
+  "/admin/records/*",
   "/admin/messages",
   "/admin/users",
   "/admin/users/*",
   "/admin/account",
+  "/agent",
+  "/agent/appointments",
+  "/agent/appointments/*",
+  "/agent/properties",
+  "/agent/properties/*",
+  "/agent/records",
+  "/agent/records/*",
+  "/agent/messages",
+  "/agent/users",
+  "/agent/users/*",
+  "/agent/account",
 ]
 
 const protectedClientRoutes: string[] = [
   "/contact",
   "/appointments",
-  "/new-payment",
+  "/records/*",
   "/reserved",
-  "/payments",
+  "/records",
 ]
 
 /**
@@ -42,7 +53,7 @@ const protectedClientRoutes: string[] = [
  * @type {string[]}
  */
 
-const authRoutes: string[] = ["/login", "/register"]
+const authRoutes: string[] = [ "/login", "/register" ]
 
 export default async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
@@ -54,14 +65,11 @@ export default async function middleware(request: NextRequest) {
   const isProtectedClientRoute = protectedClientRoutes.includes(path)
   const isAuthRoute = authRoutes.includes(path)
   const isAdminRoute = path.startsWith("/admin")
+  const isAgentRoute = path.startsWith("/agent")
 
   try {
     const response = NextResponse.next()
-    const session = await getIronSession<SessionData>(
-      request,
-      response,
-      sessionOptions,
-    )
+    const session = await getIronSession<SessionData>(request, response, sessionOptions)
 
     if (!session.loggedIn && (isProtectedRoute || isProtectedClientRoute)) {
       return NextResponse.redirect(new URL("/login", request.url))
@@ -69,16 +77,23 @@ export default async function middleware(request: NextRequest) {
 
     if (session.loggedIn) {
       if (isAuthRoute) {
-        if (session.role === "admin" || session.role === "agent") {
-          return NextResponse.redirect(new URL("/admin", request.url))
+        switch (session.role) {
+          case "admin":
+            return NextResponse.redirect(new URL("/admin", request.url))
+          case "agent":
+            return NextResponse.redirect(new URL("/agent", request.url))
+          default:
+            return NextResponse.redirect(new URL("/", request.url))
         }
+      }
+
+      // Admin can access both admin and agent routes
+      if (isAdminRoute && session.role !== "admin") {
         return NextResponse.redirect(new URL("/", request.url))
       }
 
-      if (
-        isAdminRoute &&
-        !(session.role === "admin" || session.role === "agent")
-      ) {
+      // Only agents can access agent routes (and admin from above condition)
+      if (isAgentRoute && session.role !== "agent" && session.role !== "admin") {
         return NextResponse.redirect(new URL("/", request.url))
       }
     }
@@ -92,5 +107,5 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: [ "/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)" ],
 }

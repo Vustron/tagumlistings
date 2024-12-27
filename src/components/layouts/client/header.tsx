@@ -44,7 +44,7 @@ const navLinks: NavLink[] = [
   { href: "/properties", label: "Properties", requiresAuth: false },
   { href: "/search", label: "Search", requiresAuth: false },
   { href: "/contact", label: "Contact", requiresAuth: true },
-  { href: "/payments", label: "Payments", requiresAuth: true },
+  { href: "/records", label: "Records", requiresAuth: true },
   { href: "/appointments", label: "Appointments", requiresAuth: true },
   { href: "/account", label: "Account", requiresAuth: true },
 ]
