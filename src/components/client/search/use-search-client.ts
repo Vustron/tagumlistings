@@ -13,7 +13,7 @@ export const useSearchClient = () => {
   const currentPage = Number(searchParams.get("page")) || 1
   const itemsPerPage = 9
   const query = searchParams.get("query") || ""
-  const [showSoldProperties, setShowSoldProperties] = useState(false)
+  const [showReservedProperties, setShowReservedProperties] = useState(false)
 
   const initialFilters: Partial<Filter> = {
     category: searchParams.get("category") || "",
@@ -40,7 +40,10 @@ export const useSearchClient = () => {
     return data.properties.filter((property: Property) => {
       if (!property) return false
 
-      if (!showSoldProperties && property.status?.toLowerCase() === "sold") {
+      if (
+        !showReservedProperties &&
+        property.status?.toLowerCase() === "reserved"
+      ) {
         return false
       }
 
@@ -58,7 +61,7 @@ export const useSearchClient = () => {
 
       return matchesCategory && matchesLocation && matchesStatus
     })
-  }, [data?.properties, filters, showSoldProperties])
+  }, [data?.properties, filters, showReservedProperties])
 
   const totalCount = filteredProperties.length
   const totalPages = Math.ceil(totalCount / itemsPerPage)
@@ -110,13 +113,12 @@ export const useSearchClient = () => {
     router.push("/search")
   }
 
-  // Extract unique categories from properties
   const categories = useMemo(() => {
     if (!data?.properties) return []
     const uniqueCategories = new Set(
       data.properties
         .map((property: Property) => property.category)
-        .filter(Boolean), // Remove null/undefined values
+        .filter(Boolean),
     )
     return Array.from(uniqueCategories)
   }, [data?.properties])
@@ -127,8 +129,8 @@ export const useSearchClient = () => {
     setFilters,
     handleFilterChange,
     clearFilters,
-    showSoldProperties,
-    setShowSoldProperties,
+    showReservedProperties,
+    setShowReservedProperties,
     isLoading,
     displayProperties,
     totalCount,

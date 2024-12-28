@@ -25,8 +25,8 @@ const SearchClient = () => {
     setFilters,
     handleFilterChange,
     clearFilters,
-    showSoldProperties,
-    setShowSoldProperties,
+    showReservedProperties,
+    setShowReservedProperties,
     isLoading,
     displayProperties,
     totalCount,
@@ -92,12 +92,16 @@ const SearchClient = () => {
               transition={{ duration: 0.5 }}
             >
               <Button
-                onClick={() => setShowSoldProperties(!showSoldProperties)}
-                variant={showSoldProperties ? "default" : "outline"}
+                onClick={() =>
+                  setShowReservedProperties(!showReservedProperties)
+                }
+                variant={showReservedProperties ? "default" : "outline"}
                 className="flex items-center gap-2 bg-green-500 hover:bg-green-400 dark:bg-black dark:hover:bg-green-400 text-white"
               >
                 <FilterX className="size-4" />
-                {showSoldProperties ? "Show All" : "Hide Sold Properties"}
+                {showReservedProperties
+                  ? "Show All"
+                  : "Hide Reserved Properties"}
               </Button>
             </motion.div>
           </div>
@@ -132,10 +136,10 @@ const SearchClient = () => {
                 >
                   <FilterX className="size-12 mb-2" />
                   <p className="text-lg font-medium">No properties found</p>
-                  {!showSoldProperties && (
+                  {!showReservedProperties && (
                     <Button
                       variant="outline"
-                      onClick={() => setShowSoldProperties(true)}
+                      onClick={() => setShowReservedProperties(true)}
                       className="mt-2"
                     >
                       Show All Properties
