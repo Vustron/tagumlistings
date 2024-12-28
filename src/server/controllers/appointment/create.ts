@@ -75,6 +75,7 @@ export async function createAppointmentController(request: NextRequest) {
 
     const appointmentData = {
       user,
+      agent: session.name,
       date,
       description,
       color,

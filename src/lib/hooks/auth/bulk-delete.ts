@@ -79,7 +79,6 @@ export const useDeleteAccounts = () => {
         },
       )
     },
-
     onSettled: () => {
       router.refresh()
     },

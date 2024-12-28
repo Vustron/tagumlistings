@@ -12,7 +12,7 @@ export function useQueryAccounts() {
   const session = useSession()
 
   const query = useQuery({
-    queryKey: ["profile", session.id],
+    queryKey: ["profile"],
     queryFn: async () => {
       const [accountRes, accountsRes] = await Promise.all([
         getAccount(session.id),

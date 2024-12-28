@@ -85,7 +85,7 @@ export const updateAccountFields = (
     label: "Email address",
     placeholder: "john@test.com",
   },
-  ...(!isOnClient
+  ...(!isOnClient && userRole === "admin"
     ? [
         {
           name: "role" as const,
@@ -95,9 +95,7 @@ export const updateAccountFields = (
           options: [
             { value: "client", label: "Client" },
             { value: "agent", label: "Agent" },
-            ...(userRole === "admin"
-              ? [{ value: "admin", label: "Admin" }]
-              : []),
+            { value: "admin", label: "Admin" },
           ],
         },
       ]
@@ -372,7 +370,9 @@ export const updateAppointmentFields = (
     label: "Select a Client",
     placeholder: "Select a client",
     options: accounts
-      .filter((account) => account.id !== undefined)
+      .filter(
+        (account) => account.id !== undefined && account.role === "client",
+      )
       .map((account) => ({
         value: account.name || "",
         label: account.name,
@@ -435,7 +435,9 @@ export const addPaymentFields = (
       label: "Select a client",
       placeholder: "Select a client",
       options: accounts
-        .filter((account) => account.id !== undefined)
+        .filter(
+          (account) => account.id !== undefined && account.role === "client",
+        )
         .map((account) => ({
           value: account.name,
           label: account.name,
@@ -484,7 +486,9 @@ export const updatePaymentFields = (
     label: "Select a Client",
     placeholder: "Select a client",
     options: accounts
-      .filter((account) => account.id !== undefined)
+      .filter(
+        (account) => account.id !== undefined && account.role === "client",
+      )
       .map((account) => ({
         value: account.name,
         label: account.name,

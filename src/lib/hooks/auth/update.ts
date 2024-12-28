@@ -77,6 +77,16 @@ export const useUpdateAccount = (id?: string) => {
       if (session.role === "agent") {
         router.push("/agent/account")
       }
+      if (session.role === "admin") {
+        router.push("/admin/account")
+        router.refresh()
+        return
+      }
+      if (session.role === "client") {
+        router.push("/account")
+        router.refresh()
+        return
+      }
     },
     onSettled: () => {
       router.refresh()

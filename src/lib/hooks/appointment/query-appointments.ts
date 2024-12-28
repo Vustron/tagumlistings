@@ -5,7 +5,7 @@ import { getAppointments } from "@/lib/actions/appointment/get-all"
 
 export const useQueryAppointments = () => {
   const { data: appointmentsData } = useSuspenseQuery({
-    queryKey: ["appointments-data"],
+    queryKey: ["appointments"],
     queryFn: async () => {
       const [appointments, appointmentDates] = await Promise.all([
         getAppointments(),

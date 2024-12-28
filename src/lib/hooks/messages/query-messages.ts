@@ -1,9 +1,11 @@
 "use client"
 
 import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query"
-import { getAccounts } from "@/lib/actions/auth/get-all"
+
 import { collection, onSnapshot } from "firebase/firestore"
+import { getAccounts } from "@/lib/actions/auth/get-all"
 import { firestore } from "@/lib/config/firebase"
+
 import { clientErrorHandler } from "@/lib/utils"
 
 import type { Message, Accounts } from "@/lib/types"

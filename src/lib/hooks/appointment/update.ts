@@ -37,7 +37,7 @@ export const useUpdateAppointment = (id?: string) => {
     },
     onSuccess: async (updatedAppointment) => {
       const appointmentQueryFilter: QueryFilters = {
-        queryKey: ["appointments", id],
+        queryKey: ["appointment", id],
       }
 
       const appointmentsQueryFilter: QueryFilters = {
@@ -47,13 +47,10 @@ export const useUpdateAppointment = (id?: string) => {
       await queryClient.cancelQueries(appointmentsQueryFilter)
       await queryClient.cancelQueries(appointmentQueryFilter)
 
-      queryClient.setQueryData<Appointment>(
-        ["appointments", id],
-        (oldData) => ({
-          ...oldData,
-          ...updatedAppointment,
-        }),
-      )
+      queryClient.setQueryData<Appointment>(["appointment", id], (oldData) => ({
+        ...oldData,
+        ...updatedAppointment,
+      }))
 
       queryClient.setQueryData<Appointments>(["appointments"], (oldData) => {
         if (!oldData) return { appointments: [updatedAppointment] }
@@ -64,12 +61,23 @@ export const useUpdateAppointment = (id?: string) => {
           ),
         }
       })
-      if (session.role === "agent") {
-        router.push("/agent/appointments")
-      }
-      router.push("/admin/appointments")
     },
     onSettled: () => {
+      if (session.role === "admin") {
+        // router.push("/admin/appointments")
+        router.refresh()
+        return
+      }
+      if (session.role === "agent") {
+        // router.push("/agent/appointments")
+        router.refresh()
+        return
+      }
+      if (session.role === "client") {
+        // router.push("/appointments")
+        router.refresh()
+        return
+      }
       router.refresh()
     },
     onError: (error) => clientErrorHandler(error),

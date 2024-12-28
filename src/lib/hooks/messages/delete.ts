@@ -2,6 +2,7 @@
 
 // hooks
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useRouter } from "next-nprogress-bar"
 
 // actions
 import { deleteMessage } from "@/lib/actions/messages/delete"
@@ -15,6 +16,7 @@ import type { Messages } from "@/lib/types"
 
 export const useDeleteMessage = () => {
   const queryClient = useQueryClient()
+  const router = useRouter()
 
   return useMutation({
     mutationKey: ["delete-message"],
@@ -40,8 +42,7 @@ export const useDeleteMessage = () => {
       })
     },
     onSettled: () => {
-      // router.push("/admin/messages")
-      // router.refresh()
+      router.refresh()
     },
     onError: (error) => clientErrorHandler(error),
   })

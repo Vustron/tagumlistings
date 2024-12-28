@@ -69,7 +69,6 @@ export const useUpdateProperty = (idOrIds?: string | string[]) => {
           }
         })
       } else {
-        // Single update
         queryClient.setQueryData<Property>(
           ["property", idOrIds],
           (oldData) => ({
@@ -88,14 +87,23 @@ export const useUpdateProperty = (idOrIds?: string | string[]) => {
           }
         })
       }
+    },
+    onSettled: () => {
+      if (session.role === "admin") {
+        router.push("/admin/properties")
+        router.refresh()
+        return
+      }
       if (session.role === "agent") {
         router.push("/agent/properties")
         router.refresh()
+        return
       }
-      router.push("/admin/properties")
-      router.refresh()
-    },
-    onSettled: () => {
+      if (session.role === "client") {
+        router.push("/properties")
+        router.refresh()
+        return
+      }
       router.refresh()
     },
     onError: (error) => clientErrorHandler(error),

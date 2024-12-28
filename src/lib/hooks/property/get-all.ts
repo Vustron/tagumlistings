@@ -22,7 +22,6 @@ export function useGetProperties(
   params: GetPropertiesParams,
 ): ReturnType<typeof useSuspenseQuery<Properties, Error>>
 export function useGetProperties(params?: GetPropertiesParams) {
-  // For pagination, we need to ensure page is at least 1 if provided
   const queryParams = params
     ? {
         page: params.page && params.page > 0 ? params.page : 1,

@@ -5,16 +5,18 @@ import AppointmentCalendar from "@/components/agent/appointments/calendar"
 import FallbackBoundary from "@/components/shared/fallback-boundary"
 
 // Hooks
-import { useQueryAppointments } from "@/lib/hooks/appointment/query-appointments"
+import { useGetAppointmentDates } from "@/lib/hooks/appointment/get-dates"
+import { useGetAppointments } from "@/lib/hooks/appointment/get-all"
 import { useSession } from "@/components/providers/session"
 import { useMemo } from "react"
 
 const AppointmentsClient = () => {
   const session = useSession()
-  const { appointments, appointmentDates } = useQueryAppointments()
+  const { data: appointments } = useGetAppointments()
+  const { data: appointmentDates } = useGetAppointmentDates()
 
   const filteredAppointments = useMemo(() => {
-    return appointments.filter(
+    return appointments.appointments.filter(
       (appointment) => appointment.agent === session.name,
     )
   }, [appointments, session.name])
@@ -24,7 +26,7 @@ const AppointmentsClient = () => {
       <FallbackBoundary>
         <AppointmentCalendar
           events={filteredAppointments}
-          appointmentDates={appointmentDates}
+          appointmentDates={appointmentDates.dates}
         />
       </FallbackBoundary>
     </div>

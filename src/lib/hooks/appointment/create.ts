@@ -52,11 +52,22 @@ export const useCreateAppointment = () => {
       })
     },
     onSettled: () => {
-      if (session.role !== "admin") {
-        return router.push("/contact")
+      if (session.role === "admin") {
+        router.push("/admin/appointments")
+        router.refresh()
+        return
       }
-      router.push("/admin/properties")
-      // router.refresh()
+      if (session.role === "agent") {
+        router.push("/agent/appointments")
+        router.refresh()
+        return
+      }
+      if (session.role === "client") {
+        router.push("/contact")
+        router.refresh()
+        return
+      }
+      router.refresh()
     },
     onError: (error) => clientErrorHandler(error),
   })

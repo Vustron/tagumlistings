@@ -52,11 +52,21 @@ export const useCreateProperty = () => {
       })
     },
     onSettled: () => {
+      if (session.role === "admin") {
+        router.push("/admin/properties")
+        router.refresh()
+        return
+      }
       if (session.role === "agent") {
         router.push("/agent/properties")
         router.refresh()
+        return
       }
-      router.push("/admin/properties")
+      if (session.role === "client") {
+        router.push("/properties")
+        router.refresh()
+        return
+      }
       router.refresh()
     },
     onError: (error) => clientErrorHandler(error),

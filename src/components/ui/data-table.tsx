@@ -28,6 +28,7 @@ import CreateUserModal from "@/components/admin/users/create-user"
 import { Button } from "@/components/ui/button"
 
 // hooks
+import { useSession } from "@/components/providers/session"
 import { useConfirm } from "@/lib/hooks/utils/use-confirm"
 import { useReactTable } from "@tanstack/react-table"
 import { useRouter } from "next-nprogress-bar"
@@ -83,6 +84,7 @@ export default function DataTable<TData, TValue>({
   isOnClient,
   placeholder,
 }: DataTableProps<TData, TValue>) {
+  const session = useSession()
   const router = useRouter()
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure?",
@@ -187,7 +189,13 @@ export default function DataTable<TData, TValue>({
                 variant="outline"
                 size="sm"
                 className="shadow-sm"
-                onClick={() => router.push("/admin/properties/new")}
+                onClick={() => {
+                  if (session.role === "admin") {
+                    router.push("/admin/properties/new")
+                  } else {
+                    router.push("/agent/properties/new")
+                  }
+                }}
               >
                 <PlusIcon className="mr-2 size-4" aria-hidden="true" />
                 New Property

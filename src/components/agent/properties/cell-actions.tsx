@@ -7,6 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
   DropdownMenuContent,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import CreateAppointmentDialog from "@/components/agent/appointments/create"
 import { Coins, Edit, MoreHorizontal, PlusIcon, Trash } from "lucide-react"
@@ -87,6 +88,7 @@ const CellActions = ({ data }: CellActionProps) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() =>
               router.push(
@@ -96,15 +98,15 @@ const CellActions = ({ data }: CellActionProps) => {
               )
             }
           >
-            <Coins className="mr-2 size-4" /> Add payment
+            <Coins className="mr-2 size-4" /> Add record
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => setIsCreateAppointmentDialogOpen(true)}
           >
             <PlusIcon className="mr-2 size-4" aria-hidden="true" />
-            Add Appointment
+            Add booking
           </DropdownMenuItem>
-
+          <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => router.push(`/agent/properties/${data.id}`)}
           >

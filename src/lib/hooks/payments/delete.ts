@@ -41,11 +41,21 @@ export const useDeletePayment = (id: string | undefined) => {
       })
     },
     onSettled: async () => {
+      if (session.role === "admin") {
+        router.push("/admin/records")
+        router.refresh()
+        return
+      }
       if (session.role === "agent") {
         router.push("/agent/records")
         router.refresh()
+        return
       }
-      router.push("/admin/records")
+      if (session.role === "client") {
+        router.push("/records")
+        router.refresh()
+        return
+      }
       router.refresh()
     },
     onError: (error) => clientErrorHandler(error),

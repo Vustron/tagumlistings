@@ -7,8 +7,8 @@ import {
   collection,
   serverTimestamp,
 } from "firebase/firestore"
-import { rateLimit, handleErrorResponse } from "@/server/helpers"
 import { checkRequiredFields, requestBodyHandler } from "@/lib/utils"
+import { rateLimit, handleErrorResponse } from "@/server/helpers"
 import { NextResponse } from "next/server"
 
 // configs
@@ -39,13 +39,11 @@ export async function createPaymentController(request: NextRequest) {
     const createPaymentBody =
       await requestBodyHandler<AddPaymentValues>(request)
 
-    const { property, user, agent, appointment, amount, paid_date } =
-      createPaymentBody
+    const { property, user, appointment, amount, paid_date } = createPaymentBody
 
     const requiredFields: (keyof typeof createPaymentBody)[] = [
       "property",
       "user",
-      "agent",
       "appointment",
       "amount",
       "paid_date",
@@ -58,7 +56,7 @@ export async function createPaymentController(request: NextRequest) {
     const paymentData = {
       property,
       user,
-      agent,
+      agent: session.name,
       appointment,
       amount,
       paid_date,

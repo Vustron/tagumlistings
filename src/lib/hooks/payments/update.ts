@@ -61,14 +61,23 @@ export const useUpdatePayment = (id?: string) => {
           ),
         }
       })
+    },
+    onSettled: () => {
+      if (session.role === "admin") {
+        router.push("/admin/records")
+        router.refresh()
+        return
+      }
       if (session.role === "agent") {
         router.push("/agent/records")
         router.refresh()
+        return
       }
-      router.push("/admin/records")
-      router.refresh()
-    },
-    onSettled: () => {
+      if (session.role === "client") {
+        router.push("/records")
+        router.refresh()
+        return
+      }
       router.refresh()
     },
     onError: (error) => clientErrorHandler(error),

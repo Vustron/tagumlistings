@@ -2,6 +2,7 @@
 
 // hooks
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useRouter } from "next-nprogress-bar"
 
 // actions
 import { createMessage } from "@/lib/actions/messages/create"
@@ -16,6 +17,7 @@ import type { Messages } from "@/lib/types"
 
 export const useCreateMessage = () => {
   const queryClient = useQueryClient()
+  const router = useRouter()
 
   return useMutation({
     mutationKey: ["create-message"],
@@ -45,8 +47,7 @@ export const useCreateMessage = () => {
       })
     },
     onSettled: () => {
-      // router.push("/admin/messages")
-      // router.refresh()
+      router.refresh()
     },
     onError: (error) => clientErrorHandler(error),
   })
