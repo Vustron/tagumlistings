@@ -116,7 +116,6 @@ const UserButton = ({ isOnClient }: UserButtonProps) => {
 
   return (
     <>
-      {isLoading && <Loader2 className="animate-spin size-6 text-green-500" />}
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <TooltipProvider disableHoverableContent>
           <Tooltip delayDuration={100}>
@@ -131,7 +130,7 @@ const UserButton = ({ isOnClient }: UserButtonProps) => {
                     className="relative size-8 rounded-full"
                   >
                     {isLoading ? (
-                      <Loader2 className="animate-spin size-10" />
+                      <Loader2 className="animate-spin size-10 text-green" />
                     ) : (
                       <Avatar className="hover:scale-110  size-8">
                         <AvatarFallback className="bg-gray-200 text-black">
