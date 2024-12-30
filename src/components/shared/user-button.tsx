@@ -130,9 +130,11 @@ const UserButton = ({ isOnClient }: UserButtonProps) => {
                     className="relative size-8 rounded-full"
                   >
                     {isLoading ? (
-                      <Loader2 className="animate-spin size-10 text-green" />
+                      <div className="flex items-center justify-center size-8 rounded-full bg-gray-200 dark:bg-gray-800">
+                        <Loader2 className="animate-spin size-5 text-green-600 dark:text-green-500" />
+                      </div>
                     ) : (
-                      <Avatar className="hover:scale-110  size-8">
+                      <Avatar className="hover:scale-110 size-8">
                         <AvatarFallback className="bg-gray-200 text-black">
                           {getInitials(userData?.name || "User")}
                         </AvatarFallback>

@@ -84,31 +84,29 @@ const CreateAppointmentDialog = ({
 
   // Filter available accounts based on isOnClient and existing appointments
   const availableAccounts = useMemo(() => {
+    const usersWithAppointments = appointments
+      .filter((apt) => apt.propertyId === propertyId)
+      .map((apt) => apt.user)
+
     if (isOnClient) {
-      // For client view, only show agents
       return allAccounts.filter((account: UserData) => account.role === "agent")
     }
 
-    if (session.role === "agent") {
-      // For agent view, only show clients without appointments
-      const usersWithAppointments = appointments.map((apt) => apt.user)
-      return allAccounts.filter(
-        (account: UserData) =>
-          account.role === "client" &&
-          !usersWithAppointments.includes(account.name),
-      )
-    }
+    if (session.role === "admin" || session.role === "agent") {
+      return allAccounts.filter((account: UserData) => {
+        if (account.role === "client") {
+          return !usersWithAppointments.includes(account.name)
+        }
 
-    if (session.role === "admin") {
-      // For admin view, show both clients and agents
-      return allAccounts.filter(
-        (account: UserData) =>
-          account.role === "client" || account.role === "agent",
-      )
+        if (account.role === "agent") {
+          return true
+        }
+        return false
+      })
     }
 
     return []
-  }, [allAccounts, appointments, isOnClient, session.role])
+  }, [allAccounts, appointments, isOnClient, session.role, propertyId])
 
   // Check if there are any available dates for appointments
   const hasAvailableDates = useMemo(() => {

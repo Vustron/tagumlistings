@@ -84,17 +84,29 @@ const CreateAppointmentDialog = ({
 
   // Filter available accounts based on isOnClient and existing appointments
   const availableAccounts = useMemo(() => {
+    const usersWithAppointments = appointments
+      .filter((apt) => apt.propertyId === propertyId)
+      .map((apt) => apt.user)
+
     if (isOnClient) {
       return allAccounts.filter((account: UserData) => account.role === "agent")
     }
 
-    const usersWithAppointments = appointments.map((apt) => apt.user)
-    return allAccounts.filter(
-      (account: UserData) =>
-        !usersWithAppointments.includes(account.id!) &&
-        account.role === "client",
-    )
-  }, [allAccounts, appointments, isOnClient])
+    if (session.role === "admin" || session.role === "agent") {
+      return allAccounts.filter((account: UserData) => {
+        if (account.role === "client") {
+          return !usersWithAppointments.includes(account.name)
+        }
+
+        if (account.role === "agent") {
+          return true
+        }
+        return false
+      })
+    }
+
+    return []
+  }, [allAccounts, appointments, isOnClient, session.role, propertyId])
 
   // Check if there are any available dates for appointments
   const hasAvailableDates = useMemo(() => {
@@ -263,7 +275,7 @@ const CreateAppointmentDialog = ({
 
       if (selectedAgent && isOnClient) {
         const encodedAgentId = encodeURIComponent(selectedAgent.id!)
-        router.push(`/messages?agentId=${encodedAgentId}`)
+        router.push(`/contact?agentId=${encodedAgentId}`)
       }
     } catch (error) {
       toast.error(clientErrorHandler(error))
