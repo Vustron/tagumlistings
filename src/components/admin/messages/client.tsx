@@ -145,6 +145,18 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
     setIsSidebarOpen((prev) => !prev)
   }
 
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search)
+    const agentId = searchParams.get("agentId")
+
+    if (agentId && accounts.length > 0) {
+      const agent = accounts.find((acc) => acc.id === agentId)
+      if (agent) {
+        setSelectedUser(agent)
+      }
+    }
+  }, [accounts])
+
   return (
     <Card className="rounded-lg border-none h-[calc(100vh-4rem)] mt-5">
       <CardContent className="p-0 h-full relative">

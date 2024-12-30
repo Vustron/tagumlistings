@@ -115,37 +115,6 @@ const PropertiesClient = () => {
             transition={{ duration: 0.5 }}
             className="flex flex-col w-full sm:w-auto gap-4"
           >
-            {/* Completely restructured inputs container */}
-            {/* <div className="flex flex-col w-full gap-2">
-              <Input
-                type="number"
-                placeholder="Min Price"
-                value={minPrice ?? ""}
-                min={0}
-                onChange={(e: { target: { value: string } }) =>
-                  setMinPrice(
-                    e.target.value && Number.parseFloat(e.target.value) >= 0
-                      ? Number.parseFloat(e.target.value)
-                      : undefined,
-                  )
-                }
-                className="w-full"
-              />
-              <Input
-                type="number"
-                placeholder="Max Price"
-                value={maxPrice ?? ""}
-                min={0}
-                onChange={(e: { target: { value: string } }) =>
-                  setMaxPrice(
-                    e.target.value && Number.parseFloat(e.target.value) >= 0
-                      ? Number.parseFloat(e.target.value)
-                      : undefined,
-                  )
-                }
-                className="w-full"
-              />
-            </div> */}
             <Button
               onClick={() => setShowAllProperties(!showAllProperties)}
               variant={showAllProperties ? "default" : "outline"}

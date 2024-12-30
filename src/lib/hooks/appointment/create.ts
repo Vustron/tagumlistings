@@ -2,7 +2,7 @@
 
 // hooks
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { useSession } from "@/components/providers/session"
+// import { useSession } from "@/components/providers/session"
 import { useRouter } from "next-nprogress-bar"
 
 // actions
@@ -23,7 +23,7 @@ const purify = DOMPurify
 export const useCreateAppointment = () => {
   const queryClient = useQueryClient()
   const router = useRouter()
-  const session = useSession()
+  // const session = useSession()
 
   return useMutation({
     mutationKey: ["create-appointment"],
@@ -52,21 +52,21 @@ export const useCreateAppointment = () => {
       })
     },
     onSettled: () => {
-      if (session.role === "admin") {
-        router.push("/admin/appointments")
-        router.refresh()
-        return
-      }
-      if (session.role === "agent") {
-        router.push("/agent/appointments")
-        router.refresh()
-        return
-      }
-      if (session.role === "client") {
-        router.push("/contact")
-        router.refresh()
-        return
-      }
+      // if (session.role === "admin") {
+      //   router.push("/admin/appointments")
+      //   router.refresh()
+      //   return
+      // }
+      // if (session.role === "agent") {
+      //   router.push("/agent/appointments")
+      //   router.refresh()
+      //   return
+      // }
+      // if (session.role === "client") {
+      //   router.push("/contact")
+      //   router.refresh()
+      //   return
+      // }
       router.refresh()
     },
     onError: (error) => clientErrorHandler(error),

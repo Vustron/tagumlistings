@@ -22,6 +22,7 @@ import { useState, useCallback, useMemo, useEffect } from "react"
 import { useSession } from "@/components/providers/session"
 import { useConfirm } from "@/lib/hooks/utils/use-confirm"
 import { useGetAccounts } from "@/lib/hooks/auth/get-all"
+import { useRouter } from "next-nprogress-bar"
 import { useForm } from "react-hook-form"
 
 // utils
@@ -65,14 +66,12 @@ const CreateAppointmentDialog = ({
     isOnClient ? "new-appointment" : "set-dates",
   )
   const [dates, setDates] = useState<string[]>(
-    initialDates.map((date) => format(date, "yyyy-MM-dd'T'HH:mm")),
+    initialDates.map((date) => format(date, "yyyy-MM-dd")),
   )
-
   const session = useSession()
-
-  // Hooks
   const { data: accountsData } = useGetAccounts()
   const allAccounts = accountsData?.accounts ?? []
+  const router = useRouter()
 
   // Check if the current user already has an appointment for the given property
   const userHasAppointment = useMemo(() => {
@@ -86,12 +85,7 @@ const CreateAppointmentDialog = ({
   // Filter available accounts based on isOnClient and existing appointments
   const availableAccounts = useMemo(() => {
     if (isOnClient) {
-      return userHasAppointment
-        ? []
-        : allAccounts.filter(
-            (account: UserData) =>
-              account.id === session.id && account.role === "client",
-          )
+      return allAccounts.filter((account: UserData) => account.role === "agent")
     }
 
     const usersWithAppointments = appointments.map((apt) => apt.user)
@@ -100,16 +94,13 @@ const CreateAppointmentDialog = ({
         !usersWithAppointments.includes(account.id!) &&
         account.role === "client",
     )
-  }, [allAccounts, appointments, isOnClient, session.id, userHasAppointment])
+  }, [allAccounts, appointments, isOnClient])
 
   // Check if there are any available dates for appointments
   const hasAvailableDates = useMemo(() => {
-    const filteredAppointments = appointments.filter(
-      (apt) => apt.status !== "confirmed",
-    )
     const filteredDates = filterAvailableDates(
       appointmentDates,
-      filteredAppointments,
+      appointments.filter((apt) => apt.propertyId === propertyId),
       propertyId,
     )
     return filteredDates.length > 0
@@ -127,6 +118,7 @@ const CreateAppointmentDialog = ({
     resolver: zodResolver(addAppointmentSchema),
     defaultValues: {
       user: isOnClient ? session.name : "",
+      agent: "",
       date: "",
       description: "",
       color: "",
@@ -134,7 +126,6 @@ const CreateAppointmentDialog = ({
     },
   })
 
-  // Reset form when available accounts change
   useEffect(() => {
     if (!isOnClient) {
       const currentUser = form.getValues("user")
@@ -147,7 +138,6 @@ const CreateAppointmentDialog = ({
     }
   }, [availableAccounts, form, isOnClient])
 
-  // Date management handlers
   const handleDateChange = useCallback((index: number, value: string) => {
     setDates((prevDates) => {
       const newDates = [...prevDates]
@@ -165,22 +155,13 @@ const CreateAppointmentDialog = ({
   }, [])
 
   const handleSubmitDates = useCallback(async () => {
-    // Helper functions
     const getDateWithoutTime = (date: Date) =>
-      new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
+      new Date(date.getFullYear(), date.getMonth(), date.getDate())
 
     const isCurrentOrFutureDate = (date: Date) => {
-      const today = new Date()
-      const currentMonth = today.getMonth()
-      const currentYear = today.getFullYear()
-
-      const dateMonth = date.getMonth()
-      const dateYear = date.getFullYear()
-
-      return (
-        dateYear > currentYear ||
-        (dateYear === currentYear && dateMonth >= currentMonth)
-      )
+      const today = getDateWithoutTime(new Date())
+      const dateToCheck = getDateWithoutTime(date)
+      return dateToCheck >= today
     }
 
     const parsedDates = dates
@@ -190,35 +171,31 @@ const CreateAppointmentDialog = ({
       .filter(isCurrentOrFutureDate)
 
     if (parsedDates.length === 0) {
-      toast.error(
-        "Please select valid dates from current or future months only.",
-      )
+      toast.error("Please select valid dates from today or future dates only.")
       return
     }
 
-    // Check for duplicates
     const uniqueDates = parsedDates.filter((newDate) => {
-      const newDateTimestamp = getDateWithoutTime(newDate)
+      const newDateTimestamp = getDateWithoutTime(newDate).getTime()
 
-      // Check duplicates in existing appointment dates
       const isDuplicateInAppointmentDates = appointmentDates.some(
         (appointmentDate) =>
           appointmentDate.dates.some(
             (existingDate) =>
-              getDateWithoutTime(new Date(existingDate)) === newDateTimestamp,
+              getDateWithoutTime(new Date(existingDate)).getTime() ===
+              newDateTimestamp,
           ),
       )
 
-      // Check duplicates in current appointments
       const isDuplicateInAppointments = appointments.some(
         (appointment) =>
-          getDateWithoutTime(new Date(appointment.date)) === newDateTimestamp,
+          getDateWithoutTime(new Date(appointment.date)).getTime() ===
+          newDateTimestamp,
       )
 
-      // Check duplicates within current selection
       const isDuplicateInCurrentSelection = parsedDates
         .filter((d) => d !== newDate)
-        .some((d) => getDateWithoutTime(d) === newDateTimestamp)
+        .some((d) => getDateWithoutTime(d).getTime() === newDateTimestamp)
 
       return !(
         isDuplicateInAppointmentDates ||
@@ -249,31 +226,48 @@ const CreateAppointmentDialog = ({
     setDates([])
   }, [dates, appointments, appointmentDates, saveAppointmentDateMutation])
 
-  // New appointment handler with improved validation
   const handleSubmitAppointment = async (values: AddAppointmentValues) => {
-    if (isOnClient && userHasAppointment) {
-      toast.error("You already have an appointment scheduled for this property")
-      return
-    }
+    try {
+      await createAppointmentMutation.mutateAsync(values)
 
-    if (!isOnClient) {
-      const isUserAvailable = availableAccounts.some(
-        (account) => account.name === values.user,
+      // Find and delete matching appointment date
+      const matchingAppointmentDate = appointmentDates.find((appointmentDate) =>
+        appointmentDate.dates.some((date) => {
+          const appointmentDateWithoutTime = new Date(date)
+          appointmentDateWithoutTime.setHours(0, 0, 0, 0)
+
+          if (!values.date) return false
+          const selectedDateWithoutTime = new Date(values.date)
+          selectedDateWithoutTime.setHours(0, 0, 0, 0)
+
+          return (
+            appointmentDateWithoutTime.getTime() ===
+            selectedDateWithoutTime.getTime()
+          )
+        }),
       )
-      if (!isUserAvailable) {
-        toast.error("This user is not available for appointments")
-        form.reset()
-        return
+
+      if (matchingAppointmentDate?.id) {
+        await deleteAppointmentDateMutation.mutateAsync(
+          matchingAppointmentDate.id,
+        )
       }
+
+      const selectedAgent = allAccounts.find(
+        (account) => account.name === values.agent && account.role === "agent",
+      )
+
+      toast.success("Appointment created successfully")
+      form.reset()
+      onOpenChange(false)
+
+      if (selectedAgent && isOnClient) {
+        const encodedAgentId = encodeURIComponent(selectedAgent.id!)
+        router.push(`/messages?agentId=${encodedAgentId}`)
+      }
+    } catch (error) {
+      toast.error(clientErrorHandler(error))
     }
-
-    await toast.promise(createAppointmentMutation.mutateAsync(values), {
-      loading: <span className="animate-pulse">Adding appointment...</span>,
-      success: "Appointment added",
-      error: (error: unknown) => clientErrorHandler(error),
-    })
-
-    form.reset()
   }
 
   const handleDelete = async (id: string) => {
@@ -361,8 +355,9 @@ const CreateAppointmentDialog = ({
                             className="flex items-center space-x-2"
                           >
                             <Input
-                              type="datetime-local"
+                              type="date"
                               value={date}
+                              min={format(new Date(), "yyyy-MM-dd")}
                               onChange={(e) =>
                                 handleDateChange(index, e.target.value)
                               }
@@ -422,7 +417,9 @@ const CreateAppointmentDialog = ({
                         <div className="space-y-2">
                           {filterAvailableDates(
                             appointmentDates,
-                            appointments,
+                            appointments.filter(
+                              (apt) => apt.propertyId === propertyId,
+                            ),
                             propertyId,
                           ).map((appointmentDate) => (
                             <motion.div

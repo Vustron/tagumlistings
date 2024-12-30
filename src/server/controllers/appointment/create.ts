@@ -10,8 +10,8 @@ import {
   collection,
   serverTimestamp,
 } from "firebase/firestore"
-import { rateLimit, handleErrorResponse } from "@/server/helpers"
 import { checkRequiredFields, requestBodyHandler } from "@/lib/utils"
+import { rateLimit, handleErrorResponse } from "@/server/helpers"
 import { NextResponse } from "next/server"
 
 // configs
@@ -42,10 +42,12 @@ export async function createAppointmentController(request: NextRequest) {
     const createAppointmentBody =
       await requestBodyHandler<AddAppointmentValues>(request)
 
-    const { user, date, description, color, propertyId } = createAppointmentBody
+    const { user, agent, date, description, color, propertyId } =
+      createAppointmentBody
 
     const requiredFields: (keyof typeof createAppointmentBody)[] = [
       "user",
+      "agent",
       "date",
       "description",
       "color",
@@ -75,7 +77,7 @@ export async function createAppointmentController(request: NextRequest) {
 
     const appointmentData = {
       user,
-      agent: session.name,
+      agent,
       date,
       description,
       color,

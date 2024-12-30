@@ -1,8 +1,8 @@
 "use client"
 
 // components
-import ChatWindow from "@/components/agent/messages/chat-window"
-import Sidebar from "@/components/agent/messages/sidebar"
+import ChatWindow from "@/components/admin/messages/chat-window"
+import Sidebar from "@/components/admin/messages/sidebar"
 import { Card, CardContent } from "@/components/ui/card"
 
 // hooks
@@ -144,6 +144,18 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev)
   }
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search)
+    const agentId = searchParams.get("agentId")
+
+    if (agentId && accounts.length > 0) {
+      const agent = accounts.find((acc) => acc.id === agentId)
+      if (agent) {
+        setSelectedUser(agent)
+      }
+    }
+  }, [accounts])
 
   return (
     <Card className="rounded-lg border-none h-[calc(100vh-4rem)] mt-5">

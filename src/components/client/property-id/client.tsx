@@ -4,10 +4,16 @@ import PropertyDetails from "@/components/client/property-id/property-details"
 import PropertySkeleton from "@/components/client/property-id/skeleton"
 import FallbackBoundary from "@/components/shared/fallback-boundary"
 
-import { useQueryClientPropertyData } from "@/lib/actions/property/query-client-property"
+import { useGetAppointmentDates } from "@/lib/hooks/appointment/get-dates"
+import { useGetAppointments } from "@/lib/hooks/appointment/get-all"
 import { useSession } from "@/components/providers/session"
 import { useUpdateAccount } from "@/lib/hooks/auth/update"
+import { useGetProperty } from "@/lib/hooks/property/get"
 import { useState } from "react"
+
+import { placeholderImage } from "@/lib/utils"
+
+import type { Appointment } from "@/lib/types"
 
 const PropertyIdClient = ({ id }: { id: string }) => {
   const [reservationStatus] = useState<
@@ -15,8 +21,13 @@ const PropertyIdClient = ({ id }: { id: string }) => {
   >("idle")
   const session = useSession()
   const updateAccount = useUpdateAccount(session?.id)
-  const { property, filteredAppointments, appointmentDates, images } =
-    useQueryClientPropertyData(id, session?.name)
+  const { data: property } = useGetProperty(id)
+  const { data } = useGetAppointments()
+  const filteredAppointments =
+    data?.appointments?.filter(
+      (appointment: Appointment) => appointment.user === session?.name,
+    ) ?? []
+  const { data: appointmentDates } = useGetAppointmentDates()
 
   if (!property) {
     return <PropertySkeleton />
@@ -25,6 +36,9 @@ const PropertyIdClient = ({ id }: { id: string }) => {
   const isPropertyReserved = session?.reservedProperties?.some(
     (reservedProperty) => reservedProperty.id === property.id,
   )
+  const images = property?.propertyPics?.length
+    ? property.propertyPics
+    : [{ url: placeholderImage("No Images Available") }]
 
   return (
     <FallbackBoundary>
@@ -35,7 +49,7 @@ const PropertyIdClient = ({ id }: { id: string }) => {
         updateAccount={updateAccount}
         isPropertyReserved={isPropertyReserved!}
         appointments={filteredAppointments}
-        appointmentDates={appointmentDates}
+        appointmentDates={appointmentDates.dates}
         isOnClientAppointments
         session={session}
       />

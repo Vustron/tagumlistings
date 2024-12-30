@@ -307,6 +307,18 @@ export const addAppointmentFields = (
 ): FieldConfig<AddAppointmentValues>[] => {
   const fields: FieldConfig<AddAppointmentValues>[] = [
     {
+      name: "agent",
+      type: "select",
+      label: "Select Agent",
+      placeholder: "Select an agent",
+      options: accounts
+        .filter((account) => account.role === "agent")
+        .map((account) => ({
+          value: account.name,
+          label: account.name,
+        })),
+    },
+    {
       name: "date",
       type: "select",
       label: "Select Appointment Date",
@@ -342,12 +354,14 @@ export const addAppointmentFields = (
       placeholder: "Select a client",
       options: accounts
         .filter((account) => {
-          // Check if the user already has an appointment
           const hasAppointment = appointments.some(
             (appointment) => appointment.user === account.name,
           )
-          // Only include users who do not have an appointment
-          return account.id !== undefined && !hasAppointment
+          return (
+            account.id !== undefined &&
+            !hasAppointment &&
+            account.role === "client"
+          )
         })
         .map((account) => ({
           value: account.name,
@@ -375,6 +389,18 @@ export const updateAppointmentFields = (
       )
       .map((account) => ({
         value: account.name || "",
+        label: account.name,
+      })),
+  },
+  {
+    name: "agent",
+    type: "select",
+    label: "Select Agent",
+    placeholder: "Select an agent",
+    options: accounts
+      .filter((account) => account.role === "agent")
+      .map((account) => ({
+        value: account.name,
         label: account.name,
       })),
   },

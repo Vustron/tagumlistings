@@ -28,17 +28,17 @@ export const filterAvailableDates = (
   return dates.filter((appointmentDate) => {
     return (
       appointmentDate.dates.filter((date) => {
-        const dateMonth = new Date(date).getMonth()
-        const dateYear = new Date(date).getFullYear()
+        const availableDate = new Date(date)
+        availableDate.setHours(0, 0, 0, 0)
 
         // Check if date is already taken in appointments
         const isDateTaken = appointments.some((appointment) => {
+          if (appointment.propertyId !== propertyId) return false
+
           const appointmentDate = new Date(appointment.date)
-          return (
-            appointment.propertyId === propertyId &&
-            appointmentDate.getMonth() === dateMonth &&
-            appointmentDate.getFullYear() === dateYear
-          )
+          appointmentDate.setHours(0, 0, 0, 0)
+
+          return appointmentDate.getTime() === availableDate.getTime()
         })
 
         return !isDateTaken

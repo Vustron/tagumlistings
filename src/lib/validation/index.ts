@@ -141,6 +141,7 @@ export type BulkDeletePropertiesValues = z.infer<
 // addAppointmentSchema
 export const addAppointmentSchema = z.object({
   user: requiredString.optional(),
+  agent: requiredString.optional(),
   date: requiredString.optional(),
   description: requiredString.optional(),
   color: requiredString.optional(),

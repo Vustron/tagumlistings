@@ -21,6 +21,18 @@ export const columns: ColumnDef<Appointment>[] = [
     sortingFn: "datetime",
   },
   {
+    accessorKey: "agent",
+    header: "Agent",
+    cell: ({ row }) => {
+      const agent = row.original.agent
+      return (
+        <div className="flex flex-col">
+          <span className="font-medium">{agent}</span>
+        </div>
+      )
+    },
+  },
+  {
     accessorKey: "description",
     header: "Description",
     cell: ({ row }) => {

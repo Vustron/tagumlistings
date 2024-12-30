@@ -10,7 +10,7 @@ import { Suspense } from "react"
 export const LoadingFallback = () => {
   return (
     <div className="flex flex-col items-center justify-center h-[500px]">
-      <Loader2 className="size-20 animate-spin" />
+      <Loader2 className="size-20 animate-spin text-green-500" />
     </div>
   )
 }
