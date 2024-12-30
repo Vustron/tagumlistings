@@ -27,7 +27,7 @@ export async function getAccounts(): Promise<Accounts> {
 
 export async function preFetchAccounts() {
   return queryOptions<Accounts, Error>({
-    queryKey: [ "accounts" ],
+    queryKey: ["accounts"],
     queryFn: () => getAccounts(),
   })
 }
