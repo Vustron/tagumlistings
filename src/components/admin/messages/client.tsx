@@ -7,8 +7,10 @@ import { Card, CardContent } from "@/components/ui/card"
 
 // hooks
 import { useCreateMessage } from "@/lib/hooks/messages/create"
+import { useGetMessages } from "@/lib/hooks/messages/get-all"
 import { useEffect, useState, useRef, useMemo } from "react"
 import { useSession } from "@/components/providers/session"
+import { useGetAccounts } from "@/lib/hooks/auth/get-all"
 
 // utils
 import { clientErrorHandler, uploadMultipleImages } from "@/lib/utils"
@@ -16,7 +18,6 @@ import toast from "react-hot-toast"
 
 // types
 import type { UserData } from "@/lib/types"
-import { useQueryMessagesData } from "@/lib/hooks/messages/query-messages"
 
 interface MessagesClientProps {
   isAdmin?: boolean
@@ -35,14 +36,15 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
   )
 
   // Data fetching
-  const { accounts, messages } = useQueryMessagesData()
+  const { data: accounts } = useGetAccounts()
+  const { data: messages } = useGetMessages()
   const createMessageMutation = useCreateMessage()
   const session = useSession()
 
   // Set default user if not admin and no user is selected
   useEffect(() => {
-    if (!isAdmin && accounts.length > 0 && !selectedUser) {
-      const defaultAccount = accounts.find((account) =>
+    if (!isAdmin && accounts.accounts.length > 0 && !selectedUser) {
+      const defaultAccount = accounts.accounts.find((account) =>
         session.role === "client"
           ? account.role === "agent"
           : account.role === "client",
@@ -56,11 +58,11 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
   const filteredAccounts = useMemo(() => {
     switch (session.role) {
       case "admin":
-        return accounts.filter((account) => account.role !== "admin")
+        return accounts.accounts.filter((account) => account.role !== "admin")
       case "agent":
-        return accounts.filter((account) => account.role === "client")
+        return accounts.accounts.filter((account) => account.role === "client")
       case "client":
-        return accounts.filter((account) => account.role === "agent")
+        return accounts.accounts.filter((account) => account.role === "agent")
       default:
         return []
     }
@@ -68,7 +70,7 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
 
   // Filter messages for selected user
   const filteredMessages = useMemo(() => {
-    return messages
+    return messages.messages
       .filter(
         (msg) =>
           (msg.senderId === selectedUser?.id &&
@@ -149,8 +151,8 @@ const MessagesClient = ({ isAdmin }: MessagesClientProps) => {
     const searchParams = new URLSearchParams(window.location.search)
     const agentId = searchParams.get("agentId")
 
-    if (agentId && accounts.length > 0) {
-      const agent = accounts.find((acc) => acc.id === agentId)
+    if (agentId && accounts.accounts.length > 0) {
+      const agent = accounts.accounts.find((acc) => acc.id === agentId)
       if (agent) {
         setSelectedUser(agent)
       }

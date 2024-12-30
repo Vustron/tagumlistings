@@ -22,11 +22,11 @@ export async function getAccountsController() {
     const databaseKey = "accounts"
     const existingAccounts = await redis.get(databaseKey)
 
-    let accounts: UserData[] = existingAccounts
+    const accounts: UserData[] = existingAccounts
       ? (JSON.parse(existingAccounts) as UserData[])
       : []
 
-    accounts = accounts.filter((account) => account.id !== session.id)
+    // accounts = accounts.filter((account) => account.id !== session.id)
 
     return NextResponse.json(
       { accounts },

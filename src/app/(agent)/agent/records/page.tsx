@@ -1,16 +1,17 @@
 // components
-import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
-import ContentLayout from "@/components/layouts/agent/content-layout"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
+import ContentLayout from "@/components/layouts/agent/content-layout"
+import QueryHydrator from "@/components/shared/query-hydrator"
 import RecordsClient from "@/components/agent/records/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions
+import { preFetchPayments } from "@/lib/actions/payment/get-all"
+import { preFetchAccount } from "@/lib/actions/auth/get"
 import { getSession } from "@/lib/actions/session/get"
 
 // utils
 import { recordsItems } from "@/lib/misc/breadcrumb-lists"
-import { dataSerializer } from "@/lib/utils"
 
 // types
 import type { Metadata } from "next"
@@ -21,20 +22,19 @@ export const metadata: Metadata = {
 }
 
 export default async function RecordsPage() {
-  // get session
-  const session = await getSession()
-
-  // session serialize
-  const userData = dataSerializer(session)
-
+  const [, fetchAccount, fetchPayments] = await Promise.all([
+    getSession(),
+    preFetchAccount((await getSession()).id!),
+    preFetchPayments(),
+  ])
   return (
-    <HydrationBoundaryWrapper accountId={userData.id}>
+    <QueryHydrator prefetchFns={[fetchAccount, fetchPayments]}>
       <ContentLayout title="Records">
         <BounceWrapper>
           <DynamicBreadcrumb items={recordsItems} />
           <RecordsClient />
         </BounceWrapper>
       </ContentLayout>
-    </HydrationBoundaryWrapper>
+    </QueryHydrator>
   )
 }

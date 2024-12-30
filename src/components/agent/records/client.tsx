@@ -9,10 +9,9 @@ import { Heading } from "@/components/ui/heading"
 
 // hooks
 import { useDeletePayments } from "@/lib/hooks/payments/bulk-delete"
-import { useFetchScroll } from "@/lib/hooks/utils/use-fetch-scroll"
 import { useGetPayments } from "@/lib/hooks/payments/get-all"
 import { useSession } from "@/components/providers/session"
-import { useMemo, useRef } from "react"
+import { useMemo } from "react"
 
 // utils
 import { clientErrorHandler, formatPriceToPHP } from "@/lib/utils"
@@ -23,16 +22,9 @@ import type { Row } from "@tanstack/react-table"
 import type { Payment } from "@/lib/types"
 
 const RecordsClient = () => {
-  const topRef = useRef<HTMLDivElement>(null)
-  const bottomRef = useRef<HTMLDivElement>(null)
   const { data: paymentsData } = useGetPayments()
   const deletePayments = useDeletePayments()
   const session = useSession()
-
-  useFetchScroll({
-    topRef,
-    bottomRef,
-  })
 
   const handleDelete = async (rows: Row<Payment>[]) => {
     const ids = rows.map((r) => r.original.id)
@@ -92,16 +84,13 @@ const RecordsClient = () => {
 
         <Separator />
 
-        <div ref={topRef}>
-          <DataTable
-            placeholder="Search.."
-            columns={columns}
-            data={filteredPayments}
-            isOnPayments
-            onDelete={handleDelete}
-          />
-        </div>
-        <div ref={bottomRef} />
+        <DataTable
+          placeholder="Search.."
+          columns={columns}
+          data={filteredPayments}
+          isOnPayments
+          onDelete={handleDelete}
+        />
       </div>
     </FallbackBoundary>
   )

@@ -9,9 +9,7 @@ import { Heading } from "@/components/ui/heading"
 
 // hooks
 import { useDeleteProperties } from "@/lib/hooks/property/bulk-delete"
-import { useFetchScroll } from "@/lib/hooks/utils/use-fetch-scroll"
 import { useGetProperties } from "@/lib/hooks/property/get-all"
-import { useRef } from "react"
 
 // utils
 import { clientErrorHandler } from "@/lib/utils"
@@ -22,15 +20,8 @@ import type { Row } from "@tanstack/react-table"
 import type { Property } from "@/lib/types"
 
 const PropertiesClient = () => {
-  const topRef = useRef<HTMLDivElement>(null)
-  const bottomRef = useRef<HTMLDivElement>(null)
   const { data } = useGetProperties()
   const deleteProperties = useDeleteProperties()
-
-  useFetchScroll({
-    topRef,
-    bottomRef,
-  })
 
   const handleDelete = async (rows: Row<Property>[]) => {
     const ids = rows.map((r) => r.original.id)
@@ -54,16 +45,13 @@ const PropertiesClient = () => {
       </div>
       <Separator className="mt-2" />
 
-      <div ref={topRef}>
-        <DataTable
-          placeholder="Search.."
-          columns={columns}
-          isOnProperties
-          data={propertiesData}
-          onDelete={handleDelete}
-        />
-      </div>
-      <div ref={bottomRef} />
+      <DataTable
+        placeholder="Search.."
+        columns={columns}
+        isOnProperties
+        data={propertiesData}
+        onDelete={handleDelete}
+      />
     </FallbackBoundary>
   )
 }

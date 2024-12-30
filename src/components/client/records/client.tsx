@@ -9,10 +9,9 @@ import { Heading } from "@/components/ui/heading"
 
 // hooks
 import { useDeletePayments } from "@/lib/hooks/payments/bulk-delete"
-import { useFetchScroll } from "@/lib/hooks/utils/use-fetch-scroll"
 import { useGetPayments } from "@/lib/hooks/payments/get-all"
 import { useSession } from "@/components/providers/session"
-import { useRef, useMemo } from "react"
+import { useMemo } from "react"
 
 // utils
 import { clientErrorHandler, formatPriceToPHP } from "@/lib/utils"
@@ -21,19 +20,11 @@ import toast from "react-hot-toast"
 // types
 import type { Row } from "@tanstack/react-table"
 import type { Payment } from "@/lib/types"
-import type { ComponentRef } from "react"
 
 const RecordsClient = () => {
-  const topRef = useRef<ComponentRef<"div">>(null)
-  const bottomRef = useRef<ComponentRef<"div">>(null)
   const { data: paymentsData } = useGetPayments()
   const deletePayments = useDeletePayments()
   const session = useSession()
-
-  useFetchScroll({
-    topRef,
-    bottomRef,
-  })
 
   // Filter payments based on session.id
   const filteredPayments = useMemo(() => {
@@ -106,17 +97,14 @@ const RecordsClient = () => {
 
         <Separator />
 
-        <div ref={topRef}>
-          <DataTable
-            placeholder="Search.."
-            columns={columns}
-            data={filteredPayments}
-            isOnPayments
-            onDelete={session?.role === "admin" ? handleDelete : undefined}
-            isOnClient
-          />
-        </div>
-        <div ref={bottomRef} />
+        <DataTable
+          placeholder="Search.."
+          columns={columns}
+          data={filteredPayments}
+          isOnPayments
+          onDelete={session?.role === "admin" ? handleDelete : undefined}
+          isOnClient
+        />
       </div>
     </FallbackBoundary>
   )

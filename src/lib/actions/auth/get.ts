@@ -5,6 +5,7 @@ import { httpRequest } from "@/lib/config/http"
 import { queryOptions } from "@tanstack/react-query"
 
 // types
+import type { QueryClient } from "@tanstack/react-query"
 import type { SessionData } from "@/lib/config/session"
 import type { UserData } from "@/lib/types"
 
@@ -19,9 +20,11 @@ export async function getAccount(id: string): Promise<UserData> {
 }
 
 export async function preFetchAccount(id: string) {
-  return queryOptions<UserData, Error>({
-    enabled: !!id,
-    queryKey: ["account", id],
-    queryFn: () => getAccount(id),
-  })
+  return async (_queryClient: QueryClient) => {
+    return queryOptions<UserData, Error>({
+      enabled: !!id,
+      queryKey: ["account", id],
+      queryFn: () => getAccount(id),
+    })
+  }
 }

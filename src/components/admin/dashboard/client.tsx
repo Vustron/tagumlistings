@@ -15,7 +15,9 @@ import AppointmentsList from "@/components/admin/appointments/list"
 import DashboardCard from "@/components/admin/dashboard/card"
 
 // hooks
-import { useQueryDashboardData } from "@/lib/hooks/dashboard/query-dashboard"
+import { useGetAppointments } from "@/lib/hooks/appointment/get-all"
+import { useGetProperties } from "@/lib/hooks/property/get-all"
+import { useGetPayments } from "@/lib/hooks/payments/get-all"
 
 // utils
 import {
@@ -24,26 +26,31 @@ import {
 } from "@/lib/utils"
 
 const AdminDashboardClient = () => {
-  const { appointments, properties, payments } = useQueryDashboardData()
+  const { data: appointments } = useGetAppointments()
+  const { data: properties } = useGetProperties()
+  const { data: payments } = useGetPayments()
 
-  const totalAppointments = appointments.length
-  const currentMonthAppointments =
-    filterAppointmentsForCurrentMonth(appointments)
-  const lastHourAppointments = filterAppointmentsForLastHour(appointments)
+  const totalAppointments = appointments.appointments.length
+  const currentMonthAppointments = filterAppointmentsForCurrentMonth(
+    appointments.appointments,
+  )
+  const lastHourAppointments = filterAppointmentsForLastHour(
+    appointments.appointments,
+  )
 
   const currentAppointmentsCount = currentMonthAppointments.length
   const lastHourAppointmentsCount = lastHourAppointments.length
 
-  const propertiesCount = properties.length
-  const paymentsCount = payments.length
-  const pendingPayments = payments.filter(
+  const propertiesCount = properties.properties.length
+  const paymentsCount = payments.payments.length
+  const pendingPayments = payments.payments.filter(
     (payment) => payment.status === "pending",
   ).length
 
   const lastMonth = new Date()
   lastMonth.setMonth(lastMonth.getMonth() - 1)
 
-  const propertiesLastMonth = properties.filter(
+  const propertiesLastMonth = properties.properties.filter(
     (property) =>
       property.created_at && new Date(property.created_at) >= lastMonth,
   ).length
@@ -55,7 +62,7 @@ const AdminDashboardClient = () => {
   ).toFixed(2)
   const propertiesChangeSign = propertiesChange >= 0 ? "+" : ""
 
-  const paymentsLastMonth = payments.filter(
+  const paymentsLastMonth = payments.payments.filter(
     (payment) => payment.paid_date && new Date(payment.paid_date) >= lastMonth,
   ).length
 
@@ -67,8 +74,8 @@ const AdminDashboardClient = () => {
   const paymentsChangeSign = paymentsChange >= 0 ? "+" : ""
 
   const pendingPaymentsLastMonth =
-    appointments.filter((a) => new Date(a.date) >= lastMonth).length -
-    paymentsLastMonth
+    appointments.appointments.filter((a) => new Date(a.date) >= lastMonth)
+      .length - paymentsLastMonth
 
   const pendingChange = pendingPayments - pendingPaymentsLastMonth
   const pendingPercentageChange = (
@@ -122,7 +129,10 @@ const AdminDashboardClient = () => {
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7 mt-4">
           <div className="col-span-4">
-            <ReportsChart payments={payments} appointments={appointments} />
+            <ReportsChart
+              payments={payments.payments}
+              appointments={appointments.appointments}
+            />
           </div>
 
           <Card className="col-span-4 md:col-span-3">

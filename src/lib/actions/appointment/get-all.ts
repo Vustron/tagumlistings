@@ -5,6 +5,7 @@ import { httpRequest } from "@/lib/config/http"
 import { queryOptions } from "@tanstack/react-query"
 
 // types
+import type { QueryClient } from "@tanstack/react-query"
 import type { Appointments } from "@/lib/types"
 
 export async function getAppointments(): Promise<Appointments> {
@@ -14,8 +15,10 @@ export async function getAppointments(): Promise<Appointments> {
 }
 
 export async function preFetchAppointments() {
-  return queryOptions<Appointments, Error>({
-    queryKey: ["appointments"],
-    queryFn: () => getAppointments(),
-  })
+  return async (_queryClient: QueryClient) => {
+    return queryOptions<Appointments, Error>({
+      queryKey: ["appointments"],
+      queryFn: () => getAppointments(),
+    })
+  }
 }

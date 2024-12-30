@@ -1,16 +1,16 @@
 // components
-import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
+import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 import AddPropertyClient from "@/components/agent/new-property/client"
 import ContentLayout from "@/components/layouts/agent/content-layout"
-import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
+import QueryHydrator from "@/components/shared/query-hydrator"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions
+import { preFetchAccount } from "@/lib/actions/auth/get"
 import { getSession } from "@/lib/actions/session/get"
 
 // utils
 import { addPropertiesItems } from "@/lib/misc/breadcrumb-lists"
-import { dataSerializer } from "@/lib/utils"
 
 // types
 import type { Metadata } from "next"
@@ -20,21 +20,19 @@ export const metadata: Metadata = {
   title: "Add Property",
 }
 
-export default async function PropertiesPage() {
-  // get session
-  const session = await getSession()
-
-  // session serialize
-  const userData = dataSerializer(session)
-
+export default async function AddPropertyPage() {
+  const [, fetchAccount] = await Promise.all([
+    getSession(),
+    preFetchAccount((await getSession()).id!),
+  ])
   return (
-    <HydrationBoundaryWrapper accountId={userData.id}>
+    <QueryHydrator prefetchFns={[fetchAccount]}>
       <ContentLayout title="Add Properties">
         <BounceWrapper>
           <DynamicBreadcrumb items={addPropertiesItems} />
           <AddPropertyClient />
         </BounceWrapper>
       </ContentLayout>
-    </HydrationBoundaryWrapper>
+    </QueryHydrator>
   )
 }

@@ -1,19 +1,21 @@
 // components
-import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 import ContentLayout from "@/components/layouts/admin/content-layout"
 import PropertyClient from "@/components/admin/property/client"
+import QueryHydrator from "@/components/shared/query-hydrator"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions
+import { preFetchProperty } from "@/lib/actions/property/get"
+import { preFetchAccount } from "@/lib/actions/auth/get"
 import { getSession } from "@/lib/actions/session/get"
 
 // utils
 import { propertyItems } from "@/lib/misc/breadcrumb-lists"
-import { dataSerializer } from "@/lib/utils"
 
 // types
 import type { Metadata } from "next"
+import { preFetchAccounts } from "@/lib/actions/auth/get-all"
 
 export const metadata: Metadata = {
   title: "Property",
@@ -24,20 +26,23 @@ interface PageProps {
 }
 
 export default async function PropertyIdPage({ params }: PageProps) {
-  const [sessionData, resolvedParams] = await Promise.all([
-    getSession(),
-    params,
-  ])
-  const userData = dataSerializer(sessionData)
+  const [, fetchAccount, fetchAccounts, fetchProperty, resolvedParams] =
+    await Promise.all([
+      getSession(),
+      preFetchAccount((await getSession()).id!),
+      preFetchAccounts(),
+      preFetchProperty((await params).id),
+      params,
+    ])
   const { id } = resolvedParams
   return (
-    <HydrationBoundaryWrapper accountId={userData.id} propertyId={id}>
+    <QueryHydrator prefetchFns={[fetchAccount, fetchAccounts, fetchProperty]}>
       <ContentLayout title="Property">
         <BounceWrapper>
           <DynamicBreadcrumb items={propertyItems} />
           <PropertyClient id={id} />
         </BounceWrapper>
       </ContentLayout>
-    </HydrationBoundaryWrapper>
+    </QueryHydrator>
   )
 }

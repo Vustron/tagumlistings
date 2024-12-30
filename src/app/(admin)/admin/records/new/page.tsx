@@ -1,16 +1,19 @@
 // components
-import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 import ContentLayout from "@/components/layouts/admin/content-layout"
 import AddPaymentClient from "@/components/admin/new-payment/client"
+import QueryHydrator from "@/components/shared/query-hydrator"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions
+import { preFetchAppointments } from "@/lib/actions/appointment/get-all"
+import { preFetchProperties } from "@/lib/actions/property/get-all"
+import { preFetchAccounts } from "@/lib/actions/auth/get-all"
+import { preFetchAccount } from "@/lib/actions/auth/get"
 import { getSession } from "@/lib/actions/session/get"
 
 // utils
 import { addPaymentItems } from "@/lib/misc/breadcrumb-lists"
-import { dataSerializer } from "@/lib/utils"
 
 // types
 import type { Metadata } from "next"
@@ -27,21 +30,38 @@ interface PageProps {
   }>
 }
 
-export default async function NewPaymentPage({ searchParams }: PageProps) {
-  const [sessionData, resolvedSearchParams] = await Promise.all([
+export default async function NewRecordPage({ searchParams }: PageProps) {
+  const [
+    ,
+    fetchAccount,
+    fetchAccounts,
+    fetchAppointments,
+    fetchProperties,
+    resolvedSearchParams,
+  ] = await Promise.all([
     getSession(),
+    preFetchAccount((await getSession()).id!),
+    preFetchAccounts(),
+    preFetchAppointments(),
+    preFetchProperties(),
     searchParams,
   ])
-  const userData = dataSerializer(sessionData)
   const { property, price } = resolvedSearchParams
   return (
-    <HydrationBoundaryWrapper accountId={userData.id}>
+    <QueryHydrator
+      prefetchFns={[
+        fetchAccount,
+        fetchAccounts,
+        fetchAppointments,
+        fetchProperties,
+      ]}
+    >
       <ContentLayout title="Add Transaction">
         <BounceWrapper>
           <DynamicBreadcrumb items={addPaymentItems} />
           <AddPaymentClient property={property} price={price} />
         </BounceWrapper>
       </ContentLayout>
-    </HydrationBoundaryWrapper>
+    </QueryHydrator>
   )
 }

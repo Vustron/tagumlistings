@@ -1,16 +1,19 @@
 // components
-import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 import ContentLayout from "@/components/layouts/admin/content-layout"
 import PropertiesClient from "@/components/admin/properties/client"
+import QueryHydrator from "@/components/shared/query-hydrator"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions
+import { preFetchAppointmentDates } from "@/lib/actions/appointment/get-dates"
+import { preFetchAppointments } from "@/lib/actions/appointment/get-all"
+import { preFetchProperties } from "@/lib/actions/property/get-all"
+import { preFetchAccount } from "@/lib/actions/auth/get"
 import { getSession } from "@/lib/actions/session/get"
 
 // utils
 import { propertiesItems } from "@/lib/misc/breadcrumb-lists"
-import { dataSerializer } from "@/lib/utils"
 
 // types
 import type { Metadata } from "next"
@@ -21,21 +24,34 @@ export const metadata: Metadata = {
 }
 
 export default async function PropertiesPage() {
-  // get session
-  const session = await getSession()
-
-  // session serialize
-  const userData = dataSerializer(session)
-
+  const [
+    ,
+    fetchAccount,
+    fetchProperties,
+    fetchAppointments,
+    fetchAppointmentDates,
+  ] = await Promise.all([
+    getSession(),
+    preFetchAccount((await getSession()).id!),
+    preFetchProperties(),
+    preFetchAppointments(),
+    preFetchAppointmentDates(),
+  ])
   return (
-    <HydrationBoundaryWrapper accountId={userData.id}>
+    <QueryHydrator
+      prefetchFns={[
+        fetchAccount,
+        fetchProperties,
+        fetchAppointments,
+        fetchAppointmentDates,
+      ]}
+    >
       <ContentLayout title="Properties">
         <BounceWrapper>
           <DynamicBreadcrumb items={propertiesItems} />
-
           <PropertiesClient />
         </BounceWrapper>
       </ContentLayout>
-    </HydrationBoundaryWrapper>
+    </QueryHydrator>
   )
 }

@@ -5,6 +5,7 @@ import { httpRequest } from "@/lib/config/http"
 import { queryOptions } from "@tanstack/react-query"
 
 // types
+import type { QueryClient } from "@tanstack/react-query"
 import type { Payment } from "@/lib/types"
 
 export async function getPayment(id: string): Promise<Payment> {
@@ -18,9 +19,11 @@ export async function getPayment(id: string): Promise<Payment> {
 }
 
 export async function preFetchPayment(id: string) {
-  return queryOptions<Payment, Error>({
-    enabled: !!id,
-    queryKey: ["payment", id],
-    queryFn: () => getPayment(id),
-  })
+  return async (_queryClient: QueryClient) => {
+    return queryOptions<Payment, Error>({
+      enabled: !!id,
+      queryKey: ["payment", id],
+      queryFn: () => getPayment(id),
+    })
+  }
 }

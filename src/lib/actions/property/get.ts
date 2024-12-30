@@ -5,6 +5,7 @@ import { httpRequest } from "@/lib/config/http"
 import { queryOptions } from "@tanstack/react-query"
 
 // types
+import type { QueryClient } from "@tanstack/react-query"
 import type { Property } from "@/lib/types"
 
 export async function getProperty(id: string): Promise<Property> {
@@ -18,9 +19,11 @@ export async function getProperty(id: string): Promise<Property> {
 }
 
 export async function preFetchProperty(id: string) {
-  return queryOptions<Property, Error>({
-    enabled: !!id,
-    queryKey: ["property", id],
-    queryFn: () => getProperty(id),
-  })
+  return async (_queryClient: QueryClient) => {
+    return queryOptions<Property, Error>({
+      enabled: !!id,
+      queryKey: ["property", id],
+      queryFn: () => getProperty(id),
+    })
+  }
 }

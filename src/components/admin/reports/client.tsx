@@ -7,11 +7,15 @@ import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
 
 // hooks
-import { useQueryReportData } from "@/lib/hooks/report/query-report"
+import { useGetAppointments } from "@/lib/hooks/appointment/get-all"
+import { useGetPayments } from "@/lib/hooks/payments/get-all"
 
 const ReportsClient = () => {
-  const { payments, appointments, totalReports } = useQueryReportData()
-
+  const { data: payments } = useGetPayments()
+  const { data: appointments } = useGetAppointments()
+  const paymentsCount = payments.payments.length
+  const appointmentsCount = appointments.appointments.length
+  const totalReports = paymentsCount + appointmentsCount
   return (
     <FallbackBoundary>
       <div className="flex items-start justify-between">
@@ -23,7 +27,10 @@ const ReportsClient = () => {
       <Separator className="mt-2" />
 
       <div className="w-full max-w-5xl mx-auto mt-8">
-        <ReportsChart payments={payments} appointments={appointments} />
+        <ReportsChart
+          payments={payments.payments}
+          appointments={appointments.appointments}
+        />
       </div>
     </FallbackBoundary>
   )

@@ -1,13 +1,11 @@
 // components
-import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
+import QueryHydrator from "@/components/shared/query-hydrator"
 import AccountClient from "@/components/client/account/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions
+import { preFetchAccount } from "@/lib/actions/auth/get"
 import { getSession } from "@/lib/actions/session/get"
-
-// utils
-import { dataSerializer } from "@/lib/utils"
 
 // types
 import type { Metadata } from "next"
@@ -18,17 +16,15 @@ export const metadata: Metadata = {
 }
 
 export default async function ClientAccountPage() {
-  // get session
-  const session = await getSession()
-
-  // session serialize
-  const userData = dataSerializer(session)
-
+  const [session, fetchAccount] = await Promise.all([
+    getSession(),
+    preFetchAccount((await getSession()).id!),
+  ])
   return (
-    <HydrationBoundaryWrapper accountId={userData.id}>
+    <QueryHydrator prefetchFns={[fetchAccount]}>
       <BounceWrapper>
-        <AccountClient id={userData.id} />
+        <AccountClient id={session.id} />
       </BounceWrapper>
-    </HydrationBoundaryWrapper>
+    </QueryHydrator>
   )
 }

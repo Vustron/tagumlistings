@@ -6,8 +6,6 @@ import FallbackBoundary from "@/components/shared/fallback-boundary"
 import PropertyCard from "@/components/layouts/client/property-card"
 import { Button } from "@/components/ui/button"
 import { Loader2, FilterX } from "lucide-react"
-// @ts-ignore
-import { Input } from "@/components/ui/input"
 
 // hooks
 import { useGetProperties } from "@/lib/hooks/property/get-all"
@@ -25,10 +23,8 @@ const PropertiesClient = () => {
   const currentPage = Number(searchParams.get("page")) || 1
   const itemsPerPage = 9
   const [showAllProperties, setShowAllProperties] = useState(false)
-  // @ts-ignore
-  const [minPrice, setMinPrice] = useState<number | undefined>()
-  // @ts-ignore
-  const [maxPrice, setMaxPrice] = useState<number | undefined>()
+  const [minPrice] = useState<number | undefined>()
+  const [maxPrice] = useState<number | undefined>()
 
   // Fetch all properties
   const { data, isLoading } = useGetProperties()

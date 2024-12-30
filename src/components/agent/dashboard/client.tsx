@@ -15,7 +15,9 @@ import AppointmentsList from "@/components/admin/appointments/list"
 import DashboardCard from "@/components/admin/dashboard/card"
 
 // hooks
-import { useQueryDashboardData } from "@/lib/hooks/dashboard/query-dashboard"
+import { useGetAppointments } from "@/lib/hooks/appointment/get-all"
+import { useGetProperties } from "@/lib/hooks/property/get-all"
+import { useGetPayments } from "@/lib/hooks/payments/get-all"
 import { useSession } from "@/components/providers/session"
 
 // utils
@@ -25,15 +27,17 @@ import {
 } from "@/lib/utils"
 
 const AgentDashboardClient = () => {
+  const { data: appointments } = useGetAppointments()
+  const { data: properties } = useGetProperties()
+  const { data: payments } = useGetPayments()
   const session = useSession()
-  const { appointments, properties, payments } = useQueryDashboardData()
 
   // Filter data for current agent
-  const agentAppointments = appointments.filter(
+  const agentAppointments = appointments.appointments.filter(
     (appointment) => appointment.agent === session.name,
   )
 
-  const agentPayments = payments.filter(
+  const agentPayments = payments.payments.filter(
     (payment) => payment.agent === session.name,
   )
 
@@ -45,7 +49,7 @@ const AgentDashboardClient = () => {
   const currentAppointmentsCount = currentMonthAppointments.length
   const lastHourAppointmentsCount = lastHourAppointments.length
 
-  const propertiesCount = properties.filter(
+  const propertiesCount = properties.properties.filter(
     (p) => p.agent === session.name && p.status === "reserved",
   ).length
   const paymentsCount = agentPayments.length
@@ -56,7 +60,7 @@ const AgentDashboardClient = () => {
   const lastMonth = new Date()
   lastMonth.setMonth(lastMonth.getMonth() - 1)
 
-  const propertiesLastMonth = properties.filter(
+  const propertiesLastMonth = properties.properties.filter(
     (property) =>
       property.agent === session.name &&
       property.status === "reserved" &&

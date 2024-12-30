@@ -94,19 +94,32 @@ const CreateAppointmentDialog = ({
 
     if (session.role === "admin" || session.role === "agent") {
       return allAccounts.filter((account: UserData) => {
+        // For clients, check if they don't already have an appointment
         if (account.role === "client") {
           return !usersWithAppointments.includes(account.name)
         }
 
+        // For agents, always include current user and other agents
         if (account.role === "agent") {
-          return true
+          return (
+            account.name === session.name ||
+            !usersWithAppointments.includes(account.name)
+          )
         }
+
         return false
       })
     }
 
     return []
-  }, [allAccounts, appointments, isOnClient, session.role, propertyId])
+  }, [
+    allAccounts,
+    appointments,
+    isOnClient,
+    session.role,
+    session.name,
+    propertyId,
+  ])
 
   // Check if there are any available dates for appointments
   const hasAvailableDates = useMemo(() => {

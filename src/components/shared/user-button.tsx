@@ -26,7 +26,9 @@ import { accountSwitch } from "@/lib/actions/auth/account-switch"
 import { logout } from "@/lib/actions/auth/logout"
 
 // hooks
-import { useQueryAccounts } from "@/lib/hooks/auth/query-accounts"
+import { useSession } from "@/components/providers/session"
+import { useGetAccounts } from "@/lib/hooks/auth/get-all"
+import { useGetAccount } from "@/lib/hooks/auth/get"
 import { useRouter } from "next-nprogress-bar"
 import { useMemo, useState } from "react"
 
@@ -43,7 +45,6 @@ import Link from "next/link"
 
 // types
 import type { SessionData } from "@/lib/config/session"
-
 import type { UserData } from "@/lib/types"
 
 interface UserButtonProps {
@@ -54,7 +55,10 @@ const UserButton = ({ isOnClient }: UserButtonProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const [showAccountSwitcher, setShowAccountSwitcher] = useState(false)
   const router = useRouter()
-  const { user, accounts, isLoading } = useQueryAccounts()
+  const session = useSession()
+  const { data: user, isLoading: loadingAccount } = useGetAccount(session.id)
+  const { data: accounts, isLoading: loadingAccounts } = useGetAccounts()
+  const isLoading = loadingAccount || loadingAccounts
 
   const userData: SessionData | undefined =
     user && isValidSessionData(user)
@@ -62,15 +66,15 @@ const UserButton = ({ isOnClient }: UserButtonProps) => {
       : undefined
 
   const filteredAccounts = useMemo(() => {
-    if (!accounts) return []
+    if (!accounts.accounts) return []
     if (userData?.role === "agent") {
-      return accounts.filter((account) => account.role === "agent")
+      return accounts.accounts.filter((account) => account.role === "agent")
     }
     if (userData?.role === "admin") {
-      return accounts.filter((account) => account.role === "admin")
+      return accounts.accounts.filter((account) => account.role === "admin")
     }
-    return accounts
-  }, [accounts, userData?.role])
+    return accounts.accounts
+  }, [accounts.accounts, userData?.role])
 
   // logout handler
   const handleLogout = async () => {

@@ -1,16 +1,16 @@
 // components
-import HydrationBoundaryWrapper from "@/components/shared/hydration-boundary"
 import DynamicBreadcrumb from "@/components/shared/dynamic-breadcrumb"
 import ContentLayout from "@/components/layouts/admin/content-layout"
+import QueryHydrator from "@/components/shared/query-hydrator"
 import AccountClient from "@/components/admin/account/client"
 import BounceWrapper from "@/components/shared/bounce"
 
 // actions
+import { preFetchAccount } from "@/lib/actions/auth/get"
 import { getSession } from "@/lib/actions/session/get"
 
 // utils
 import { accountItems } from "@/lib/misc/breadcrumb-lists"
-import { dataSerializer } from "@/lib/utils"
 
 // types
 import type { Metadata } from "next"
@@ -21,16 +21,18 @@ export const metadata: Metadata = {
 }
 
 export default async function AccountPage() {
-  const session = await getSession()
-  const userData = dataSerializer(session)
+  const [session, fetchAccount] = await Promise.all([
+    getSession(),
+    preFetchAccount((await getSession()).id!),
+  ])
   return (
-    <HydrationBoundaryWrapper accountId={userData.id}>
+    <QueryHydrator prefetchFns={[fetchAccount]}>
       <ContentLayout title="Account">
         <BounceWrapper>
           <DynamicBreadcrumb items={accountItems} />
-          <AccountClient id={userData.id} />
+          <AccountClient id={session.id} />
         </BounceWrapper>
       </ContentLayout>
-    </HydrationBoundaryWrapper>
+    </QueryHydrator>
   )
 }

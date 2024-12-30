@@ -7,7 +7,9 @@ import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
 
 // hooks
-import { useQueryNewPaymentData } from "@/lib/hooks/payments/query-new-payment"
+import { useGetAppointments } from "@/lib/hooks/appointment/get-all"
+import { useGetProperties } from "@/lib/hooks/property/get-all"
+import { useGetAccounts } from "@/lib/hooks/auth/get-all"
 
 interface AddPaymentClientProps {
   property?: string
@@ -15,7 +17,9 @@ interface AddPaymentClientProps {
 }
 
 const AddPaymentClient = ({ property, price }: AddPaymentClientProps) => {
-  const { accounts, appointments, properties } = useQueryNewPaymentData()
+  const { data: accounts } = useGetAccounts()
+  const { data: appointments } = useGetAppointments()
+  const { data: properties } = useGetProperties()
 
   return (
     <FallbackBoundary>
@@ -26,9 +30,9 @@ const AddPaymentClient = ({ property, price }: AddPaymentClientProps) => {
 
       <div className="container flex flex-col justify-center items-center lg:w-[400px] sm:w-[300px] h-auto p-5 mt-5">
         <NewPaymentForm
-          accounts={accounts}
-          appointments={appointments}
-          properties={properties}
+          accounts={accounts.accounts}
+          appointments={appointments.appointments}
+          properties={properties.properties}
           property={property}
           price={price}
         />
