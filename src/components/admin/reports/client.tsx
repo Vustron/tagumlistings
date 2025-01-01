@@ -29,7 +29,9 @@ const ReportsClient = () => {
       <div className="w-full max-w-5xl mx-auto mt-8">
         <ReportsChart
           payments={payments.payments}
+          unfilteredAppointments={appointments.appointments}
           appointments={appointments.appointments}
+          unfilteredPayments={payments.payments}
         />
       </div>
     </FallbackBoundary>

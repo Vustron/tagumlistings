@@ -131,7 +131,9 @@ const AdminDashboardClient = () => {
           <div className="col-span-4">
             <ReportsChart
               payments={payments.payments}
+              unfilteredPayments={payments.payments}
               appointments={appointments.appointments}
+              unfilteredAppointments={appointments.appointments}
             />
           </div>
 

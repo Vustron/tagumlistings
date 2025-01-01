@@ -34,10 +34,17 @@ interface ChartData {
 
 interface ReportsChartProps {
   payments: Payment[]
+  unfilteredPayments: Payment[]
   appointments: Appointment[]
+  unfilteredAppointments: Appointment[]
 }
 
-const ReportsChart = ({ payments, appointments }: ReportsChartProps) => {
+const ReportsChart = ({
+  payments,
+  appointments,
+  unfilteredPayments,
+  unfilteredAppointments,
+}: ReportsChartProps) => {
   const [period, setPeriod] = useState<"weekly" | "monthly" | "yearly">(
     "weekly",
   )
@@ -238,7 +245,10 @@ const ReportsChart = ({ payments, appointments }: ReportsChartProps) => {
     >
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-semibold tracking-tight">Reports</h2>
-        <DownloadReports payments={payments} appointments={appointments} />
+        <DownloadReports
+          payments={unfilteredPayments}
+          appointments={unfilteredAppointments}
+        />
       </div>
 
       <Tabs

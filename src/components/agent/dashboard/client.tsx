@@ -144,7 +144,9 @@ const AgentDashboardClient = () => {
           <div className="col-span-4">
             <ReportsChart
               payments={agentPayments}
+              unfilteredPayments={payments.payments}
               appointments={agentAppointments}
+              unfilteredAppointments={appointments.appointments}
             />
           </div>
 
