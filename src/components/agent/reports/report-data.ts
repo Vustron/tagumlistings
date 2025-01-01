@@ -68,7 +68,7 @@ const isValidDate = (date: any): boolean => {
 }
 
 export const processData = (
-  period: "weekly" | "monthly" | "yearly",
+  type: "weekly" | "monthly" | "yearly" | "agent",
   payments: Payment[],
   appointments: Appointment[],
 ) => {
@@ -108,7 +108,7 @@ export const processData = (
       .length,
   }
 
-  switch (period) {
+  switch (type) {
     case "weekly": {
       start = startOfWeek(now, { weekStartsOn: 0 })
       end = endOfWeek(now, { weekStartsOn: 0 })
@@ -168,13 +168,13 @@ export const processData = (
     }
   }
 
-  if (period === "monthly" || period === "yearly") {
-    const datePoints = getDatesInRange(start, end, period)
+  if (type === "monthly" || type === "yearly") {
+    const datePoints = getDatesInRange(start, end, type)
     data = datePoints.map((date) => ({
       date: format(date, format_string),
       payments: filteredPayments
         .filter((p) => {
-          if (period === "yearly") {
+          if (type === "yearly") {
             return p.paid_date.getMonth() === date.getMonth()
           }
           return isWithinInterval(startOfDay(p.paid_date), {
@@ -190,7 +190,7 @@ export const processData = (
         })),
       appointments: filteredAppointments
         .filter((a) => {
-          if (period === "yearly") {
+          if (type === "yearly") {
             return a.date.getMonth() === date.getMonth()
           }
           return isWithinInterval(startOfDay(a.date), {

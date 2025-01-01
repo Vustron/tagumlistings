@@ -67,14 +67,23 @@ const UserButton = ({ isOnClient }: UserButtonProps) => {
 
   const filteredAccounts = useMemo(() => {
     if (!accounts.accounts) return []
+
+    const accountsWithoutCurrent = accounts.accounts.filter(
+      (account) => account.name !== session.name,
+    )
+
     if (userData?.role === "agent") {
-      return accounts.accounts.filter((account) => account.role === "agent")
+      return accountsWithoutCurrent.filter(
+        (account) => account.role === "agent",
+      )
     }
     if (userData?.role === "admin") {
-      return accounts.accounts.filter((account) => account.role === "admin")
+      return accountsWithoutCurrent.filter(
+        (account) => account.role === "admin",
+      )
     }
-    return accounts.accounts
-  }, [accounts.accounts, userData?.role])
+    return accountsWithoutCurrent
+  }, [accounts.accounts, userData?.role, session.name])
 
   // logout handler
   const handleLogout = async () => {
@@ -103,8 +112,8 @@ const UserButton = ({ isOnClient }: UserButtonProps) => {
                 ? "/agent"
                 : "/"
 
-          router.refresh()
           router.push(redirectPath)
+          window.location.reload()
           setShowAccountSwitcher(false)
         })(),
         {

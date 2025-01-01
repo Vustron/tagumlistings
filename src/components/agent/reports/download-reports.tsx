@@ -7,9 +7,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
-import { Calendar, Calendar1, Clock, FileDown } from "lucide-react"
+import {
+  Calendar,
+  Calendar1,
+  Clock,
+  FileDown,
+  FileChartLine,
+} from "lucide-react"
 import { generatePDF } from "@/components/agent/reports/pdf-generator"
+import { Button } from "@/components/ui/button"
 
 // types
 import type { DownloadReportsProps } from "@/components/agent/reports/report-data"
@@ -27,12 +33,12 @@ const DownloadReports = ({ payments, appointments }: DownloadReportsProps) => {
           Download Reports
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent className="w-auto">
         <DropdownMenuItem
           onClick={() => generatePDF("weekly", payments, appointments)}
           className="flex items-center px-3 py-2"
         >
-          <Clock className="mr-2 h-4 w-4" />
+          <Clock className="mr-2 size-4" />
           Weekly Report
         </DropdownMenuItem>
         <DropdownMenuSeparator />
@@ -40,7 +46,7 @@ const DownloadReports = ({ payments, appointments }: DownloadReportsProps) => {
           onClick={() => generatePDF("monthly", payments, appointments)}
           className="flex items-center px-3 py-2"
         >
-          <Calendar className="mr-2 h-4 w-4" />
+          <Calendar className="mr-2 size-4" />
           Monthly Report
         </DropdownMenuItem>
         <DropdownMenuSeparator />
@@ -48,8 +54,16 @@ const DownloadReports = ({ payments, appointments }: DownloadReportsProps) => {
           onClick={() => generatePDF("yearly", payments, appointments)}
           className="flex items-center px-3 py-2"
         >
-          <Calendar1 className="mr-2 h-4 w-4" />
+          <Calendar1 className="mr-2 size-4" />
           Yearly Report
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onClick={() => generatePDF("agent", payments, appointments)}
+          className="flex items-center px-3 py-2"
+        >
+          <FileChartLine className="mr-2 size-4" />
+          Agent Performance Report
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
