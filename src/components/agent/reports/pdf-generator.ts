@@ -8,73 +8,77 @@ import jsPDF from "jspdf"
 import type { ReportSummary } from "@/components/agent/reports/report-data"
 import type { Appointment, Payment } from "@/lib/types"
 
-const PRIMARY_COLOR: [ number, number, number ] = [ 34, 197, 94 ]
-const ACCENT_COLOR: [ number, number, number ] = [ 239, 246, 255 ]
+const PRIMARY_COLOR: [number, number, number] = [34, 197, 94]
+const ACCENT_COLOR: [number, number, number] = [239, 246, 255]
 
 const generateAgentReport = (
   doc: jsPDF,
   appointments: Appointment[],
-  payments: Payment[]
+  payments: Payment[],
 ) => {
   // Initialize agent stats
-  const agentStats = {} as Record<string, {
-    name: string;
-    // Appointment stats
-    totalAppointments: number;
-    confirmedAppointments: number;
-    pendingAppointments: number;
-    // Payment stats
-    totalPayments: number;
-    paidPayments: number;
-    pendingPayments: number;
-  }>;
+  const agentStats = {} as Record<
+    string,
+    {
+      name: string
+      // Appointment stats
+      totalAppointments: number
+      confirmedAppointments: number
+      pendingAppointments: number
+      // Payment stats
+      totalPayments: number
+      paidPayments: number
+      pendingPayments: number
+    }
+  >
 
   // Process appointments
   for (const appointment of appointments) {
-    const agent = appointment.agent || 'Unassigned';
-    if (!agentStats[ agent ]) {
-      agentStats[ agent ] = {
+    const agent = appointment.agent || "Unassigned"
+    if (!agentStats[agent]) {
+      agentStats[agent] = {
         name: agent,
         totalAppointments: 0,
         confirmedAppointments: 0,
         pendingAppointments: 0,
         totalPayments: 0,
         paidPayments: 0,
-        pendingPayments: 0
-      };
+        pendingPayments: 0,
+      }
     }
-    agentStats[ agent ].totalAppointments++;
-    if (appointment.status === 'confirmed') {
-      agentStats[ agent ].confirmedAppointments++;
+    agentStats[agent].totalAppointments++
+    if (appointment.status === "confirmed") {
+      agentStats[agent].confirmedAppointments++
     } else {
-      agentStats[ agent ].pendingAppointments++;
+      agentStats[agent].pendingAppointments++
     }
   }
 
   // Process payments
   for (const payment of payments) {
-    const agent = payment.agent || 'Unassigned';
-    if (!agentStats[ agent ]) {
-      agentStats[ agent ] = {
+    const agent = payment.agent || "Unassigned"
+    if (!agentStats[agent]) {
+      agentStats[agent] = {
         name: agent,
         totalAppointments: 0,
         confirmedAppointments: 0,
         pendingAppointments: 0,
         totalPayments: 0,
         paidPayments: 0,
-        pendingPayments: 0
-      };
+        pendingPayments: 0,
+      }
     }
-    agentStats[ agent ].totalPayments++;
-    if (payment.status === 'paid') {
-      agentStats[ agent ].paidPayments++;
+    agentStats[agent].totalPayments++
+    if (payment.status === "paid") {
+      agentStats[agent].paidPayments++
     } else {
-      agentStats[ agent ].pendingPayments++;
+      agentStats[agent].pendingPayments++
     }
   }
 
-  const sortedAgents = Object.values(agentStats)
-    .sort((a, b) => b.totalAppointments - a.totalAppointments);
+  const sortedAgents = Object.values(agentStats).sort(
+    (a, b) => b.totalAppointments - a.totalAppointments,
+  )
 
   const pageWidth = doc.internal.pageSize.width
   const tableWidth = 200
@@ -87,19 +91,19 @@ const generateAgentReport = (
   doc.text("Agent Appointments Summary", marginLeft, 55)
 
   autoTable(doc, {
-    head: [ [ "Agent", "Total Appointments", "Confirmed", "Pending" ] ],
-    body: sortedAgents.map(agent => [
+    head: [["Agent", "Total Appointments", "Confirmed", "Pending"]],
+    body: sortedAgents.map((agent) => [
       agent.name,
       agent.totalAppointments.toString(),
       agent.confirmedAppointments.toString(),
-      agent.pendingAppointments.toString()
+      agent.pendingAppointments.toString(),
     ]),
     startY: 65,
     margin: { left: marginLeft, right: marginLeft },
     styles: {
       fontSize: 10,
       cellPadding: 4,
-      halign: 'center'
+      halign: "center",
     },
     headStyles: {
       fillColor: PRIMARY_COLOR,
@@ -107,15 +111,15 @@ const generateAgentReport = (
       fontStyle: "bold",
       halign: "center",
       textColor: "#FFFFFF",
-      minCellHeight: 12
+      minCellHeight: 12,
     },
     alternateRowStyles: { fillColor: ACCENT_COLOR },
     columnStyles: {
       0: { cellWidth: 70, halign: "left" },
       1: { cellWidth: 50, halign: "center" },
       2: { cellWidth: 40, halign: "center" },
-      3: { cellWidth: 40, halign: "center" }
-    }
+      3: { cellWidth: 40, halign: "center" },
+    },
   })
 
   // Payments Table
@@ -126,19 +130,19 @@ const generateAgentReport = (
   doc.text("Agent Payments Summary", marginLeft, paymentsTableY)
 
   autoTable(doc, {
-    head: [ [ "Agent", "Total Payments", "Paid", "Pending" ] ],
-    body: sortedAgents.map(agent => [
+    head: [["Agent", "Total Payments", "Paid", "Pending"]],
+    body: sortedAgents.map((agent) => [
       agent.name,
       agent.totalPayments.toString(),
       agent.paidPayments.toString(),
-      agent.pendingPayments.toString()
+      agent.pendingPayments.toString(),
     ]),
     startY: paymentsTableY + 10,
     margin: { left: marginLeft, right: marginLeft },
     styles: {
       fontSize: 10,
       cellPadding: 4,
-      halign: 'center'
+      halign: "center",
     },
     headStyles: {
       fillColor: PRIMARY_COLOR,
@@ -146,19 +150,19 @@ const generateAgentReport = (
       fontStyle: "bold",
       halign: "center",
       textColor: "#FFFFFF",
-      minCellHeight: 12
+      minCellHeight: 12,
     },
     alternateRowStyles: { fillColor: ACCENT_COLOR },
     columnStyles: {
       0: { cellWidth: 70, halign: "left" },
       1: { cellWidth: 50, halign: "center" },
       2: { cellWidth: 40, halign: "center" },
-      3: { cellWidth: 40, halign: "center" }
-    }
+      3: { cellWidth: 40, halign: "center" },
+    },
   })
 
   return (doc as any).lastAutoTable.finalY + 15
-};
+}
 
 const addSummarySection = (
   doc: jsPDF,
@@ -211,16 +215,16 @@ const addAppointmentsSection = (
   appointments: any[],
   title: string,
   yPos: number,
-  PRIMARY_COLOR: [ number, number, number ],
-  ACCENT_COLOR: [ number, number, number ],
+  PRIMARY_COLOR: [number, number, number],
+  ACCENT_COLOR: [number, number, number],
 ) => {
   doc.setFontSize(11)
   doc.setTextColor(...PRIMARY_COLOR)
   doc.text(title, 20, yPos)
 
   autoTable(doc, {
-    head: [ [ "User", "Description", "Status", "Date" ] ],
-    body: appointments.map((a) => [ a.user, a.description, a.status, a.date ]),
+    head: [["User", "Description", "Status", "Date"]],
+    body: appointments.map((a) => [a.user, a.description, a.status, a.date]),
     startY: yPos + 2,
     margin: { left: 25, right: 25 },
     styles: { fontSize: 10, cellPadding: 4 },
@@ -257,7 +261,7 @@ const addPaymentsSection = (
   doc.text("Payments", 20, yPos)
 
   autoTable(doc, {
-    head: [ [ "User", "Amount", "Date" ] ],
+    head: [["User", "Amount", "Date"]],
     body: payments.map((p) => [
       p.user,
       typeof p.amount === "string" ? p.amount : p.amount.toFixed(2),
@@ -324,7 +328,8 @@ export const generatePDF = (
 
   if (type === "agent") {
     // Add logo and header for agent report
-    const logoBase64 = "https://ik.imagekit.io/mutd5f1xb/android-chrome-512x512.png?updatedAt=1728439897900"
+    const logoBase64 =
+      "https://ik.imagekit.io/mutd5f1xb/android-chrome-512x512.png?updatedAt=1728439897900"
     doc.addImage(logoBase64, "PNG", 20, 15, 25, 25)
     doc.setFontSize(24)
     doc.setTextColor(...PRIMARY_COLOR)
