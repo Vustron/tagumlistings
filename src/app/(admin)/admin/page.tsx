@@ -20,10 +20,10 @@ import type { Metadata } from "next"
 
 // meta data
 export const metadata: Metadata = {
-  title: "Agent",
+  title: "Admin",
 }
 
-export default async function AgentDashboardPage() {
+export default async function AdminDashboardPage() {
   const [, fetchAccount, fetchAppointments, fetchProperties, fetchPayments] =
     await Promise.all([
       getSession(),

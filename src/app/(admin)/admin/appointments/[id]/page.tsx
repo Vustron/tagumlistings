@@ -20,7 +20,7 @@ import { preFetchAppointmentDates } from "@/lib/actions/appointment/get-dates"
 
 // meta data
 export const metadata: Metadata = {
-  title: "Appointments",
+  title: "Appointment",
 }
 
 interface PageProps {
