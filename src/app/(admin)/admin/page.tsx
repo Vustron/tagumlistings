@@ -18,7 +18,6 @@ import { dashboardItems } from "@/lib/misc/breadcrumb-lists"
 // types
 import type { Metadata } from "next"
 
-// meta data
 export const metadata: Metadata = {
   title: "Admin",
 }
